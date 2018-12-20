@@ -1,0 +1,92 @@
+package $packNm$;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+
+@Service
+public class $PgmNm$Srv {
+
+	@Autowired
+	private $PgmNm$Dao $pgmNm$Dao;
+
+	@Autowired
+	private $PgmNm$ValidatorSrv $pgmNm$ValidatorSrv;
+
+	public Map<String, Object> select$PgmNm$List(Map<String,String> params){
+
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		List<Map<String,Object>> list = null;
+		try{
+			list = $pgmNm$Dao.select$PgmNm$List(params);;
+			result.put("isSuccess", true);
+			result.put("data", list);
+		} catch (Exception e){
+			result.put("isSuccess", false);
+			result.put("errUserMsg", "시스템 장애가 발생하였습니다");
+			result.put("errSysrMsg", e.getMessage());
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	public Map<String, Object> save$PgmNm$(Map<String,String> params){
+
+
+		System.out.println($pgmNm$Dao.select$PgmNm$Cnt(params));
+
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		Map<String, String> errors = new HashMap<String, String>();
+		errors = $pgmNm$ValidatorSrv.validateSave$PgmNm$(params);
+
+		if(errors.size()>0){
+			result.put("isSuccess", false);
+			result.put("errUserMsg", errors.get("errUserMsg"));
+			return result;
+		} else {
+			try{
+		    	result.put("isSuccess", true);
+
+			    if  ($pgmNm$Dao.select$PgmNm$Cnt(params)==0) {
+			    	$pgmNm$Dao.insert$PgmNm$(params);
+			    	result.put("msg", "입력 되었습니다");
+			    } else {
+			    	$pgmNm$Dao.update$PgmNm$(params);
+			    	result.put("msg", "갱신 되었습니다");
+			    }
+			} catch (Exception e){
+				e.printStackTrace();
+				result.put("errUserMsg", "시스템 장애가 발생되었습니다.");
+			}
+			return result;
+		}
+	}
+
+	public Map<String, Object> delete$PgmNm$(Map<String,String> params){
+
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		Map<String, String> errors = new HashMap<String, String>();
+		errors = $pgmNm$ValidatorSrv.validateDelete$PgmNm$(params);
+		if(errors.size()>0){
+			//model.addAttribute("tb$PgmNm$", tb$PgmNm$);
+			result.put("isSuccess", false);
+			result.put("errUserMsg", errors.get("errUserMsg"));
+			System.out.println(result);
+			return result;
+		} else {
+			$pgmNm$Dao.delete$PgmNm$(params);
+			result.put("isSuccess", true);
+			result.put("msg", "삭제 되었습니다");
+			return result;
+		}
+	}
+
+	
+}

@@ -1,0 +1,21 @@
+Ext.define('$extjsPackNm$.$PgmNm$Model', {
+     extend: 'Ext.app.ViewModel'
+    ,alias: 'viewmodel.$pgmNm$'
+    ,data : {
+    	searchValue : ''
+     }
+    ,stores : {
+        $pgmNm$ : {
+             fields : ['TITLE','CONTENT','REG_DTM','REG_USR_ID','UPD_DTM','UPD_USR_ID']
+            ,proxy : {
+                 type : 'ajax'              
+                ,url : '/$restfulPathName$/select$PgmNm$'
+                ,reader : {
+                     type : 'json'
+                    ,rootProperty : 'data'  
+                }
+            } 
+
+        }
+     } 
+});

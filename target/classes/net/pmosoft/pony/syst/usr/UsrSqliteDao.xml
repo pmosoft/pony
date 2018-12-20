@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.pmosoft.pony.syst.usr.UsrDao">
+
+<select id="selectUsrList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+
+	-- UsrDao.selectUsrList
+	SELECT   
+	         USR_ID
+			,USR_EMAIL
+			,USR_PW
+			,USR_NM
+			,USR_AGE
+			,USE_YN
+			,strftime('%Y%m%d%H%M%S','now','localtime') AS REG_DT
+			,REG_USR_ID
+			,strftime('%Y%m%d%H%M%S','now','localtime') AS UPD_DT
+			,UPD_USR_ID 
+	FROM   TSYUR00010
+    WHERE 1=1
+    AND  (
+          (#{searchKeyCombo} = 'USR_ID' AND USR_ID LIKE '%'||#{searchValue}||'%')
+           OR   
+          (#{searchKeyCombo} = 'USR_NM' AND USR_NM LIKE '%'||#{searchValue}||'%')
+         ) 
+	ORDER BY USR_ID 		  	
+</select>
+
+<select id="selectUsrCnt" parameterType="java.util.HashMap" resultType="int">
+	-- UsrDao.selectUsrCnt
+	SELECT COUNT(*) CNT 
+	FROM   TSYUR00010
+    WHERE  USR_ID = #{USR_ID}
+</select>
+
+
+<insert id="insertUsr" parameterType="java.util.HashMap">
+
+	-- UsrDao.insertUsr
+	INSERT INTO TSYUR00010
+	(
+	     USR_ID
+		,USR_EMAIL
+		,USR_PW
+		,USR_NM
+		,USR_AGE
+		,USE_YN
+		,REG_DT
+		,REG_USR_ID
+		,UPD_DT
+		,UPD_USR_ID
+	) VALUES ( 
+         #{USR_ID}
+		,#{USR_EMAIL}
+		,#{USR_PW}
+		,#{USR_NM}
+		,CAST(#{USR_AGE} AS INT)
+		,CASE WHEN #{USE_YN} = 'true' THEN 'Y' ELSE 'N' END
+		,curdate()
+		,#{REG_USR_ID}
+		,curdate()
+		,#{UPD_USR_ID} 
+	)
+		  	
+</insert>
+
+
+<delete id="deleteUsr" parameterType="java.util.HashMap">
+	-- UsrDao.deleteUsr
+	DELETE FROM TSYUR00010 WHERE USR_ID = #{USR_ID} 
+</delete>
+	
+<update id="updateUsr" parameterType="java.util.HashMap">
+	
+	-- UsrDao.updateUsr
+	UPDATE TSYUR00010 
+	SET  USR_ID     = #{USR_ID}            
+		,USR_EMAIL  = #{USR_EMAIL}         
+		,USR_PW     = #{USR_PW}            
+		,USR_NM     = #{USR_NM}            
+		,USR_AGE    = CAST(#{USR_AGE} AS INT)
+		,USE_YN      = CASE WHEN #{USE_YN} = 'true' THEN 'Y' ELSE 'N' END
+		,UPD_DT      = curdate()
+		,UPD_USR_ID = #{UPD_USR_ID}
+	WHERE  USR_ID = #{USR_ID}
+	 
+</update>
+
+	
+</mapper>

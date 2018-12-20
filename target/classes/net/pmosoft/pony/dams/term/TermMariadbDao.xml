@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.pmosoft.pony.dams.term.TermDao">
+
+
+<!--*************************************************************************** 
+**
+**                                 Term
+**
+****************************************************************************-->
+
+
+
+<!--**********************************
+**              추출
+***********************************-->
+
+<select id="selectExtTermList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+
+    -- TermDao.selectExtTermList
+    SELECT A.COL_NM
+          ,A.COL_HNM
+          ,'' AS COL_DESC
+          ,'' AS COL_ABBR_HNM
+          ,A.DATA_TYPE_DESC
+          ,'01' AS COL_STS_CD
+          ,'요청' AS COL_STS_NM
+          ,DATE_FORMAT(NOW(),'%Y%m%d%H%i%S') AS REG_DTM
+          ,'' REG_USR_ID
+          ,DATE_FORMAT(NOW(),'%Y%m%d%H%i%S') AS UPD_DTM
+          ,'' UPD_USR_ID
+    FROM 
+           (
+            SELECT COL_NM
+                  ,COL_HNM
+                  ,DATA_TYPE_DESC
+            FROM   TDACM00080
+            WHERE  COL_HNM > ' '
+            AND    DB_NM  LIKE CONCAT(CONCAT('%',#{DB_CONN_CD_NM}),'%')
+            GROUP BY COL_NM,COL_HNM
+            ) A
+            LEFT OUTER JOIN TDACM00040 B
+            ON A.COL_NM = B.COL_NM
+    WHERE   B.COL_NM IS NULL
+
+</select>
+
+
+
+<delete id="deleteExtTermList" parameterType="java.util.HashMap">
+    -- TermDao.deleteExtTermList
+    DELETE FROM TDACM00041;
+</delete>
+
+
+<insert id="insertExtTermList" parameterType="java.util.HashMap">
+
+    -- TermDao.insertExtTermList
+    INSERT INTO TDACM00041
+    (
+         COL_NM        
+        ,COL_HNM       
+        ,COL_DESC      
+        ,COL_ABBR_HNM  
+        ,DATA_TYPE_DESC
+        ,COL_STS_CD    
+        ,REG_DTM
+        ,REG_USR_ID
+        ,UPD_DTM
+        ,UPD_USR_ID
+    ) VALUES (
+         #{COL_NM}        
+        ,#{COL_HNM}       
+        ,#{COL_DESC}      
+        ,#{COL_ABBR_HNM}  
+        ,#{DATA_TYPE_DESC}
+        ,'01'    
+        ,curdate()
+        ,#{REG_USR_ID}
+        ,curdate()
+        ,#{UPD_USR_ID}
+    )
+
+</insert>
+
+
+<select id="selectCmpTermList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    -- TermDao.selectCmpTermList
+    SELECT A.*
+    FROM  (
+			SELECT A.*
+			FROM   TDACM00041 A
+			       LEFT OUTER JOIN TDACM00040 B
+			       ON   A.COL_NM = B.COL_NM
+			WHERE  B.COL_NM IS NULL
+          ) A      
+    ORDER BY A.COL_NM  
+</select>
+
+<select id="selectTermList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+
+	-- TermDao.selectTermList
+	SELECT   PKG_FUL_NM
+			,PKG2_NM
+			,PKG3_NM
+			,PKG4_NM
+			,PKG_HNM
+			,PKG_DESC
+			,USE_YN
+			,date_format(REG_DTM,'%Y.%m.%d %H:%i:%S') AS REG_DTM
+			,REG_USR_ID
+			,date_format(UPD_DTM,'%Y.%m.%d %H:%i:%S') AS UPD_DTM
+			,UPD_USR_ID
+	FROM    TDACM00010
+    WHERE   PKG2_NM LIKE CONCAT(CONCAT('%',#{searchValue}),'%')
+    OR      PKG3_NM LIKE CONCAT(CONCAT('%',#{searchValue}),'%')
+    OR      PKG4_NM LIKE CONCAT(CONCAT('%',#{searchValue}),'%')
+    OR      PKG_FUL_NM LIKE CONCAT(CONCAT('%',#{searchValue}),'%')
+    OR      PKG_HNM LIKE CONCAT(CONCAT('%',#{searchValue}),'%')
+    OR      PKG_DESC LIKE CONCAT(CONCAT('%',#{searchValue}),'%')
+	ORDER BY PKG_FUL_NM
+</select>
+
+<select id="selectTermCnt" parameterType="java.util.HashMap" resultType="int">
+	-- TermDao.selectTermCnt
+	SELECT COUNT(*) CNT
+	FROM   TDACM00010
+    WHERE  PKG_FUL_NM = #{PKG_FUL_NM}
+</select>
+
+<insert id="insertTerm" parameterType="java.util.HashMap">
+
+	-- TermDao.insertTerm
+	INSERT INTO TDACM00010
+	(
+	     PKG_FUL_NM
+		,PKG2_NM
+		,PKG3_NM
+		,PKG4_NM
+		,PKG_HNM
+		,PKG_DESC
+		,USE_YN
+		,REG_DTM
+		,REG_USR_ID
+		,UPD_DTM
+		,UPD_USR_ID
+	) VALUES (
+         #{PKG_FUL_NM}
+		,#{PKG2_NM}
+		,#{PKG3_NM}
+		,#{PKG4_NM}
+		,#{PKG_HNM}
+		,#{PKG_DESC}
+		,CASE WHEN #{USE_YN} = 'true' THEN 'Y' ELSE 'N' END
+		,curdate()
+		,#{REG_USR_ID}
+		,curdate()
+		,#{UPD_USR_ID}
+	)
+
+</insert>
+
+
+<delete id="deleteTerm" parameterType="java.util.HashMap">
+	-- TermDao.deleteTerm
+	DELETE FROM TDACM00040 WHERE COL_STS_CD = #{COL_STS_CD}
+</delete>
+
+<update id="updateTerm" parameterType="java.util.HashMap">
+
+	-- TermDao.updateTerm
+	UPDATE TDACM00010
+	SET  PKG2_NM      = #{PKG2_NM}
+		,PKG3_NM      = #{PKG3_NM}
+		,PKG4_NM      = #{PKG4_NM}
+		,PKG_HNM      = #{PKG_HNM}
+		,PKG_DESC     = #{PKG_DESC}
+		,USE_YN       = CASE WHEN #{USE_YN} = 'true' THEN 'Y' ELSE 'N' END
+		,UPD_DTM      = curdate()
+		,UPD_USR_ID  = #{UPD_USR_ID}
+	WHERE  PKG_FUL_NM = #{PKG_FUL_NM}
+
+</update>
+
+<select id="selectPackInfoList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+
+    -- DataArchDao.selectPackInfoList
+    SELECT   PKG_FUL_NM
+            ,PKG2_NM
+            ,PKG3_NM
+            ,PKG4_NM
+            ,PKG_HNM
+            ,PKG_DESC
+            ,USE_YN
+            ,date_format(REG_DTM,'%Y.%m.%d %H:%i:%S') AS REG_DTM
+            ,REG_USR_ID
+            ,date_format(UPD_DTM,'%Y.%m.%d %H:%i:%S') AS UPD_DTM
+            ,UPD_USR_ID
+    FROM    TDACM00010
+    WHERE   PKG2_NM LIKE CONCAT(CONCAT('%',#{searchValue}),'%')
+    OR      PKG3_NM LIKE CONCAT(CONCAT('%',#{searchValue}),'%')
+    OR      PKG4_NM LIKE CONCAT(CONCAT('%',#{searchValue}),'%')
+    OR      PKG_FUL_NM LIKE CONCAT(CONCAT('%',#{searchValue}),'%')
+    OR      PKG_HNM LIKE CONCAT(CONCAT('%',#{searchValue}),'%')
+    OR      PKG_DESC LIKE CONCAT(CONCAT('%',#{searchValue}),'%')
+    ORDER BY PKG_FUL_NM
+</select>
+
+<select id="selectPackInfoCnt" parameterType="java.util.HashMap" resultType="int">
+    -- DataArchDao.selectPackInfoCnt
+    SELECT COUNT(*) CNT
+    FROM   TDACM00010
+    WHERE  PKG_FUL_NM = #{PKG_FUL_NM}
+</select>
+
+<insert id="insertPackInfo" parameterType="java.util.HashMap">
+
+    -- DataArchDao.insertPackInfo
+    INSERT INTO TDACM00010
+    (
+         PKG_FUL_NM
+        ,PKG2_NM
+        ,PKG3_NM
+        ,PKG4_NM
+        ,PKG_HNM
+        ,PKG_DESC
+        ,USE_YN
+        ,REG_DTM
+        ,REG_USR_ID
+        ,UPD_DTM
+        ,UPD_USR_ID
+    ) VALUES (
+         #{PKG_FUL_NM}
+        ,#{PKG2_NM}
+        ,#{PKG3_NM}
+        ,#{PKG4_NM}
+        ,#{PKG_HNM}
+        ,#{PKG_DESC}
+        ,CASE WHEN #{USE_YN} = 'true' THEN 'Y' ELSE 'N' END
+        ,curdate()
+        ,#{REG_USR_ID}
+        ,curdate()
+        ,#{UPD_USR_ID}
+    )
+
+</insert>
+
+
+<delete id="deletePackInfo" parameterType="java.util.HashMap">
+    -- DataArchDao.deletePackInfo
+    DELETE FROM TDACM00010 WHERE PKG_FUL_NM = #{PKG_FUL_NM}
+</delete>
+
+<update id="updatePackInfo" parameterType="java.util.HashMap">
+
+    -- DataArchDao.updatePackInfo
+    UPDATE TDACM00010
+    SET  PKG2_NM      = #{PKG2_NM}
+        ,PKG3_NM      = #{PKG3_NM}
+        ,PKG4_NM      = #{PKG4_NM}
+        ,PKG_HNM      = #{PKG_HNM}
+        ,PKG_DESC     = #{PKG_DESC}
+        ,USE_YN       = CASE WHEN #{USE_YN} = 'true' THEN 'Y' ELSE 'N' END
+        ,UPD_DTM      = curdate()
+        ,UPD_USR_ID  = #{UPD_USR_ID}
+    WHERE  PKG_FUL_NM = #{PKG_FUL_NM}
+
+</update>
+
+
+
+
+</mapper>

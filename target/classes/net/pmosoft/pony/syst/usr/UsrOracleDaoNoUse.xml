@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.pmosoft.pony.syst.Usr.UsrDao">
+
+<select id="selectUsrList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+
+	-- UsrDao.selectUsrList
+	SELECT   
+	         Usr_ID
+			,Usr_EMAIL
+			,Usr_PW
+			,Usr_NM
+			,Usr_AGE
+			,USE_YN
+			,date_format(REG_DT,'%Y.%m.%d %H:%i:%S') AS REG_DT
+			,REG_Usr_ID
+			,date_format(UPD_DT,'%Y.%m.%d %H:%i:%S') AS UPD_DT
+			,UPD_Usr_ID 
+	FROM   TSYUR0001
+    WHERE 22=22 
+    AND  (
+          (#{searchKeyCombo} = 'Usr_ID' AND Usr_ID LIKE '%'||#{searchValue}||'%')
+	       OR   
+	      (#{searchKeyCombo} = 'Usr_NM' AND Usr_NM LIKE '%'||#{searchValue}||'%')
+	     ) 
+	ORDER BY Usr_ID 		  	
+</select>
+
+<select id="selectUsrCnt" parameterType="java.util.HashMap" resultType="int">
+	-- UsrDao.selectUsrCnt
+	SELECT COUNT(*) CNT 
+	FROM   TSYUR0001
+    WHERE  Usr_ID = #{Usr_ID}
+</select>
+
+
+<insert id="insertUsr" parameterType="java.util.HashMap">
+
+	-- UsrDao.insertUsr
+	INSERT INTO TSYUR0001
+	(
+	     Usr_ID
+		,Usr_EMAIL
+		,Usr_PW
+		,Usr_NM
+		,Usr_AGE
+		,USE_YN
+		,REG_DT
+		,REG_Usr_ID
+		,UPD_DT
+		,UPD_Usr_ID
+	) VALUES ( 
+         #{Usr_ID}
+		,#{Usr_EMAIL}
+		,#{Usr_PW}
+		,#{Usr_NM}
+		,TO_NUMBER(#{Usr_AGE})
+		,#{USE_YN}
+		,SYSDATE
+		,#{REG_Usr_ID}
+		,SYSDATE
+		,#{UPD_Usr_ID} 
+	)
+		  	
+</insert>
+
+
+<delete id="deleteUsr" parameterType="java.util.HashMap">
+	-- UsrDao.deleteUsr
+	DELETE FROM TSYUR0001 WHERE Usr_ID = #{Usr_ID} 
+</delete>
+	
+<update id="updateUsr" parameterType="java.util.HashMap">
+	
+	-- UsrDao.updateUsr
+	UPDATE TSYUR0001 
+	SET  Usr_ID     = #{Usr_ID}            
+		,Usr_EMAIL  = #{Usr_EMAIL}         
+		,Usr_PW     = #{Usr_PW}            
+		,Usr_NM     = #{Usr_NM}            
+		,Usr_AGE    = TO_NUMBER(#{Usr_AGE})
+		,USE_YN      = #{USE_YN}
+		,UPD_DT      = SYSDATE
+		,UPD_Usr_ID = #{UPD_Usr_ID}
+	WHERE  Usr_ID = #{Usr_ID}
+	 
+</update>
+
+	
+</mapper>

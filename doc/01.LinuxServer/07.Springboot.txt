@@ -1,0 +1,10 @@
+######################
+## pony springboot
+######################
+cd /home/pony/webapp
+nohup java -jar  pony-0.0.1-SNAPSHOT.war &
+tail -f /home/pony/webapp/nohup.out
+ps -ef | grep pony
+kill
+
+==> springboot는 톰캣이 내장되었으므로 별도의 톰캣서버가 필요없다.

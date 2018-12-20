@@ -1,0 +1,65 @@
+----------------------
+-- connect
+----------------------
+root/life200727
+
+
+-----------------------------------------------------
+-- 1. 기존 mariadb 백업
+-----------------------------------------------------
+
+-----------------------------------------------------
+-- 2. 기존 mariadb cfg 백업
+-----------------------------------------------------
+cp /etc/my.cnf /etc/my.cnf.backup
+
+-----------------------------------------------------
+-- 3. mariadb stop
+-----------------------------------------------------
+systemctl stop mysqld
+# systemctl start mysqld
+
+-----------------------------------------------------
+-- 4. 기존 mariadb 제거
+-----------------------------------------------------
+rpm -qa | grep -i '^MariaDB'
+
+##rpm 명령으로 확인된 MariaDB 관련 패키지를 아래와 같이 나열하여 제거한다.
+yum remove MariaDB-server-10.1.26-1.el7.centos.x86_64 MariaDB-client-10.3.9-1.el7.centos.x86_64 MariaDB-shared-10.1.26-1.el7.centos.x86_64 MariaDB-common-10.1.26-1.el7.centos.x86_64
+
+mv /etc/my.cnf.rpmsave /etc/my.cnf 
+cat /etc/my.cnf
+
+-----------------------------------------------------
+-- 5. MariaDB를 재설치
+-----------------------------------------------------
+vi /etc/yum.repos.d/MariaDB.repo
+ # MariaDB 10.3 CentOS repository list - created 2018-09-09 03:52 UTC
+# http://downloads.mariadb.org/mariadb/repositories/
+[mariadb]
+name = MariaDB
+baseurl = http://yum.mariadb.org/10.3/centos7-amd64
+gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+gpgcheck=1
+
+yum install MariaDB-server MariaDB-client
+
+-----------------------------------------------------
+-- 6. MariaDB cfg 복원 
+-----------------------------------------------------
+cp /etc/my.cnf.backup /etc/my.cnf
+
+-----------------------------------------------------
+-- 7. MariaDB DB 재기동 
+-----------------------------------------------------
+systemctl start mysqld
+
+-----------------------------------------------------
+-- 8. MariaDB DB 복원
+-----------------------------------------------------
+mysql -u root -plife200727
+select version();
+
+tar xvf db_all_backup.tgz
+mysql -uroot -plife200727 < db_all_backup.sql
+

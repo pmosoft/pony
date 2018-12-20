@@ -1,0 +1,13 @@
+#####################################################
+## TOMCAT
+#####################################################
+/home/pony/apache-tomcat-7.0.82.tar.gz 아래 폴더로 압축해제
+
+/usr/local/server/tomcat
+
+server.xml 수정
+
+      <Host name="www.pmosoft.net"  appBase="webapps"
+            unpackWARs="true" autoDeploy="true">
+      </Host>
+

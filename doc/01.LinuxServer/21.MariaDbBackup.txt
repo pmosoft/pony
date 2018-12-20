@@ -1,0 +1,76 @@
+----------------------
+-- connect
+----------------------
+root/life200727
+mysql -uroot -plife200727
+
+-----------------------------------------------------
+--
+--                     DB all backup
+--
+-----------------------------------------------------
+
+----------------------
+-- backup shell
+----------------------
+db_all_backup.sh
+
+mysqldump -uroot -plife200727 -A > db_all_backup.sql
+tar -zcvf db_all_backup.tgz db_all_backup.sql
+rm -f db_all_backup.sql
+
+----------------------------
+-- crontab(daily overwrite)
+----------------------------
+crontab -e
+
+# Mariadb All Backup.
+1 * * * * /root/db_all_backup.sh >> /root/db_all_backup.log 2>&1
+
+
+-----------------------------------------------------
+--
+--                     모든 db 복원
+--
+-----------------------------------------------------
+tar xvf all_db_backup.tgz
+mysql -uroot -life200727 < all_db_backup.sql
+
+-----------------------------------------------------
+-- 
+-- 기타
+--
+-----------------------------------------------------
+mysqldump -uroot -pl1 pony > pony_backup.sql
+
+1.root 에 db계정명을 적습니다.
+
+2.pass 부분에 mysql 비밀번호를 적습니다. 비밀번호를 적지 않고 넘어가면 mysqldump 명령어 수행시 비밀번호를 물어봅니다.
+
+3.dbname 부분에 db명을 적습니다,
+
+4.backup 부분에 백업할 파일명을 적습니다. 
+
+mysql 전체 DB 백업
+#!/usr/bin/env bash
+mysqldump -uroot -plife200727 -A > db_all_backup.sql
+tar -zcvf db_all_backup.tgz db_all_backup.sql
+rm -f db_all_backup.sql
+
+# mysqldump -uroot -p --all-databases > backup.sql
+
+
+mysql 특정 db의 특정 테이블만 백업
+
+* dump 데이터베이스의 test 테이블만 백업합니다.
+
+# mysqldump -uroot -p dump test > dumptest.sql
+
+mysql schema 정보만 백업
+
+# mysqldump -uroot -p --no-data schemainfo > schemainfo.sql
+
+
+
+
+

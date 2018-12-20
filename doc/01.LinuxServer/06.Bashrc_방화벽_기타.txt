@@ -1,0 +1,152 @@
+###############
+## user
+###############
+root/life200727
+pony/life200727
+
+mysql -u root -plife200727
+
+
+######################
+## pony springboot
+######################
+cd /home/pony/webapp
+nohup java -jar  pony-0.0.1-SNAPSHOT.war &
+tail -f /home/pony/webapp/nohup.out
+ps -ef | grep pony
+kill
+
+==> springboot는 톰캣이 내장되었으므로 별도의 톰캣서버가 필요없다.
+
+###############
+## bashrc
+###############
+vi /etc/bashrc
+export PS1="[\[\e[36;1m\]\u@\[\e[31;1m\]\w]$ "
+export PS1="[\[\e[36;1m\]\u@\[\e[32;1m\]\h:\[\e[31;1m\]\w]$ "
+
+# alias
+alias fup='nohup java -jar  pony-0.0.1-SNAPSHOT.war &'
+alias flog='tail -f /home/pony/webapp/nohup.out'
+alias fdown='pkill -9 -ef pony'
+alias sup='nohup java -jar subtitlestudy-0.0.1-SNAPSHOT.war &'
+alias slog='tail -f /home/subtitle/nohup.out'
+alias sdown='pkill -9 -ef subtitlestudy'
+alias pup='nohup java -jar pushup-0.0.1-SNAPSHOT.war &'
+alias plog='tail -f /home/pushup/webapp/nohup.out'
+alias pdown='pkill -9 -ef pushup'
+alias pmoup='nohup java -jar pmosoft-0.0.1-SNAPSHOT.war &'
+alias pmolog='tail -f /home/pmosoft/webapp/nohup.out'
+alias pmodown='pkill -9 -ef pmosoft'
+alias tup='nohup java -jar teambuilder-0.0.1-SNAPSHOT.war &'
+alias tlog='tail -f /home/teambuilder/webapp/nohup.out'
+alias tdown='pkill -9 -ef teambuilder'
+
+alias shutdown='/usr/local/server/tomcat/bin/shutdown.sh'
+alias startup='/usr/local/server/tomcat/bin/startup.sh'
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias grep='grep --color=auto'
+alias l.='ls -d .* --color=auto'
+alias ll='ls -l --color=auto'
+alias ls='ls --color=auto'
+alias which='alias | /usr/bin/which --tty-only --read-alias --show-dot --show-tilde'
+
+# java path
+export JAVA_HOME=/usr/local/java
+export PATH=$PATH:$JAVA_HOME/bin
+export M2_HOME=/usr/local/maven
+export PATH=$PATH:$M2_HOME/bin
+export PATH=$PATH:/usr/local/apache-maven-3.5.0/bin
+
+# screen
+setterm -blank 0
+
+###############
+## root 자동로그인
+###############
+vi /etc/gdm/custom.conf 에서 설정
+[daemon] 밑에 아래의 설정값 추가.
+AutomaticLoginEnable=true
+AutomaticLogin=root
+
+
+
+#####################################################
+## 방화벽 해제
+#####################################################
+systemctl stop firewalld
+systemctl disable firewalld
+
+
+#####################################################
+## MariaDB
+## Mysql
+#####################################################
+yum -y install http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm
+yum -y install mysql-community-server
+systemctl start mysqld
+systemctl enable mysqld
+
+mysql -u root -plife200727
+
+CREATE DATABASE hadoopguide;
+GRANT ALL PRIVILEGES ON hadoopguide.* TO ''@'localhost';
+
+SELECT Host,User,Password FROM mysql.user;
+
+INSERT INTO mysql.user (host,user,password) VALUES ('%','root',password('1'));
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
+FLUSH PRIVILEGES;
+
+UPDATE mysql.user SET password=PASSWORD('1') WHERE user='root'; 
+FLUSH PRIVILEGES; 
+
+
+INSERT INTO mysql.user (host,user,password) VALUES ('%','hive',password('hive'));
+GRANT ALL PRIVILEGES ON *.* TO 'hive'@'%';
+FLUSH PRIVILEGES;
+
+create user 'hive'@'%' identified by 'hive';
+
+create user 'hive'@'localhost' identified by 'hive';
+create user 'hive'@'127.0.0.1' identified by 'hive';
+
+
+UPDATE mysql.user SET password=PASSWORD('hive') WHERE user='hive'; 
+FLUSH PRIVILEGES; 
+
+grant all privileges on metastore.* to 'hive'@'%';
+flush privileges;
+
+
+#####################################################
+## FTP
+#####################################################
+yum install vsftpd -y
+vi /etc/vsftpd/vsftpd.conf
+service vsftpd start
+chkconfig vsftpd on
+chkconfig --list | grep vsftpd
+
+vi /etc/vsftpd/chroot_list
+
+#####################################################
+## JDK
+#####################################################
+/usr/local/jdk1.8... 를 설치하고 (1.9 오류 존재 비추)
+/etc/bashrc에 path를 설정해야 한다.
+
+#####################################################
+## TOMCAT
+#####################################################
+/home/pony/apache-tomcat-7.0.82.tar.gz 아래 폴더로 압축해제
+
+/usr/local/server/tomcat
+
+server.xml 수정
+
+      <Host name="www.pmosoft.net"  appBase="webapps"
+            unpackWARs="true" autoDeploy="true">
+      </Host>
+

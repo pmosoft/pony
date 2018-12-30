@@ -36,14 +36,14 @@
 
 	<dependencies>
 
-        <!--***************** 
-        ** Spring 
-        ******************-->
+    <!--***************** 
+    ** Spring 
+    ******************-->
         
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>springloaded</artifactId>
-        </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>springloaded</artifactId>
+    </dependency>
         
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>
@@ -87,28 +87,27 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 		</dependency>
 
-        <!--***************** 
-        ** Mybatis 
-        ******************-->
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>1.1.1</version>
-        </dependency>
+    <!--***************** 
+    ** Mybatis 
+    ******************-->
+    <dependency>
+        <groupId>org.mybatis.spring.boot</groupId>
+        <artifactId>mybatis-spring-boot-starter</artifactId>
+        <version>1.1.1</version>
+    </dependency>
 
-        <!--***************** 
-        ** Log4j 
-        ******************-->
+    <!--***************** 
+    ** Log4j 
+    ******************-->
 		<dependency>
 			<groupId>org.bgee.log4jdbc-log4j2</groupId>
 			<artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
 			<version>1.16</version>
 		</dependency>
 
-        <!--***************** 
-        ** Database 
-        ******************-->
-
+    <!--***************** 
+    ** Database 
+    ******************-->
 		<dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>ojdbc7</artifactId>
@@ -137,9 +136,10 @@
 		    <version>3.25.2</version>
 		</dependency>
 
-        <!--***************** 
-        ** Excel 
-        ******************-->
+
+    <!--***************** 
+    ** Excel 
+    ******************-->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
@@ -152,30 +152,9 @@
 			<version>3.7</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
-		<dependency>
-		    <groupId>org.apache.httpcomponents</groupId>
-		    <artifactId>httpclient</artifactId>
-		    <version>4.5.6</version>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
-		<dependency>
-		    <groupId>org.jsoup</groupId>
-		    <artifactId>jsoup</artifactId>
-		    <version>1.11.3</version>
-		</dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.openqa.selenium.client-drivers/selenium-java-client-driver -->
-		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-java</artifactId>
-			<version>3.13.0</version> 
-		</dependency>
-		
-        <!--***************** 
-        ** Json 
-        ******************-->
+    <!--***************** 
+    ** Json 
+    ******************-->
 		<dependency>
 			<groupId>net.sf.json-lib</groupId>
 			<artifactId>json-lib</artifactId>

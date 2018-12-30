@@ -22,29 +22,30 @@ public class PonyApplication
 	}
 
 
-    @Configuration
-    public class WebApplicationConfig extends WebMvcConfigurerAdapter {
+//    @Configuration
+//    public class WebApplicationConfig extends WebMvcConfigurerAdapter {
+//
+//        @Override
+//        public void addViewControllers(ViewControllerRegistry registry) {
+//            registry.addViewController("/notFound").setViewName("forward:/index.html");
+//        }
+//
+//        @Bean
+//        public EmbeddedServletContainerCustomizer containerCustomizer() {
+//            return container -> {
+//                container.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND,"/notFound"));
+//            };
+//        }
+//    }
 
-        @Override
-        public void addViewControllers(ViewControllerRegistry registry) {
-            registry.addViewController("/notFound").setViewName("forward:/index.html");
-        }
-
-        @Bean
-        public EmbeddedServletContainerCustomizer containerCustomizer() {
-            return container -> {
-                container.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND,"/notFound"));
-            };
-        }
-    }
-
-    @EventListener(ApplicationReadyEvent.class)
-    public void doSomethingAfterStartup() {
-        Runtime runtime = Runtime.getRuntime();
-        try {
-            runtime.exec("explorer.exe http://localhost:9201");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    @EventListener(ApplicationReadyEvent.class)
+//    public void doSomethingAfterStartup() {
+//        Runtime runtime = Runtime.getRuntime();
+//        try {
+//            runtime.exec("explorer.exe http://localhost:9201");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+    
 }

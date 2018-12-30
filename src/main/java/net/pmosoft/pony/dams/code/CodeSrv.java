@@ -21,15 +21,15 @@ public class CodeSrv {
     @Autowired
     private CodeValidatorSrv codeValidatorSrv;
 
-    public Map<String, Object> selectCodeList(Map<String,String> params){
+    public Map<String, Object> selectCodeList(Code code){
 
         Map<String, Object> result = new HashMap<String, Object>();
 
         try {
-            List<Map<String,Object>> list = null;
-            list = codeDao.selectCodeList(params);;
+            List<Code> codeOutVoList = null;
+            codeOutVoList = codeDao.selectCodeList(code);;
             result.put("isSuccess", true);
-            result.put("data", list);
+            result.put("codeOutVoList", codeOutVoList);
         } catch (Exception e){
             result.put("isSuccess", false);
             result.put("errUsrMsg", "시스템 장애가 발생하였습니다");

@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
  *
  */
 @RestController
+@CrossOrigin(origins="http://localhost:4202")
 public class CodeCtrl {
 
     @Autowired
@@ -27,8 +30,8 @@ public class CodeCtrl {
      * 코드목록 조회
      */
     @RequestMapping(value = "/dams/code/selectCodeList")
-    public Map<String, Object> selectCodeList(@RequestParam Map<String,String> params) {
-        return codeSrv.selectCodeList(params);
+    public Map<String, Object> selectCodeList(@RequestBody Code code) {
+        return codeSrv.selectCodeList(code);
     }
 
     /**

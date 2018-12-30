@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface CodeDao {
 
 
-    List<Map<String, Object>> selectCodeList(Map<String,String> params);
+    List<Code> selectCodeList(Code code);
     List<Map<String, Object>> selectCodeRegList(Map<String,String> params);
     List<Map<String, Object>> selectCodeCombo(Map<String,String> params);
     List<Map<String, Object>> selectCodeExtList(Map<String,String> params);

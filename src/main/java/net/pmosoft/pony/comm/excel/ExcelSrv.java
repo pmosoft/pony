@@ -34,7 +34,7 @@ public class ExcelSrv {
 
         Map<String, Object> result = new HashMap<String, Object>();
 
-        
+         
         String data = params.get("data");
         System.out.println("data="+data);
         Gson gson = new Gson(); 
@@ -44,8 +44,8 @@ public class ExcelSrv {
         ExcelUtil excelDown = new ExcelUtil();
         try {
             excelDown.downListToExcel(listParams,App.excelPath+params.get("fileNm"));
-            //Runtime run = Runtime.getRuntime ();
-            //run.exec ("cmd /c start excel.exe "+App.excelPath+"imsi.xls");
+            Runtime run = Runtime.getRuntime ();
+            run.exec ("cmd /c start excel.exe "+App.excelPath+params.get("fileNm"));
             
             result.put("isSuccess", true);
             

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
+@CrossOrigin(origins="http://localhost:4202")
 public class ExcelCtrl {
 
 	@Autowired
@@ -26,6 +28,7 @@ public class ExcelCtrl {
 	 */
 	@RequestMapping(value = "/comm/excel/downloadExcel")
 	public Map<String, Object> downloadExcel(@RequestParam Map<String,String> params) {
+	    System.out.println("params="+params);
 		return excelSrv.downloadExcel(params);
 	}
 

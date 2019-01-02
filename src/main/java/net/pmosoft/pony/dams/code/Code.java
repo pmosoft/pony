@@ -15,8 +15,9 @@ public class Code {
     String regUsrId    ; // 등록자       
     String updDtm      ; // 변경일시       
     String updUsrId    ; // 변경자
-    
-    String searchValue ; // 조회조건:코드관련 
+
+    String comboCodeId ; // [조회조건] 선택된 콤보 id 
+    String searchValue ; // [조회조건] 코드관련      
 
     public String getCdIdNm() {
         return cdIdNm;
@@ -128,6 +129,14 @@ public class Code {
 
     public void setSearchValue(String searchValue) {
         this.searchValue = searchValue;
+    }
+
+    public String getComboCodeId() {
+        return comboCodeId;
+    }
+
+    public void setComboCodeId(String comboCodeId) {
+        this.comboCodeId = comboCodeId;
     }
     
 }

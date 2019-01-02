@@ -30,11 +30,24 @@
             LEFT JOIN TDACM00060 C
             ON  C.CD_ID_NM = 'CD_TY_CD'
             AND C.CD = A.CD_TY_CD
-    WHERE   A.CD_ID_HNM LIKE ('%'||#{searchValue}||'%')
-    OR      A.CD LIKE ('%'||#{searchValue}||'%')
-    OR      A.CD_NM LIKE ('%'||#{searchValue}||'%')
-    OR      A.CD_HNM LIKE ('%'||#{searchValue}||'%')
-    OR      A.CD_ID_GRP_NM LIKE ('%'||#{searchValue}||'%')
+    WHERE  (#{comboCodeId} = 'ALL' AND
+             (   
+                 A.CD_ID_NM     LIKE ('%'||#{searchValue}||'%')
+              OR A.CD_ID_HNM    LIKE ('%'||#{searchValue}||'%')
+              OR A.CD_ID_GRP_NM LIKE ('%'||#{searchValue}||'%')
+              OR A.CD           LIKE ('%'||#{searchValue}||'%')
+              OR A.CD_NM        LIKE ('%'||#{searchValue}||'%')
+              OR A.CD_HNM       LIKE ('%'||#{searchValue}||'%')
+              OR A.CD_DESC      LIKE ('%'||#{searchValue}||'%')
+              )
+            )
+    OR     (#{comboCodeId} = 'CD_ID_NM'     AND A.CD_ID_NM     LIKE ('%'||#{searchValue}||'%'))
+    OR     (#{comboCodeId} = 'CD_ID_HNM'    AND A.CD_ID_HNM    LIKE ('%'||#{searchValue}||'%'))
+    OR     (#{comboCodeId} = 'CD_ID_GRP_NM' AND A.CD_ID_GRP_NM LIKE ('%'||#{searchValue}||'%'))
+    OR     (#{comboCodeId} = 'CD'           AND A.CD           LIKE ('%'||#{searchValue}||'%'))
+    OR     (#{comboCodeId} = 'CD_NM'        AND A.CD_NM        LIKE ('%'||#{searchValue}||'%'))
+    OR     (#{comboCodeId} = 'CD_HNM'       AND A.CD_HNM       LIKE ('%'||#{searchValue}||'%'))
+    OR     (#{comboCodeId} = 'CD_DESC'      AND A.CD_DESC      LIKE ('%'||#{searchValue}||'%'))
     ORDER BY A.CD_TY_CD,A.CD_ID_NM, A.CD
 </select>
 
@@ -86,9 +99,7 @@
             ,A.CD_PARAM7_DESC
             ,A.CD_PARAM7     
             ,A.CD_PARAM8_DESC
-            ,A.CD_PARAM8     
-            ,A.CD_PARAM9_DESC
-            ,A.CD_PARAM9     
+            ,A.CD_PARAM8     +`
             ,A.REG_DTM AS REG_DTM
             ,A.REG_USR_ID
             ,A.UPD_DTM AS UPD_DTM

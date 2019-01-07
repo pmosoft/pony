@@ -22,6 +22,41 @@ public class StringUtil {
         PADDING[32] = "                                                                ";
     }    
 
+    /*
+     *  토큰을 첫문자대문자 Camel로 변환
+     * */
+    public static String tokenToUCamel(String str, String delimeter) {
+
+        //String str = "aa-bb-cc";
+        String[] array = str.split(delimeter);
+        //System.out.println(array.length);
+        String firstUpperCamel = "";
+        for (int i = 0; i < array.length; i++) {
+            //System.out.println(array[i]);
+            //System.out.println(StringUtil.replaceFirstCharUpperCase(array[i]));
+            firstUpperCamel += StringUtil.replaceFirstCharUpperCase(array[i]);
+        }
+        return firstUpperCamel;
+    }    
+
+    /*
+     *  토큰을 첫문자소문자 Camel로 변환
+     * */
+    public static String tokenToLCamel(String str, String delimeter) {
+        //String str = "aa-bb-cc";
+        String[] array = str.split(delimeter);
+        //System.out.println(array.length);
+        String firstLowerCamel = "";
+        for (int i = 0; i < array.length; i++) {
+            //System.out.println(array[i]);
+            //System.out.println(StringUtil.replaceFirstCharUpperCase(array[i]));
+            if(i==0) firstLowerCamel += StringUtil.replaceFirstCharLowerCase(array[i]);
+            else firstLowerCamel += StringUtil.replaceFirstCharUpperCase(array[i]);
+        }
+        //System.out.println(firstLowerCamel);
+        return firstLowerCamel;
+    }    
+    
     
     /*
      *  String이 null일 경우를 check하고 null이면 공백을 리턴한다

@@ -11,9 +11,7 @@ import net.pmosoft.pony.comm.util.FileUtil;
 import net.pmosoft.pony.comm.util.StringUtil;
 
 
-public class GensCommByCopy implements GensPgmByCopy {
-
-    
+public class GensCommByCopy {
 
     /******************************************
      * 글로벌 프로퍼티

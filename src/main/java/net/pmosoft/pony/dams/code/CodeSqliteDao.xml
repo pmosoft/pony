@@ -8,47 +8,41 @@
 <select id="selectCodeList" parameterType="net.pmosoft.pony.dams.code.Code" resultType="net.pmosoft.pony.dams.code.Code">
 
     -- CodeDao.selectCodeList
-    SELECT   A.CD_ID_NM    
-            ,A.CD_ID_HNM   
-            ,A.CD_ID_GRP_NM
-            ,A.CD          
-            ,A.CD_NM       
-            ,A.CD_HNM      
+    SELECT   A.CD_GRP    
+            ,A.CD_GRP_NM   
+            ,A.CD_ID
+            ,A.CD_ID_NM          
+            ,A.CD       
+            ,A.CD_NM      
             ,A.CD_DESC      
-            ,A.CD_TY_CD
-            ,C.CD_HNM AS CD_TY_CD_NM   
-            ,A.CD_STS_CD   
-            ,B.CD_HNM AS CD_STS_CD_NM   
-            ,A.REG_DTM AS REG_DTM
+            ,B.CD_NM       AS CD_TY_CD
+            ,A.REG_DTM
             ,A.REG_USR_ID
-            ,A.UPD_DTM AS UPD_DTM
+            ,A.UPD_DTM
             ,A.UPD_USR_ID
     FROM    TDACM00060 A
             LEFT JOIN TDACM00060 B
-            ON  B.CD_ID_NM = 'CD_STS_CD'
-            AND B.CD = A.CD_STS_CD
-            LEFT JOIN TDACM00060 C
-            ON  C.CD_ID_NM = 'CD_TY_CD'
-            AND C.CD = A.CD_TY_CD
+            ON  B.CD_ID = 'CD_TY_CD'
+            AND B.CD = A.CD_TY_CD
     WHERE  (#{comboCodeId} = 'ALL' AND
              (   
-                 A.CD_ID_NM     LIKE ('%'||#{searchValue}||'%')
-              OR A.CD_ID_HNM    LIKE ('%'||#{searchValue}||'%')
-              OR A.CD_ID_GRP_NM LIKE ('%'||#{searchValue}||'%')
-              OR A.CD           LIKE ('%'||#{searchValue}||'%')
-              OR A.CD_NM        LIKE ('%'||#{searchValue}||'%')
-              OR A.CD_HNM       LIKE ('%'||#{searchValue}||'%')
-              OR A.CD_DESC      LIKE ('%'||#{searchValue}||'%')
+                 A.CD_GRP    LIKE ('%'||#{searchValue}||'%')
+              OR A.CD_GRP_NM LIKE ('%'||#{searchValue}||'%')
+              OR A.CD_ID     LIKE ('%'||#{searchValue}||'%')
+              OR A.CD_ID_NM  LIKE ('%'||#{searchValue}||'%')
+              OR A.CD        LIKE ('%'||#{searchValue}||'%')
+              OR A.CD_NM     LIKE ('%'||#{searchValue}||'%')
+              OR A.CD_DESC   LIKE ('%'||#{searchValue}||'%')
               )
             )
-    OR     (#{comboCodeId} = 'CD_ID_NM'     AND A.CD_ID_NM     LIKE ('%'||#{searchValue}||'%'))
-    OR     (#{comboCodeId} = 'CD_ID_HNM'    AND A.CD_ID_HNM    LIKE ('%'||#{searchValue}||'%'))
-    OR     (#{comboCodeId} = 'CD_ID_GRP_NM' AND A.CD_ID_GRP_NM LIKE ('%'||#{searchValue}||'%'))
-    OR     (#{comboCodeId} = 'CD'           AND A.CD           LIKE ('%'||#{searchValue}||'%'))
-    OR     (#{comboCodeId} = 'CD_NM'        AND A.CD_NM        LIKE ('%'||#{searchValue}||'%'))
-    OR     (#{comboCodeId} = 'CD_HNM'       AND A.CD_HNM       LIKE ('%'||#{searchValue}||'%'))
-    OR     (#{comboCodeId} = 'CD_DESC'      AND A.CD_DESC      LIKE ('%'||#{searchValue}||'%'))
-    ORDER BY A.CD_TY_CD,A.CD_ID_NM, A.CD
+    OR     (#{comboCodeId} = 'CD_GRP'     AND A.CD_GRP    LIKE ('%'||#{searchValue}||'%'))
+    OR     (#{comboCodeId} = 'CD_GRP_NM'  AND A.CD_GRP_NM LIKE ('%'||#{searchValue}||'%'))
+    OR     (#{comboCodeId} = 'CD_ID'      AND A.CD_ID     LIKE ('%'||#{searchValue}||'%'))
+    OR     (#{comboCodeId} = 'CD_ID_NM'   AND A.CD_ID_NM  LIKE ('%'||#{searchValue}||'%'))
+    OR     (#{comboCodeId} = 'CD'         AND A.CD        LIKE ('%'||#{searchValue}||'%'))
+    OR     (#{comboCodeId} = 'CD_NM'      AND A.CD_NM     LIKE ('%'||#{searchValue}||'%'))
+    OR     (#{comboCodeId} = 'CD_DESC'    AND A.CD_DESC   LIKE ('%'||#{searchValue}||'%'))
+    ORDER BY A.CD_TY_CD,A.CD_ID, A.CD
 </select>
 
 

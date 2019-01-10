@@ -4,14 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.pmosoft.pony.comm.util.StringUtil;
-import net.pmosoft.pony.gens.pgm.Gens;
+import net.pmosoft.pony.gens.pgm.GensPgm;
 
-public class GensAngularByCopy extends GensCommByCopy2 {
+public class GensAngularByCopy extends GensCommByCopy {
 
     public static void main(String[] args) throws Exception { 
         GensAngularByCopy gensAngularByCopy = new GensAngularByCopy();
 
-        Gens gens = new Gens();
+        GensPgm gens = new GensPgm();
         gens.setSrcPathNm("d:/fframe/workspace/pony-web/src/app/layout/clone/angular");
         gens.setSrcBarNm("clone-angular");
         gens.setTarPathNm("d:/fframe/workspace/pony-web/src/app/layout/clone/spring");
@@ -21,14 +21,14 @@ public class GensAngularByCopy extends GensCommByCopy2 {
         gensAngularByCopy.genTarPgmFiles(gens);
     }
 
-    public void execute(Gens gens) throws Exception {
+    public void execute(GensPgm gens) throws Exception {
         setGenParam(gens);
         genTarPgmFiles(gens);
     }
     /******************************************
      * 1단계 : 입력 param으로 gen시 필요param를 세팅
      *****************************************/
-    public void setGenParam(Gens gens) throws Exception {
+    public void setGenParam(GensPgm gens) throws Exception {
 
         try {
 
@@ -68,7 +68,7 @@ public class GensAngularByCopy extends GensCommByCopy2 {
     /******************************************
      * 2단계 : 복사할 파일들 지정 
      *****************************************/
-    public void genTarPgmFiles(Gens gens) throws Exception{
+    public void genTarPgmFiles(GensPgm gens) throws Exception{
 
         try 
         {
@@ -103,7 +103,7 @@ public class GensAngularByCopy extends GensCommByCopy2 {
     /***********************************************
      * 4단계 : 리팩토링 룰  
      ***********************************************/
-    public String replaceRule(String line, Gens gens) {
+    public String replaceRule(String line, GensPgm gens) {
               
         line = line.replace(gens.getSrcBarNm()   ,gens.getTarBarNm()   ); 
         line = line.replace(gens.getSrcClassNm() ,gens.getTarClassNm() ); 

@@ -1,28 +1,46 @@
 package net.pmosoft.pony.gens.pgm;
 
-public class Gens {
+public class GensPgm {
 
-    String srcPathNm   ; // 소스 경로명     
-    String srcPkgNm    ; // 소스  패키지명     
-    String srcBarNm    ; // 소스 구분자 - 형식명    
-    String srcClassNm  ; // 소스 첫대문자 Camel명    
-    String srcMethodNm ; // 소스 첫소문자 Camel명    
-    String srcDotNm    ; // 소스 구분자 . 형식명    
-    String srcTabNm    ; // 소스 구분자 _ 형식명    
+    String pkgComNm        ; // 패키지 회사명                                 (예:net.pmosoft.pony)
+    String slashComNm      ; // 슬래쉬 회사명                                 (예:net/pmosoft/pony)
+    String srcPathNm       ; // 소스 경로명                                    (예:"d:/fframe/workspace/pony/src/main/java/net/pmosoft/pony/dams/code/");
+    String srcPkgNm        ; // 소스  패키지명                                (예:net.pmosoft.pony.dams.code)
+    String srcPkgPathNm    ; // 소스 슬래쉬 패키지명                       (예:net/pmosoft/pony/dams/code)
+    String srcPkgPathAbbrNm; // 소스 슬래쉬 회사명이 배제된 패키지명(예:/dams/code)
+    String srcBarNm        ; // 소스 구분자 - 형식명                      (예:code-list)
+    String srcClassNm      ; // 소스 첫대문자 Camel명                  (예:CodeList)
+    String srcMethodNm     ; // 소스 첫소문자 Camel명                  (예:codeList)
+    String srcDotNm        ; // 소스 구분자 . 형식명                      (예:code.list)
+    String srcTabNm        ; // 소스 구분자 _ 형식명                      (예:code_list)
 
-    String tarPathNm   ; // 타켓 경로명     
-    String tarPkgNm    ; // 타켓 경로명     
-    String tarBarNm    ; // 타켓 구분자 - 형식명    
-    String tarClassNm  ; // 타켓 첫대문자 Camel명    
-    String tarMethodNm ; // 타켓 첫소문자 Camel명    
-    String tarDotNm    ; // 타켓 구분자 . 형식명    
-    String tarTabNm    ; // 타켓 구분자 _ 형식명    
-    
+    String tarPathNm       ;
+    String tarPkgNm        ;
+    String tarPkgPathNm    ;
+    String tarPkgPathAbbrNm;
+    String tarBarNm        ;
+    String tarClassNm      ;
+    String tarMethodNm     ;
+    String tarDotNm        ;
+    String tarTabNm        ;
+
     String retMsg             = "";
     String retErrMsg          = "";
     String retSrcMsg          = "";
     String retTarMsg          = "";
-    
+
+    public String getPkgComNm() {
+        return pkgComNm;
+    }
+    public void setPkgComNm(String pkgComNm) {
+        this.pkgComNm = pkgComNm;
+    }
+    public String getSlashComNm() {
+        return slashComNm;
+    }
+    public void setSlashComNm(String slashComNm) {
+        this.slashComNm = slashComNm;
+    }
     public String getSrcPathNm() {
         return srcPathNm;
     }
@@ -34,6 +52,18 @@ public class Gens {
     }
     public void setSrcPkgNm(String srcPkgNm) {
         this.srcPkgNm = srcPkgNm;
+    }
+    public String getSrcPkgPathNm() {
+        return srcPkgPathNm;
+    }
+    public void setSrcPkgPathNm(String srcPkgPathNm) {
+        this.srcPkgPathNm = srcPkgPathNm;
+    }
+    public String getSrcPkgPathAbbrNm() {
+        return srcPkgPathAbbrNm;
+    }
+    public void setSrcPkgPathAbbrNm(String srcPkgPathAbbrNm) {
+        this.srcPkgPathAbbrNm = srcPkgPathAbbrNm;
     }
     public String getSrcBarNm() {
         return srcBarNm;
@@ -76,6 +106,18 @@ public class Gens {
     }
     public void setTarPkgNm(String tarPkgNm) {
         this.tarPkgNm = tarPkgNm;
+    }
+    public String getTarPkgPathNm() {
+        return tarPkgPathNm;
+    }
+    public void setTarPkgPathNm(String tarPkgPathNm) {
+        this.tarPkgPathNm = tarPkgPathNm;
+    }
+    public String getTarPkgPathAbbrNm() {
+        return tarPkgPathAbbrNm;
+    }
+    public void setTarPkgPathAbbrNm(String tarPkgPathAbbrNm) {
+        this.tarPkgPathAbbrNm = tarPkgPathAbbrNm;
     }
     public String getTarBarNm() {
         return tarBarNm;

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
- 
+
 @RestController
 @CrossOrigin(origins="http://localhost:4202")
 public class TranCtrl {
@@ -15,9 +15,9 @@ public class TranCtrl {
     @Autowired
     private TranSrv tranSrv;
 
-    @RequestMapping(value = "/tran/delimeterToArray")
-    public Map<String, Object> delimeterToArray(@RequestBody Tran tran) {
-        return tranSrv.delimeterToArray(tran);
+    @RequestMapping(value = "/tran/delimeterToRows")
+    public Map<String, Object> delimeterToRows(@RequestBody Tran tran) {
+        return tranSrv.delimeterToRows(tran);
     }
-        
+
 }

@@ -14,7 +14,7 @@ public class StringTest
 
     static void 구분자배열() {
         String str = "aa-bb-cc";
-        String[] array = str.split("-");
+        String[] array = str.split("\\-");
         System.out.println(array.length);
         String firstLowerCamel = "";
         String firstUpperCamel = "";
@@ -28,15 +28,15 @@ public class StringTest
         System.out.println(firstUpperCamel);
         System.out.println(firstLowerCamel);
         System.out.println(StringUtil.tokenToLCamel(str,"-"));
-    }    
-    
+    }
+
     static void 끝문자제거() {
         String r01 = "aa/aa/";
         if(r01.endsWith("/")) System.out.println(r01.substring(0,r01.length()-1));
-    }    
+    }
 
     static void test01() {
-        
+
 //      char a=','; //char�� �̱�(')
 //      char b='' ;
 //      String src ="15,000,000";
@@ -45,16 +45,16 @@ public class StringTest
 //      String src3 = "7ABCD1";
 
 //    String aaa = "20031002702����                          000000000622620001                                         000000000144140000000013068040000000000000000000000000144140000000000000000000000000000000��������������μ������Ρ�����                                                        0000000700000000007431  0000000000000000";
-      
+
 //    System.out.println(aaa.length());
 
 //      byte[] ba;
 //      ba = (aaa.getBytes());
-  
+
 //    System.out.println(ba.length);
 
 //    SET @��ÿ�������  = (SELECT ��ÿ�������  FROM TB_IQF_����_������ WHERE �������� = DATEFORMAT(GETDATE() ,'yyyymmdd'));
-//    SET @�Ϳ�������    = (SELECT �Ϳ�������    FROM TB_IQF_����_������ WHERE �������� = DATEFORMAT(GETDATE() ,'yyyymmdd'));    
+//    SET @�Ϳ�������    = (SELECT �Ϳ�������    FROM TB_IQF_����_������ WHERE �������� = DATEFORMAT(GETDATE() ,'yyyymmdd'));
 
       String src="WHERE �������� = DATEFORMAT(GETDATE() ,'yyyymmdd'))";
       //System.out.println(src);
@@ -64,7 +64,7 @@ public class StringTest
       System.out.println(src);
 
       System.out.println ( System.currentTimeMillis ( ) );
-      
+
       //System.out.println(src.indexOf("getdddate"));
 //      String src1="��ȭ��� ���� ���к����� ����� �����մϴ�.";
 //      int src_len = src.length();
@@ -96,7 +96,7 @@ public class StringTest
 //    System.System.out.printlnln("src2=" + src2.charAt(0));
 //    src = src.replace(src1.charAt(0),src2.charAt(0));
 //    System.System.out.printlnln(src);
-        
+
     }
 
 }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="test.jdbc.mybatis.sqlite.EmpDao">
+
+	<select id="selectEmp" resultType="test.jdbc.mybatis.sqlite.EmpDto">
+		select * from (select '1' empno, 'abc' ename union all select '2' empno, 'def' ename) emp
+	</select>
+
+</mapper>

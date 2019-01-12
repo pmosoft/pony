@@ -1,4 +1,23 @@
 ﻿------------------------------
+-- JDBC
+------------------------------
+DROP TABLE TDACM00010;
+
+CREATE TABLE TDACM00010 (
+ JDBC_NM     VARCHAR(30) NOT NULL -- COMMENT 'JDBC명'
+,DRIVER      VARCHAR(100)    NULL -- COMMENT '드라이버'
+,URL         VARCHAR(100)    NULL -- COMMENT 'URL'
+,USR_ID      VARCHAR(50)     NULL -- COMMENT '유저아이디'
+,USR_PW      VARCHAR(300)    NULL -- COMMENT '유저패스워드'
+,REG_DTM     VARCHAR(14)     NULL -- COMMENT '등록일시'
+,REG_USR_ID  VARCHAR(20)     NULL -- COMMENT '등록자'
+,UPD_DTM     VARCHAR(14)     NULL -- COMMENT '변경일시'
+,UPD_USR_ID  VARCHAR(20)     NULL -- COMMENT '변경자'
+,PRIMARY KEY(JDBC_NM)
+)
+;
+
+﻿------------------------------
 -- 약어 정보
 ------------------------------
 DROP TABLE TDACM00020;
@@ -8,7 +27,7 @@ CREATE TABLE TDACM00020 (
 ,ABBR_FUL_NM VARCHAR(20)     NULL -- COMMENT '약어풀명'
 ,ABBR_HNM    VARCHAR(10)     NULL -- COMMENT '약어한글명'
 ,ABBR_DESC   VARCHAR(200)    NULL -- COMMENT '약어설명'
-,ABBR_APR_CD CHAR(2)         NULL -- COMMENT '약어승인코드' -- 01:요청 02:진행중 03:반려 04:반려취소 05:승인 06:승인취소 
+,ABBR_APR_CD CHAR(2)         NULL -- COMMENT '약어승인코드' -- 01:요청 02:진행중 03:반려 04:반려취소 05:승인 06:승인취소
 ,REG_DTM     VARCHAR(14)     NULL -- COMMENT '등록일시'
 ,REG_USR_ID  VARCHAR(20)     NULL -- COMMENT '등록자'
 ,UPD_DTM     VARCHAR(14)     NULL -- COMMENT '변경일시'
@@ -24,7 +43,7 @@ DROP TABLE TDACM00040
 ;
 
 CREATE TABLE TDACM00040 (
- COL_NM         VARCHAR(20)  NOT NULL -- COMMENT '컬럼명' 
+ COL_NM         VARCHAR(20)  NOT NULL -- COMMENT '컬럼명'
 ,COL_HNM        VARCHAR(20)      NULL -- COMMENT '컬럼한글명'
 ,COL_DESC       VARCHAR(200)     NULL -- COMMENT '컬럼설명'
 ,COL_ABBR_HNM   VARCHAR(30)      NULL -- COMMENT '컬럼약어한글명'
@@ -53,7 +72,7 @@ SELECT * FROM TDACM00062
 COMMIT;
 
 INSERT INTO TDACM00060
-SELECT 
+SELECT
 A.CD_ID_GRP_NM  AS CD_GRP
 , A.CD_ID_GRP_NM AS CD_GRP_NM
 , A.CD_ID_NM AS CD_ID
@@ -65,7 +84,7 @@ A.CD_ID_GRP_NM  AS CD_GRP
 , A.REG_DTM
 ,A.REG_USR_ID
 ,A.UPD_DTM
-,A.UPD_USR_ID 
+,A.UPD_USR_ID
 FROM TDACM00060 A
 
 CREATE TABLE TDACM00060 (
@@ -120,7 +139,7 @@ CREATE TABLE TDACM00061 (
 DROP TABLE TDACM00070;
 
 CREATE TABLE TDACM00070 (
- DB_NM          VARCHAR(10)  NOT NULL -- COMMENT 'DB명' 
+ DB_NM          VARCHAR(10)  NOT NULL -- COMMENT 'DB명'
 ,OWNER          VARCHAR(15)      NULL -- COMMENT '소유자'
 ,TAB_NM         VARCHAR(40)      NULL -- COMMENT '테이블명'
 ,TAB_HNM        VARCHAR(40)      NULL -- COMMENT '테이블한글명'
@@ -136,7 +155,7 @@ CREATE TABLE TDACM00070 (
 DROP TABLE TDACM00071;
 
 CREATE TABLE TDACM00071 (
- DB_NM          VARCHAR(10)  NOT NULL COMMENT 'DB명' 
+ DB_NM          VARCHAR(10)  NOT NULL COMMENT 'DB명'
 ,OWNER          VARCHAR(15)      NULL COMMENT '소유자'
 ,TAB_NM         VARCHAR(40)      NULL COMMENT '테이블명'
 ,TAB_HNM        VARCHAR(40)      NULL COMMENT '테이블한글명'
@@ -158,16 +177,16 @@ DROP TABLE TDACM00080
 
 
 CREATE TABLE TDACM00080 (
- DB_NM          VARCHAR(10)  NOT NULL -- COMMENT 'DB명' 
+ DB_NM          VARCHAR(10)  NOT NULL -- COMMENT 'DB명'
 ,OWNER          VARCHAR(15)  NOT NULL -- COMMENT '소유자'
 ,TAB_NM         VARCHAR(40)  NOT NULL -- COMMENT '테이블명'
-,COL_ID         INT          NOT NULL -- COMMENT '컬럼아이디' 
-,COL_NM         VARCHAR(40)  NOT NULL -- COMMENT '컬럼명' 
+,COL_ID         INT          NOT NULL -- COMMENT '컬럼아이디'
+,COL_NM         VARCHAR(40)  NOT NULL -- COMMENT '컬럼명'
 ,COL_HNM        VARCHAR(40)      NULL -- COMMENT '컬럼한글명'
 ,DATA_TYPE_DESC VARCHAR(30)      NULL -- COMMENT '데이터타입설명'
 ,NULLABLE       VARCHAR(10)      NULL -- COMMENT 'NULL'
-,PK             VARCHAR(10)      NULL -- COMMENT 'PK' 
-,DATA_TYPE_NM   VARCHAR(20)      NULL -- COMMENT '데이터타입명' 
+,PK             VARCHAR(10)      NULL -- COMMENT 'PK'
+,DATA_TYPE_NM   VARCHAR(20)      NULL -- COMMENT '데이터타입명'
 ,LEN            INT              NULL -- COMMENT '길이'
 ,DECIMAL_CNT    INT              NULL -- COMMENT '소수점수'
 ,COL_DESC       VARCHAR(1000)    NULL -- COMMENT '컬럼설명'
@@ -183,16 +202,16 @@ DROP TABLE TDACM00081
 ;
 
 CREATE TABLE TDACM00081 (
- DB_NM          VARCHAR(10)  NOT NULL COMMENT 'DB명' 
+ DB_NM          VARCHAR(10)  NOT NULL COMMENT 'DB명'
 ,OWNER          VARCHAR(15)  NOT NULL COMMENT '소유자'
 ,TAB_NM         VARCHAR(40)  NOT NULL COMMENT '테이블명'
-,COL_ID         INT          NOT NULL COMMENT '컬럼아이디' 
-,COL_NM         VARCHAR(40)  NOT NULL COMMENT '컬럼명' 
+,COL_ID         INT          NOT NULL COMMENT '컬럼아이디'
+,COL_NM         VARCHAR(40)  NOT NULL COMMENT '컬럼명'
 ,COL_HNM        VARCHAR(40)      NULL COMMENT '컬럼한글명'
 ,DATA_TYPE_DESC VARCHAR(30)      NULL COMMENT '데이터타입설명'
 ,NULLABLE       VARCHAR(10)      NULL COMMENT 'NULL'
-,PK             VARCHAR(10)      NULL COMMENT 'PK' 
-,DATA_TYPE_NM   VARCHAR(20)      NULL COMMENT '데이터타입명' 
+,PK             VARCHAR(10)      NULL COMMENT 'PK'
+,DATA_TYPE_NM   VARCHAR(20)      NULL COMMENT '데이터타입명'
 ,LEN            INT              NULL COMMENT '길이'
 ,DECIMAL_CNT    INT              NULL COMMENT '소수점수'
 ,COL_DESC       VARCHAR(1000)     NULL COMMENT '컬럼설명'
@@ -204,16 +223,16 @@ CREATE TABLE TDACM00081 (
 ;
 
 CREATE TABLE TDACM00082 (
- DB_NM          VARCHAR(10)  NOT NULL COMMENT 'DB명' 
+ DB_NM          VARCHAR(10)  NOT NULL COMMENT 'DB명'
 ,OWNER          VARCHAR(15)  NOT NULL COMMENT '소유자'
 ,TAB_NM         VARCHAR(40)  NOT NULL COMMENT '테이블명'
-,COL_ID         INT          NOT NULL COMMENT '컬럼아이디' 
-,COL_NM         VARCHAR(40)  NOT NULL COMMENT '컬럼명' 
+,COL_ID         INT          NOT NULL COMMENT '컬럼아이디'
+,COL_NM         VARCHAR(40)  NOT NULL COMMENT '컬럼명'
 ,COL_HNM        VARCHAR(40)      NULL COMMENT '컬럼한글명'
 ,DATA_TYPE_DESC VARCHAR(30)      NULL COMMENT '데이터타입설명'
 ,NULL_YN        CHAR(1)      NULL COMMENT '데이터타입설명'
-,PK_YN          CHAR(1)      NULL COMMENT '데이터타입설명' 
-,DATA_TYPE_NM   VARCHAR(20)      NULL COMMENT '데이터타입명' 
+,PK_YN          CHAR(1)      NULL COMMENT '데이터타입설명'
+,DATA_TYPE_NM   VARCHAR(20)      NULL COMMENT '데이터타입명'
 ,LEN            INT              NULL COMMENT '길이'
 ,DECIMAL_CNT    INT              NULL COMMENT '소수점수'
 ,COL_DESC       VARCHAR(200)     NULL COMMENT '컬럼설명'

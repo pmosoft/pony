@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-    
+
 /**
  *
  */
@@ -27,77 +27,35 @@ public class JdbcInfoCtrl {
     private JdbcInfoSrv jdbcInfoSrv;
 
     /**
-     * 코드목록 조회
-     */
-    @RequestMapping(value = "/dams/jdbc/selectJdbcInfoList")
-    public Map<String, Object> selectJdbcInfoList(@RequestBody JdbcInfo jdbcInfo) {
-        return jdbcInfoSrv.selectJdbcInfoList(jdbcInfo);
-    }
-
-    /**
-     * 코드등록목록 조회
-     */
-    @RequestMapping(value = "/dams/jdbc/selectJdbcInfoRegList")
-    public Map<String, Object> selectJdbcInfoRegList(@RequestParam Map<String, String> params) {
-        return jdbcInfoSrv.selectJdbcInfoRegList(params);
-    }   
-
-    /**
-     * 코드콤보 조회
-     */
-    @RequestMapping(value = "/dams/jdbc/selectJdbcInfoCombo")
-    public Map<String, Object> selectJdbcInfoCombo(@RequestParam Map<String, String> params) {
-        return jdbcInfoSrv.selectJdbcInfoCombo(params);
-    }   
-
-
-    /**
-     * 코드확장목록 조회
-     */
-    @RequestMapping(value = "/dams/jdbc/selectJdbcInfoExtList")
-    public Map<String, Object> selectJdbcInfoExtList(@RequestParam Map<String, String> params) {
-        return jdbcInfoSrv.selectJdbcInfoExtList(params);
-    }      
-    
-    /**
-     * 코드확장등록목록 조회
-     */
-    @RequestMapping(value = "/dams/jdbc/selectJdbcInfoExtRegList")
-    public Map<String, Object> selectJdbcInfoExtRegList(@RequestParam Map<String, String> params) {
-        return jdbcInfoSrv.selectJdbcInfoExtRegList(params);
-    }   
-    
-   
-    /**
-     * 코드 저장(Multi:json)
+     * JDBC 정보 저장
      */
     @RequestMapping(value = "/dams/jdbc/saveJdbcInfo")
-    public Map<String, Object> saveJdbcInfo(@RequestParam Map<String,String> params) {
-        return jdbcInfoSrv.saveJdbcInfo(params);
+    public Map<String, Object> saveJdbcInfo(@RequestBody JdbcInfo inVo) {
+        return jdbcInfoSrv.saveJdbcInfo(inVo);
     }
 
     /**
-     * 코드확장 저장(Multi:json)
+     * JDBC 정보 조회
      */
-    @RequestMapping(value = "/dams/jdbc/saveJdbcInfoExt")
-    public Map<String, Object> saveJdbcInfoExt(@RequestParam Map<String,String> params) {
-        return jdbcInfoSrv.saveJdbcInfoExt(params);
+    @RequestMapping(value = "/dams/jdbc/selectJdbcInfoList")
+    public Map<String, Object> selectJdbcInfoList(@RequestBody JdbcInfo inVo) {
+        return jdbcInfoSrv.selectJdbcInfoList(inVo);
     }
-    
+
     /**
-     * 코드 삭제(Multi:json)
+     * JDBC 정보 삭제
      */
     @RequestMapping(value = "/dams/jdbc/deleteJdbcInfo")
-    public Map<String, Object> deleteJdbcInfo(@RequestParam Map<String,String> params) {
-        return jdbcInfoSrv.deleteJdbcInfo(params);
+    public Map<String, Object> deleteJdbcInfo(@RequestBody JdbcInfo inVo) {
+        return jdbcInfoSrv.deleteJdbcInfo(inVo);
     }
 
     /**
-     * 코드확장 삭제(Multi:json)
+     * JDBC 연결 테스트
      */
-    @RequestMapping(value = "/dams/jdbc/deleteJdbcInfoExt")
-    public Map<String, Object> deleteJdbcInfoExt(@RequestParam Map<String,String> params) {
-        return jdbcInfoSrv.deleteJdbcInfoExt(params);
-    }   
-    
+    @RequestMapping(value = "/dams/jdbc/testJdbcInfo")
+    public Map<String, Object> testJdbcInfo(@RequestBody JdbcInfo inVo) {
+        return jdbcInfoSrv.testJdbcInfo(inVo);
+    }
+
 }

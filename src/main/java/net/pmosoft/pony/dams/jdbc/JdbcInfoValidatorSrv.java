@@ -3,12 +3,12 @@ package net.pmosoft.pony.dams.jdbc;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-                                                                                     
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.context.WebApplicationContext;
-                     
+
 //@SpringBootConfiguration
 //(classes=net.pmosoft.pony.FframeApplication.class)
 @WebAppConfiguration // 웹 컨텍스트 테스트 활성화
@@ -25,19 +25,15 @@ public class JdbcInfoValidatorSrv {
 
     //JdbcInfoDao JdbcInfoDao = webContext.getBean("JdbcInfoDao",JdbcInfoDao.class);
 
-    
-    public Map<String, String> validateSaveJdbcInfo(List<Map<String,String>> target) {
-    
+
+    public Map<String, String> validateSaveJdbcInfo(JdbcInfo inVo) {
+
 
 		//System.out.println("validateSaveJdbcInfo");
 
 		Map<String, String> errors = new HashMap<String, String>();
 		//System.out.println("validateSaveJdbcInfo11");
 
-        if (target.size() == 0) {
-            errors.put("errUsrMsg", "저장 정보가 없습니다.");
-        }    		
-		
 //		if (target.get("JdbcInfo_ID").length() < 5 || target.get("JdbcInfo_ID").length() > 15) {
 //			errors.put("errUsrMsg", "유저아이디를 5자리에서 14자리로 입력해 주시기 바랍니다.");
 //		} else if  (target.get("JdbcInfo_EMAIL").length() < 5 || target.get("JdbcInfo_EMAIL").length() > 15) {

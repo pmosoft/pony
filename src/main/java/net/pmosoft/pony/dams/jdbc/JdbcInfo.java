@@ -2,69 +2,45 @@ package net.pmosoft.pony.dams.jdbc;
 
 public class JdbcInfo {
 
-    String cdGrp     ; // 코드그룹  
-    String cdGrpNm   ; // 코드그룹명 
-    String cdId      ; // 코드아이디 
-    String cdIdNm    ; // 코드아이디명
-    String cd        ; // 코드    
-    String cdNm      ; // 코드명   
-    String cdDesc    ; // 코드설명  
-    String cdTyCd    ; // 코드유형코드
-    String regDtm    ; // 등록일시  
-    String regUsrId  ; // 등록자   
-    String updDtm    ; // 변경일시  
-    String updUsrId  ; // 변경자   
+    String jdbcNm  ;
+    String driver  ;
+    String url     ;
+    String usrId   ;
+    String usrPw   ;
+    String regDtm  ;
+    String regUsrId;
+    String updDtm  ;
+    String updUsrId;
 
-    String comboJdbcInfoId ; // [조회조건] 선택된 콤보 id 
-    String searchValue ; // [조회조건] 코드관련    
-    
-    public String getCdGrp() {
-        return cdGrp;
+    public String getJdbcNm() {
+        return jdbcNm;
     }
-    public void setCdGrp(String cdGrp) {
-        this.cdGrp = cdGrp;
+    public void setJdbcNm(String jdbcNm) {
+        this.jdbcNm = jdbcNm;
     }
-    public String getCdGrpNm() {
-        return cdGrpNm;
+    public String getDriver() {
+        return driver;
     }
-    public void setCdGrpNm(String cdGrpNm) {
-        this.cdGrpNm = cdGrpNm;
+    public void setDriver(String driver) {
+        this.driver = driver;
     }
-    public String getCdId() {
-        return cdId;
+    public String getUrl() {
+        return url;
     }
-    public void setCdId(String cdId) {
-        this.cdId = cdId;
+    public void setUrl(String url) {
+        this.url = url;
     }
-    public String getCdIdNm() {
-        return cdIdNm;
+    public String getUsrId() {
+        return usrId;
     }
-    public void setCdIdNm(String cdIdNm) {
-        this.cdIdNm = cdIdNm;
+    public void setUsrId(String usrId) {
+        this.usrId = usrId;
     }
-    public String getCd() {
-        return cd;
+    public String getUsrPw() {
+        return usrPw;
     }
-    public void setCd(String cd) {
-        this.cd = cd;
-    }
-    public String getCdNm() {
-        return cdNm;
-    }
-    public void setCdNm(String cdNm) {
-        this.cdNm = cdNm;
-    }
-    public String getCdDesc() {
-        return cdDesc;
-    }
-    public void setCdDesc(String cdDesc) {
-        this.cdDesc = cdDesc;
-    }
-    public String getCdTyCd() {
-        return cdTyCd;
-    }
-    public void setCdTyCd(String cdTyCd) {
-        this.cdTyCd = cdTyCd;
+    public void setUsrPw(String usrPw) {
+        this.usrPw = usrPw;
     }
     public String getRegDtm() {
         return regDtm;
@@ -90,17 +66,4 @@ public class JdbcInfo {
     public void setUpdUsrId(String updUsrId) {
         this.updUsrId = updUsrId;
     }
-    public String getComboJdbcInfoId() {
-        return comboJdbcInfoId;
-    }
-    public void setComboJdbcInfoId(String comboJdbcInfoId) {
-        this.comboJdbcInfoId = comboJdbcInfoId;
-    }
-    public String getSearchValue() {
-        return searchValue;
-    }
-    public void setSearchValue(String searchValue) {
-        this.searchValue = searchValue;
-    }
-
 }

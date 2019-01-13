@@ -43,6 +43,14 @@ public class JdbcInfoCtrl {
     }
 
     /**
+     * JDBC 콤보정보 조회
+     */
+    @RequestMapping(value = "/dams/jdbc/selectComboJdbcList")
+    public Map<String, Object> selectComboJdbcList(@RequestBody JdbcInfo inVo) {
+        return jdbcInfoSrv.selectComboJdbcList(inVo);
+    }
+
+    /**
      * JDBC 정보 삭제
      */
     @RequestMapping(value = "/dams/jdbc/deleteJdbcInfo")

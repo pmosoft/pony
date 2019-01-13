@@ -2,6 +2,14 @@ package net.pmosoft.pony.comm.util;
 
 public class StringUtil {
 
+   public static String padRight(String s, int n) {
+        return String.format("%1$-" + n + "s", s);
+   }
+
+   public static String padLeft(String s, int n) {
+       return String.format("%1$" + n + "s", s);
+   }
+
     /*
      *  토큰을 첫문자대문자 Camel로 변환
      * */

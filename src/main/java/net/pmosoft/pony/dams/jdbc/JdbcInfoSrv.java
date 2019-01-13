@@ -57,9 +57,14 @@ public class JdbcInfoSrv {
 
         try {
             List<JdbcInfo> jdbcInfoOutVoList = null;
-            jdbcInfoOutVoList = jdbcInfoDao.selectJdbcInfoList(jdbcInfo);;
+            jdbcInfoOutVoList = jdbcInfoDao.selectJdbcInfoList(jdbcInfo);
+
+            Gson gson = new Gson();
+            //System.out.println(gson.toJson(jdbcInfoOutVoList));
+
             result.put("isSuccess", true);
             result.put("jdbcInfoOutVoList", jdbcInfoOutVoList);
+            result.put("jdbcInfoOutVoJson", gson.toJson(jdbcInfoOutVoList));
         } catch (Exception e){
             result.put("isSuccess", false);
             result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
@@ -68,6 +73,33 @@ public class JdbcInfoSrv {
         }
         return result;
     }
+
+    public Map<String, Object> selectComboJdbcList(JdbcInfo jdbcInfo){
+
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        try {
+            List<JdbcInfo> jdbcInfoOutVoList = null;
+            jdbcInfoOutVoList = jdbcInfoDao.selectComboJdbcList(jdbcInfo);
+
+            Gson gson = new Gson();
+            //System.out.println(gson.toJson(jdbcInfoOutVoList));
+
+            result.put("isSuccess", true);
+            result.put("jdbcInfoOutVoList", jdbcInfoOutVoList);
+            result.put("jdbcInfoOutVoJson", gson.toJson(jdbcInfoOutVoList));
+        } catch (Exception e){
+            result.put("isSuccess", false);
+            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
+            result.put("errSysMsg", e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
+
+
 
     public Map<String, Object> deleteJdbcInfo(JdbcInfo inVo){
 

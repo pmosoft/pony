@@ -18,6 +18,8 @@
         ,REG_USR_ID
         ,UPD_DTM
         ,UPD_USR_ID
+        ,DRIVER AS ID
+        ,DRIVER AS NAME
     ) VALUES (
          #{jdbcNm}
         ,#{driver}
@@ -42,9 +44,42 @@
          , REG_USR_ID
          , UPD_DTM
          , UPD_USR_ID
+         , JDBC_NM       AS ID   -- combo id
+         , JDBC_NM       AS NAME -- combo name
     FROM   TDACM00010
     ORDER BY REG_DTM
 </select>
+
+<select id="selectJdbcInfo" parameterType="net.pmosoft.pony.dams.jdbc.JdbcInfo" resultType="net.pmosoft.pony.dams.jdbc.JdbcInfo">
+    -- JdbcInfoDao.selectJdbcInfo
+    SELECT JDBC_NM
+         , DRIVER
+         , URL
+         , USR_ID
+         , USR_PW
+         , REG_DTM
+         , REG_USR_ID
+         , UPD_DTM
+         , UPD_USR_ID
+         , JDBC_NM       AS ID   -- combo id
+         , JDBC_NM       AS NAME -- combo name
+    FROM   TDACM00010
+    WHERE  JDBC_NM = #{jdbcNm}
+    ORDER BY REG_DTM
+</select>
+
+
+<select id="selectComboJdbcList" parameterType="net.pmosoft.pony.dams.jdbc.JdbcInfo" resultType="net.pmosoft.pony.dams.jdbc.JdbcInfo">
+    -- JdbcInfoDao.selectJdbcInfoList
+    SELECT ' '   AS ID
+         , '선택(jdbc)' AS NAME
+    UNION ALL
+    SELECT JDBC_NM AS ID
+         , JDBC_NM AS NAME
+    FROM   TDACM00010
+    --ORDER BY REG_DTM
+</select>
+
 
 <select id="selectJdbcInfoCnt" parameterType="net.pmosoft.pony.dams.jdbc.JdbcInfo" resultType="int">
     -- JdbcInfoDao.selectJdbcInfoCnt

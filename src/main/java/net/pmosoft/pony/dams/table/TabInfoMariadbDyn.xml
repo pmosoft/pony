@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.pmosoft.pony.dams.table.TabInfoDao">
+
+<!--*******************************************************************************************************************
+**                                             (추출) 테이블정보 추출 및 저장
+********************************************************************************************************************-->
+
+<select id="selectMetaTabInfoList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="net.pmosoft.pony.dams.table.TabInfo">
+
+    -- TableDao.selectMetaTabInfoList
+    SELECT
+           '추출'                                                                              AS stsNm
+         , UPPER(#{condJdbcNm})                                                               AS jdbcNm
+         , UPPER(A.TABLE_SCHEMA)                                                              AS owner
+         , UPPER(A.TABLE_NAME)                                                                AS tabNm
+         , UPPER(B.TABLE_COMMENT)                                                             AS tabHnm
+         , A.ORDINAL_POSITION                                                                 AS colId
+         , A.COLUMN_NAME                                                                      AS colNm
+         , A.COLUMN_COMMENT                                                                   AS colHnm
+         , CASE WHEN UPPER(A.DATA_TYPE) = 'INT' THEN UPPER(A.DATA_TYPE)
+                ELSE UPPER(A.COLUMN_TYPE)
+           END                                                                                AS dataTypeDesc
+         , CASE WHEN IS_NULLABLE = 'NO' THEN 'NOT NULL' ELSE '' END                           AS nullable
+         , CASE WHEN A.COLUMN_KEY = 'PRI' THEN 'Y' ELSE '' END                                AS pk
+         , UPPER(A.DATA_TYPE)                                                                 AS dataTypeNm
+         , CASE WHEN UPPER(A.DATA_TYPE) IN ('CHAR','VARCHAR') THEN A.CHARACTER_MAXIMUM_LENGTH
+                WHEN UPPER(A.DATA_TYPE) IN ('INT','NUMERIC') THEN A.NUMERIC_PRECISION
+           END                                                                                AS len
+         , A.NUMERIC_SCALE                                                                    AS decimalCnt
+         , B.TABLE_ROWS                                                                       AS tabRows
+         , DATE_FORMAT(B.CREATE_TIME,'%Y%m%d')                                                AS tabRegDt
+         , DATE_FORMAT(B.CREATE_TIME,'%Y-%m-%d')                                              AS tabRegDt2
+         , DATE_FORMAT(B.UPDATE_TIME,'%Y%m%d')                                                AS tabUpdDt
+         , DATE_FORMAT(B.UPDATE_TIME,'%Y-%m-%d')                                              AS tabUpdDt2
+         , DATE_FORMAT(NOW(),'%Y%m%d%H%i')                                                    AS regDtm
+         , ''                                                                                 AS regUsrId
+         , DATE_FORMAT(NOW(),'%Y%m%d%H%i')                                                    AS updDtm
+         , ''                                                                                 AS updUsrId
+    FROM   INFORMATION_SCHEMA.COLUMNS A
+         , INFORMATION_SCHEMA.TABLES B
+    WHERE  A.TABLE_SCHEMA = B.TABLE_SCHEMA
+    AND    A.TABLE_NAME   = B.TABLE_NAME
+    AND    A.TABLE_SCHEMA LIKE CONCAT(CONCAT('%',UPPER(#{condOwner})),'%')
+    AND    A.TABLE_NAME   LIKE CONCAT(CONCAT('%',UPPER(#{condTabNm})),'%')
+    ORDER BY A.TABLE_NAME,A.ORDINAL_POSITION
+
+</select>
+
+</mapper>

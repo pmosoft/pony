@@ -59,12 +59,12 @@ public class JdbcInfoSrv {
             List<JdbcInfo> jdbcInfoOutVoList = null;
             jdbcInfoOutVoList = jdbcInfoDao.selectJdbcInfoList(jdbcInfo);
 
-            Gson gson = new Gson();
+            //Gson gson = new Gson();
             //System.out.println(gson.toJson(jdbcInfoOutVoList));
 
             result.put("isSuccess", true);
             result.put("jdbcInfoOutVoList", jdbcInfoOutVoList);
-            result.put("jdbcInfoOutVoJson", gson.toJson(jdbcInfoOutVoList));
+            //result.put("jdbcInfoOutVoJson", gson.toJson(jdbcInfoOutVoList));
         } catch (Exception e){
             result.put("isSuccess", false);
             result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
@@ -74,13 +74,12 @@ public class JdbcInfoSrv {
         return result;
     }
 
-    public Map<String, Object> selectComboJdbcList(JdbcInfo jdbcInfo){
+    public Map<String, Object> selectComboJdbcList(JdbcInfo inVo){
 
         Map<String, Object> result = new HashMap<String, Object>();
 
         try {
-            List<JdbcInfo> jdbcInfoOutVoList = null;
-            jdbcInfoOutVoList = jdbcInfoDao.selectComboJdbcList(jdbcInfo);
+            List<JdbcInfo> jdbcInfoOutVoList = jdbcInfoDao.selectJdbcInfoList(inVo);
 
             Gson gson = new Gson();
             //System.out.println(gson.toJson(jdbcInfoOutVoList));
@@ -96,9 +95,6 @@ public class JdbcInfoSrv {
         }
         return result;
     }
-
-
-
 
 
     public Map<String, Object> deleteJdbcInfo(JdbcInfo inVo){
@@ -122,7 +118,7 @@ public class JdbcInfoSrv {
         Map<String, Object> result = new HashMap<String, Object>();
 
         try {
-            jdbcInfoDao.deleteJdbcInfo(inVo);
+            List<JdbcInfo> jdbcInfoOutVoList = jdbcInfoDao.selectJdbcInfoList(inVo);
             result.put("isSuccess", true);
         } catch (Exception e){
             result.put("isSuccess", false);

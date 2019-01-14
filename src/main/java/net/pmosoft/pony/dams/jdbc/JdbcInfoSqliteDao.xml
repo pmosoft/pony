@@ -18,8 +18,6 @@
         ,REG_USR_ID
         ,UPD_DTM
         ,UPD_USR_ID
-        ,DRIVER AS ID
-        ,DRIVER AS NAME
     ) VALUES (
          #{jdbcNm}
         ,#{driver}
@@ -71,7 +69,7 @@
 
 <select id="selectComboJdbcList" parameterType="net.pmosoft.pony.dams.jdbc.JdbcInfo" resultType="net.pmosoft.pony.dams.jdbc.JdbcInfo">
     -- JdbcInfoDao.selectJdbcInfoList
-    SELECT ' '   AS ID
+    SELECT ''   AS ID
          , '선택(jdbc)' AS NAME
     UNION ALL
     SELECT JDBC_NM AS ID

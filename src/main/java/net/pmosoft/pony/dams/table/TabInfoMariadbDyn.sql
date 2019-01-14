@@ -18,7 +18,9 @@
                 WHEN UPPER(A.DATA_TYPE) IN ('INT','NUMERIC') THEN A.NUMERIC_PRECISION
            END                                                            AS LEN
          , A.NUMERIC_SCALE                                                AS DECIMAL_CNT
-         , ' '                                                            AS COL_DESC
+         , B.TABLE_ROWS                                                   AS TAB_ROWS
+         , DATE_FORMAT(B.CREATE_TIME,'%Y%m%d')                           AS TAB_REG_DT
+         , DATE_FORMAT(B.UPDATE_TIME,'%Y%m%d')                           AS TAB_UPD_DT
          , DATE_FORMAT(NOW(),'%Y%m%d%H%i')                                AS REG_DTM
          , ''                                                             AS REG_USR_ID
          , DATE_FORMAT(NOW(),'%Y%m%d%H%i')                                AS UPD_DTM
@@ -32,6 +34,8 @@
 
 
 
+    SELECT * FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_SCHEMA = 'push'
 
             //원본쿼리 : net.pmosoft.pony.dams.table.TabMariadbDao.xml - insertMetaTabColList
             qry  = "--                                                                  \n";

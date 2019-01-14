@@ -9,55 +9,45 @@ import org.apache.ibatis.annotations.Mapper;
 public interface TabInfoDao {
 
     /**********************************************************************************
-    *
-    *                                 MetaTabInfo
-    *
+    *                              MetaTabInfo 조회후 임시테이블 저장
     **********************************************************************************/
-    List<TabInfo> selectMetaTabInfoList(TabInfo inVo);
-    List<Map<String, Object>> selectCmpTabColList(Map<String,String> params);
-
-    void insertMetaTabCol(Map<String, Object> params);
-    void insertCmpTabCol(Map<String,String> params);
-
-    void deleteMetaTabCol(Map<String,String> params);
+    List<TabInfo> selectMetaTabInfoList(TabInfo inVo); // 범용
+    void deleteMetaTabInfo(TabInfo inVo);
+    void insertMetaTabInfo(TabInfo inVo);
 
     /**********************************************************************************
-    *
-    *                                   MetaTab
-    *
+    *                                       비교
     **********************************************************************************/
-
-    int selectMetaTabCnt(Map<String,Object> params);
-
-    //net.pmosoft.pony.dams.table.dynamic.TabMariadbDao 에서 처리
-    //List<Map<String, Object>> selectMetaTabList(Map<String,String> params);
-    void insertMetaTab(Map<String,Object> params);
-
-    void deleteMetaTab(Map<String,String> params);
-    void insertCmpTab(Map<String,String> params);
+    List<TabInfo> selectCmpTabInfoList(TabInfo inVo);
 
     /**********************************************************************************
-     *
-     *                                  TabCol
-     *
-     **********************************************************************************/
-    List<Map<String, Object>> selectTabColList(Map<String,String> params);
-    int selectTabColCnt(Map<String,String> params);
-    void insertTabCol(Map<String,String> params);
-    void updateTabCol(Map<String,String> params);
-    void deleteTabCol(Map<String, String> params);
+    *                                       저장
+    **********************************************************************************/
+    void insertCmpTabInfo(TabInfo inVo);
 
-	/**********************************************************************************
-	 *
-	 *                                  Tab
-	 *
-	 **********************************************************************************/
-	List<Map<String, Object>> selectTabList(Map<String,String> params);
-	int selectTabCnt(Map<String,String> params);
-	void insertTab(Map<String,String> params);
-	void updateTab(Map<String,String> params);
-    void deleteTab(List<Map<String, String>> params);
+    /**********************************************************************************
+    *                                       조회
+    **********************************************************************************/
+    List<TabInfo> selectTabInfoList(TabInfo inVo);
 
+    //
+//    int selectMetaTabCnt(Map<String,Object> params);
+//
+//    /**********************************************************************************
+//     *
+//     *                                     TabCol
+//     *
+//     **********************************************************************************/
+//    List<Map<String, Object>> selectTabColList(Map<String,String> params);
+//    int selectTabColCnt(Map<String,String> params);
+//
+//	/**********************************************************************************
+//	 *
+//	 *                                  Tab
+//	 *
+//	 **********************************************************************************/
+//	List<Map<String, Object>> selectTabList(Map<String,String> params);
+//	int selectTabCnt(Map<String,String> params);
 
 }
 

@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.pmosoft.pony.dams.table.TabInfoDao">
+
+<!--*******************************************************************************************************************
+**                                             (추출) 테이블정보 추출 및 저장
+********************************************************************************************************************-->
+
+<select id="selectMetaTabInfoList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="net.pmosoft.pony.dams.table.TabInfo">
+
+    -- TableDao.selectMetaTabInfoList
+    SELECT
+           '추출'                                                                              AS stsNm
+         , UPPER(#{condJdbcNm})                                                               AS jdbcNm
+         , UPPER(A.TABLE_SCHEMA)                                                              AS owner
+         , UPPER(A.TABLE_NAME)                                                                AS tabNm
+         , UPPER(B.TABLE_COMMENT)                                                             AS tabHnm
+         , A.ORDINAL_POSITION                                                                 AS colId
+         , A.COLUMN_NAME                                                                      AS colNm
+         , A.COLUMN_COMMENT                                                                   AS colHnm
+         , CASE WHEN UPPER(A.DATA_TYPE) = 'INT' THEN UPPER(A.DATA_TYPE)
+                ELSE UPPER(A.COLUMN_TYPE)
+           END                                                                                AS dataTypeDesc
+         , CASE WHEN IS_NULLABLE = 'NO' THEN 'NOT NULL' ELSE '' END                           AS nullable
+         , CASE WHEN A.COLUMN_KEY = 'PRI' THEN 'Y' ELSE '' END                                AS pk
+         , UPPER(A.DATA_TYPE)                                                                 AS dataTypeNm
+         , CASE WHEN UPPER(A.DATA_TYPE) IN ('CHAR','VARCHAR') THEN A.CHARACTER_MAXIMUM_LENGTH
+                WHEN UPPER(A.DATA_TYPE) IN ('INT','NUMERIC') THEN A.NUMERIC_PRECISION
+           END                                                                                AS len
+         , A.NUMERIC_SCALE                                                                    AS decimalCnt
+         , B.TABLE_ROWS                                                                       AS tabRows
+         , DATE_FORMAT(B.CREATE_TIME,'%Y%m%d')                                                AS tabRegDt
+         , DATE_FORMAT(B.CREATE_TIME,'%Y-%m-%d')                                              AS tabRegDt2
+         , DATE_FORMAT(B.UPDATE_TIME,'%Y%m%d')                                                AS tabUpdDt
+         , DATE_FORMAT(B.UPDATE_TIME,'%Y-%m-%d')                                              AS tabUpdDt2
+         , DATE_FORMAT(NOW(),'%Y%m%d%H%i')                                                    AS regDtm
+         , ''                                                                                 AS regUsrId
+         , DATE_FORMAT(NOW(),'%Y%m%d%H%i')                                                    AS updDtm
+         , ''                                                                                 AS updUsrId
+    FROM   INFORMATION_SCHEMA.COLUMNS A
+         , INFORMATION_SCHEMA.TABLES B
+    WHERE  A.TABLE_SCHEMA = B.TABLE_SCHEMA
+    AND    A.TABLE_NAME   = B.TABLE_NAME
+    AND    A.TABLE_SCHEMA LIKE CONCAT(CONCAT('%',UPPER(#{condOwner})),'%')
+    AND    A.TABLE_NAME   LIKE CONCAT(CONCAT('%',UPPER(#{condTabNm})),'%')
+    ORDER BY A.TABLE_NAME,A.ORDINAL_POSITION
+
+</select>
+
+<delete id="deleteMetaTabInfo" parameterType="net.pmosoft.pony.dams.table.TabInfo">
+    -- TableDao.deleteMetaTabInfo
+    DELETE FROM TDACM00081
+</delete>
+
+<insert id="insertMetaTabInfo" parameterType="net.pmosoft.pony.dams.table.TabInfo">
+
+    -- TableDao.insertMetaTabInfo
+    INSERT INTO TDACM00081
+    (
+         JDBC_NM
+        ,OWNER
+        ,TAB_NM
+        ,TAB_HNM
+        ,COL_ID
+        ,COL_NM
+        ,COL_HNM
+        ,DATA_TYPE_DESC
+        ,NULLABLE
+        ,PK
+        ,DATA_TYPE_NM
+        ,LEN
+        ,DECIMAL_CNT
+        ,TAB_ROWS
+        ,TAB_REG_DT
+        ,TAB_REG_DT2
+        ,TAB_UPD_DT
+        ,TAB_UPD_DT2
+        ,REG_DTM
+        ,REG_USR_ID
+        ,UPD_DTM
+        ,UPD_USR_ID
+    )
+    SELECT
+         #{jdbcNm}                                                           AS JDBC_NM
+        ,#{owner}                                                            AS OWNER
+        ,#{tabNm}                                                            AS TAB_NM
+        ,#{tabHnm}                                                           AS TAB_HNM
+        ,CAST(#{colId} AS INT)                                               AS COL_ID
+        ,#{colNm}                                                            AS COL_NM
+        ,#{colHnm}                                                           AS COL_HNM
+        ,#{dataTypeDesc}                                                     AS DATA_TYPE_DESC
+        ,#{nullable}                                                         AS NULLABLE
+        ,#{pk}                                                               AS PK
+        ,#{dataTypeNm}                                                       AS DATA_TYPE_NM
+        ,CASE WHEN #{len} IN ('',NULL) THEN 0 ELSE #{len} END                AS LEN
+        ,CASE WHEN #{decimalCnt} IN ('',NULL) THEN 0 ELSE #{decimalCnt} END  AS DECIMAL_CNT
+        ,CAST(#{tabRows} AS INT)                                             AS TAB_ROWS
+        ,#{tabRegDt}                                                         AS TAB_REG_DT
+        ,#{tabRegDt2}                                                        AS TAB_REG_DT2
+        ,#{tabRegDt}                                                         AS TAB_UPD_DT
+        ,#{tabUpdDt2}                                                        AS TAB_UPD_DT2
+        ,#{regDtm}                                                           AS REG_DTM
+        ,#{regUsrId}                                                         AS REG_USR_ID
+        ,#{updDtm}                                                           AS UPD_DTM
+        ,#{updUsrId}                                                         AS UPD_USR_ID
+</insert>
+
+<!--*******************************************************************************************************************
+**                                             (비교)
+********************************************************************************************************************-->
+
+<select id="selectCmpTabInfoList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="net.pmosoft.pony.dams.table.TabInfo">
+    -- TableDao.selectCmpTabInfoList
+    SELECT
+           A.STS_NM
+         , A.JDBC_NM
+         , A.OWNER
+         , A.TAB_NM
+         , A.TAB_HNM
+         , A.COL_ID
+         , A.COL_NM
+         , A.COL_HNM
+         , A.DATA_TYPE_DESC
+         , A.NULLABLE
+         , A.PK
+         , A.DATA_TYPE_NM
+         , A.LEN
+         , A.DECIMAL_CNT
+         , A.TAB_ROWS
+         , A.TAB_REG_DT
+         , A.TAB_REG_DT2
+         , A.TAB_UPD_DT
+         , A.TAB_UPD_DT2
+         , A.REG_DTM
+         , A.REG_USR_ID
+         , A.UPD_DTM
+         , A.UPD_USR_ID
+    FROM  (
+           SELECT '신규' AS STS_NM,A.*
+           FROM   TDACM00081 A
+                  LEFT OUTER JOIN TDACM00080 B
+                  ON   A.JDBC_NM = B.JDBC_NM
+                  AND  A.OWNER = B.OWNER
+                  AND  A.TAB_NM = B.TAB_NM
+                  AND  A.COL_NM = B.COL_NM
+           WHERE  A.JDBC_NM = UPPER(#{condJdbcNm})
+           AND    A.OWNER = UPPER(#{condOwner})
+           AND    B.COL_NM IS NULL
+           UNION ALL
+           SELECT '삭제' AS STS_NM,A.*
+           FROM   TDACM00080 A
+                  LEFT OUTER JOIN TDACM00081 B
+                  ON   A.JDBC_NM = B.JDBC_NM
+                  AND  A.OWNER = B.OWNER
+                  AND  A.TAB_NM = B.TAB_NM
+                  AND  A.COL_NM = B.COL_NM
+           WHERE  A.JDBC_NM = UPPER(#{condJdbcNm})
+           AND    A.OWNER = UPPER(#{condOwner})
+           AND    B.COL_NM IS NULL
+           UNION ALL
+           SELECT '타입변경' AS STS_NM,A.*
+           FROM   TDACM00081 A
+                  INNER JOIN TDACM00080 B
+                  ON   A.JDBC_NM = B.JDBC_NM
+                  AND  A.OWNER = B.OWNER
+                  AND  A.TAB_NM = B.TAB_NM
+                  AND  A.COL_NM = B.COL_NM
+                  AND  A.JDBC_NM = UPPER(#{condJdbcNm})
+                  AND  A.OWNER = UPPER(#{condOwner})
+                  AND  B.JDBC_NM = UPPER(#{condJdbcNm})
+                  AND  B.OWNER = UPPER(#{condOwner})
+           WHERE  A.DATA_TYPE_DESC != B.DATA_TYPE_DESC
+           UNION ALL
+           SELECT '널변경' AS STS_NM,A.*
+           FROM   TDACM00081 A
+                  INNER JOIN TDACM00080 B
+                  ON   A.JDBC_NM = B.JDBC_NM
+                  AND  A.OWNER = B.OWNER
+                  AND  A.TAB_NM = B.TAB_NM
+                  AND  A.COL_NM = B.COL_NM
+                  AND  A.DATA_TYPE_DESC = A.DATA_TYPE_DESC
+                  AND  A.JDBC_NM = UPPER(#{condJdbcNm})
+                  AND  A.OWNER = UPPER(#{condOwner})
+                  AND  B.JDBC_NM = UPPER(#{condJdbcNm})
+                  AND  B.OWNER = UPPER(#{condOwner})
+           WHERE  A.NULLABLE != B.NULLABLE
+          ) A
+    ORDER BY A.TAB_NM,A.COL_ID
+
+</select>
+
+
+<!--*******************************************************************************************************************
+**                                             (저장)
+********************************************************************************************************************-->
+
+
+<insert id="insertCmpTabInfo" parameterType="net.pmosoft.pony.dams.table.TabInfo">
+    -- TableDao.insertCmpTabInfo
+    INSERT INTO TDACM00080
+    SELECT A.*
+    FROM   TDACM00081 A
+           LEFT OUTER JOIN TDACM00080 B
+           ON   A.JDBC_NM = B.JDBC_NM
+           AND  A.OWNER = B.OWNER
+           AND  A.TAB_NM = B.TAB_NM
+           AND  A.COL_NM = B.COL_NM
+           AND  A.COL_HNM = B.COL_HNM
+           AND  A.DATA_TYPE_DESC = B.DATA_TYPE_DESC
+    WHERE  B.COL_NM IS NULL
+    ORDER BY A.TAB_NM,A.COL_ID
+</insert>
+
+<!--*******************************************************************************************************************
+**                                             (조회)
+********************************************************************************************************************-->
+
+<select id="selectTabInfoList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="net.pmosoft.pony.dams.table.TabInfo">
+    -- TableDao.selectTabInfoList
+    SELECT
+           '등록' AS STS_NM
+         , A.JDBC_NM
+         , A.OWNER
+         , A.TAB_NM
+         , A.TAB_HNM
+         , A.COL_ID
+         , A.COL_NM
+         , A.COL_HNM
+         , A.DATA_TYPE_DESC
+         , A.NULLABLE
+         , A.PK
+         , A.DATA_TYPE_NM
+         , A.LEN
+         , A.DECIMAL_CNT
+         , A.TAB_ROWS
+         , A.TAB_REG_DT
+         , A.TAB_REG_DT2
+         , A.TAB_UPD_DT
+         , A.TAB_UPD_DT2
+         , A.REG_DTM
+         , A.REG_USR_ID
+         , A.UPD_DTM
+         , A.UPD_USR_ID
+    FROM   TDACM00080 A
+    WHERE  A.JDBC_NM LIKE ('%'||UPPER(#{condJdbcNm})||'%')
+    AND    A.OWNER LIKE ('%'||UPPER(#{condOwner})||'%')
+    ORDER BY A.JDBC_NM,A.OWNER,A.TAB_NM,A.COL_ID
+</select>
+
+<!--*******************************************************************************************************************
+**                                             (삭제)
+********************************************************************************************************************-->
+<delete id="deleteTabCol" parameterType="net.pmosoft.pony.dams.table.TabInfo">
+    DELETE FROM TDACM00080
+    WHERE  JDBC_NM = UPPER(#{condJdbcNm})
+    AND    OWNER   = UPPER(#{condOwner})
+</delete>
+
+<select id="selectTabColList" parameterType="java.util.LinkedHashMap" resultType="java.util.LinkedHashMap">
+    -- TableDao.selectTabColList
+    SELECT   A.JDBC_NM
+            ,A.OWNER
+            ,A.TAB_NM
+            ,B.TAB_HNM
+            ,A.COL_ID
+            ,A.COL_NM
+            ,A.COL_HNM
+            ,A.DATA_TYPE_DESC
+            ,A.NULLABLE
+            ,A.PK
+            ,A.DATA_TYPE_NM
+            ,A.LEN
+            ,A.DECIMAL_CNT
+            ,TRIM(A.COL_DESC) AS COL_DESC
+            ,DATE_FORMAT(A.REG_DTM,'%Y.%m.%d %H:%i:%S') AS REG_DTM
+            ,A.REG_USR_ID
+            ,DATE_FORMAT(A.UPD_DTM,'%Y.%m.%d %H:%i:%S') AS UPD_DTM
+            ,A.UPD_USR_ID
+    FROM    TDACM00080 A
+            LEFT JOIN TDACM00070 B
+            ON  A.JDBC_NM = B.JDBC_NM
+            AND A.OWNER = B.OWNER
+            AND A.TAB_NM = B.TAB_NM
+    WHERE   1=1
+    AND     A.JDBC_NM        LIKE CONCAT(CONCAT('%',#{DB_CONN_CD_NM}),'%')
+    AND  (
+          (#{tabChk} = 'false' AND #{searchKeyCombo} = 'JDBC_NM'        AND A.JDBC_NM    LIKE CONCAT(CONCAT('%',#{searchValue}),'%'))
+           OR
+          (#{tabChk} = 'false' AND #{searchKeyCombo} = 'OWNER'        AND A.OWNER        LIKE CONCAT(CONCAT('%',#{searchValue}),'%'))
+           OR
+          (#{tabChk} = 'false' AND #{searchKeyCombo} = 'TAB_NM'       AND A.TAB_NM       LIKE CONCAT(CONCAT('%',#{searchValue}),'%'))
+           OR
+          (#{tabChk} = 'false' AND #{searchKeyCombo} = 'TAB_HNM'      AND B.TAB_HNM      LIKE CONCAT(CONCAT('%',#{searchValue}),'%'))
+           OR
+          (#{tabChk} = 'false' AND #{searchKeyCombo} = 'COL_NM'       AND A.COL_NM       LIKE CONCAT(CONCAT('%',#{searchValue}),'%'))
+           OR
+          (#{tabChk} = 'false' AND #{searchKeyCombo} = 'COL_HNM'      AND A.COL_HNM      LIKE CONCAT(CONCAT('%',#{searchValue}),'%'))
+           OR
+          (#{tabChk} = 'false' AND #{searchKeyCombo} = 'DATA_TYPE_NM' AND A.DATA_TYPE_NM LIKE CONCAT(CONCAT('%',#{searchValue}),'%'))
+           OR
+          (#{tabChk} = 'true' AND #{searchKeyCombo} = 'COL_NM' AND A.TAB_NM IN (SELECT TAB_NM FROM TDACM00080 WHERE COL_NM LIKE CONCAT(CONCAT('%',#{searchValue}),'%')))
+           OR
+          (#{tabChk} = 'true' AND #{searchKeyCombo} = 'COL_HNM' AND A.TAB_NM IN (SELECT TAB_NM FROM TDACM00080 WHERE COL_HNM LIKE CONCAT(CONCAT('%',#{searchValue}),'%')))
+         )
+    ORDER BY A.JDBC_NM,OWNER,A.TAB_NM,A.COL_ID
+</select>
+
+
+
+
+
+</mapper>

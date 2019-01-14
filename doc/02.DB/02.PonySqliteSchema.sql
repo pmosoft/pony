@@ -170,16 +170,17 @@ CREATE TABLE TDACM00071 (
 
 
 ------------------------------
--- 컬럼정보
+-- 테이블정보
 ------------------------------
 DROP TABLE TDACM00080
 ;
 
-
+-- COMMENT '테이블정보'
 CREATE TABLE TDACM00080 (
- DB_NM          VARCHAR(10)  NOT NULL -- COMMENT 'DB명'
+ JDBC_NM        VARCHAR(10)  NOT NULL -- COMMENT 'JDBC명'
 ,OWNER          VARCHAR(15)  NOT NULL -- COMMENT '소유자'
 ,TAB_NM         VARCHAR(40)  NOT NULL -- COMMENT '테이블명'
+,TAB_HNM        VARCHAR(40)      NULL -- COMMENT '테이블한글명'
 ,COL_ID         INT          NOT NULL -- COMMENT '컬럼아이디'
 ,COL_NM         VARCHAR(40)  NOT NULL -- COMMENT '컬럼명'
 ,COL_HNM        VARCHAR(40)      NULL -- COMMENT '컬럼한글명'
@@ -189,12 +190,16 @@ CREATE TABLE TDACM00080 (
 ,DATA_TYPE_NM   VARCHAR(20)      NULL -- COMMENT '데이터타입명'
 ,LEN            INT              NULL -- COMMENT '길이'
 ,DECIMAL_CNT    INT              NULL -- COMMENT '소수점수'
-,COL_DESC       VARCHAR(1000)    NULL -- COMMENT '컬럼설명'
+,TAB_ROWS       INT              NULL -- COMMENT '테이블건수'
+,TAB_REG_DT     VARCHAR(8)       NULL -- COMMENT '테이블등록일자'
+,TAB_REG_DT2    VARCHAR(10)      NULL -- COMMENT '테이블등록일자2'
+,TAB_UPD_DT     VARCHAR(8)       NULL -- COMMENT '테이블변경일자'
+,TAB_UPD_DT2    VARCHAR(10)      NULL -- COMMENT '테이블변경일자2'
 ,REG_DTM        VARCHAR(14)      NULL -- COMMENT '등록일시'
 ,REG_USR_ID     VARCHAR(20)      NULL -- COMMENT '등록자'
 ,UPD_DTM        VARCHAR(14)      NULL -- COMMENT '변경일시'
 ,UPD_USR_ID     VARCHAR(20)      NULL -- COMMENT '변경자'
-,PRIMARY KEY(DB_NM,OWNER,TAB_NM,COL_NM)
+,PRIMARY KEY(JDBC_NM,OWNER,TAB_NM,COL_NM)
 )
 ;
 
@@ -202,43 +207,28 @@ DROP TABLE TDACM00081
 ;
 
 CREATE TABLE TDACM00081 (
- DB_NM          VARCHAR(10)  NOT NULL COMMENT 'DB명'
-,OWNER          VARCHAR(15)  NOT NULL COMMENT '소유자'
-,TAB_NM         VARCHAR(40)  NOT NULL COMMENT '테이블명'
-,COL_ID         INT          NOT NULL COMMENT '컬럼아이디'
-,COL_NM         VARCHAR(40)  NOT NULL COMMENT '컬럼명'
-,COL_HNM        VARCHAR(40)      NULL COMMENT '컬럼한글명'
-,DATA_TYPE_DESC VARCHAR(30)      NULL COMMENT '데이터타입설명'
-,NULLABLE       VARCHAR(10)      NULL COMMENT 'NULL'
-,PK             VARCHAR(10)      NULL COMMENT 'PK'
-,DATA_TYPE_NM   VARCHAR(20)      NULL COMMENT '데이터타입명'
-,LEN            INT              NULL COMMENT '길이'
-,DECIMAL_CNT    INT              NULL COMMENT '소수점수'
-,COL_DESC       VARCHAR(1000)     NULL COMMENT '컬럼설명'
-,REG_DTM        VARCHAR(14)      NULL COMMENT '등록일시'
-,REG_USR_ID     VARCHAR(20)      NULL COMMENT '등록자'
-,UPD_DTM        VARCHAR(14)      NULL COMMENT '변경일시'
-,UPD_USR_ID     VARCHAR(20)      NULL COMMENT '변경자'
-) ENGINE=INNODB DEFAULT CHARSET=UTF8 COMMENT='컬럼추출정보'
-;
-
-CREATE TABLE TDACM00082 (
- DB_NM          VARCHAR(10)  NOT NULL COMMENT 'DB명'
-,OWNER          VARCHAR(15)  NOT NULL COMMENT '소유자'
-,TAB_NM         VARCHAR(40)  NOT NULL COMMENT '테이블명'
-,COL_ID         INT          NOT NULL COMMENT '컬럼아이디'
-,COL_NM         VARCHAR(40)  NOT NULL COMMENT '컬럼명'
-,COL_HNM        VARCHAR(40)      NULL COMMENT '컬럼한글명'
-,DATA_TYPE_DESC VARCHAR(30)      NULL COMMENT '데이터타입설명'
-,NULL_YN        CHAR(1)      NULL COMMENT '데이터타입설명'
-,PK_YN          CHAR(1)      NULL COMMENT '데이터타입설명'
-,DATA_TYPE_NM   VARCHAR(20)      NULL COMMENT '데이터타입명'
-,LEN            INT              NULL COMMENT '길이'
-,DECIMAL_CNT    INT              NULL COMMENT '소수점수'
-,COL_DESC       VARCHAR(200)     NULL COMMENT '컬럼설명'
-,REG_DTM        VARCHAR(14)      NULL COMMENT '등록일시'
-,REG_USR_ID     VARCHAR(20)      NULL COMMENT '등록자'
-,UPD_DTM        VARCHAR(14)      NULL COMMENT '변경일시'
-,UPD_USR_ID     VARCHAR(20)      NULL COMMENT '변경자'
-) ENGINE=INNODB DEFAULT CHARSET=UTF8 COMMENT='컬럼추출정보'
+ JDBC_NM        VARCHAR(10)  NOT NULL -- COMMENT 'JDBC명'
+,OWNER          VARCHAR(15)  NOT NULL -- COMMENT '소유자'
+,TAB_NM         VARCHAR(40)  NOT NULL -- COMMENT '테이블명'
+,TAB_HNM        VARCHAR(40)      NULL -- COMMENT '테이블한글명'
+,COL_ID         INT          NOT NULL -- COMMENT '컬럼아이디'
+,COL_NM         VARCHAR(40)  NOT NULL -- COMMENT '컬럼명'
+,COL_HNM        VARCHAR(40)      NULL -- COMMENT '컬럼한글명'
+,DATA_TYPE_DESC VARCHAR(30)      NULL -- COMMENT '데이터타입설명'
+,NULLABLE       VARCHAR(10)      NULL -- COMMENT 'NULL'
+,PK             VARCHAR(10)      NULL -- COMMENT 'PK'
+,DATA_TYPE_NM   VARCHAR(20)      NULL -- COMMENT '데이터타입명'
+,LEN            INT              NULL -- COMMENT '길이'
+,DECIMAL_CNT    INT              NULL -- COMMENT '소수점수'
+,TAB_ROWS       INT              NULL -- COMMENT '테이블건수'
+,TAB_REG_DT     VARCHAR(8)       NULL -- COMMENT '테이블등록일자'
+,TAB_REG_DT2    VARCHAR(10)      NULL -- COMMENT '테이블등록일자2'
+,TAB_UPD_DT     VARCHAR(8)       NULL -- COMMENT '테이블변경일자'
+,TAB_UPD_DT2    VARCHAR(10)      NULL -- COMMENT '테이블변경일자2'
+,REG_DTM        VARCHAR(14)      NULL -- COMMENT '등록일시'
+,REG_USR_ID     VARCHAR(20)      NULL -- COMMENT '등록자'
+,UPD_DTM        VARCHAR(14)      NULL -- COMMENT '변경일시'
+,UPD_USR_ID     VARCHAR(20)      NULL -- COMMENT '변경자'
+,PRIMARY KEY(JDBC_NM,OWNER,TAB_NM,COL_NM)
+)
 ;

@@ -16,13 +16,21 @@ public class TabInfo {
     String dataTypeNm   ;
     String len          ;
     String decimalCnt   ;
-    String colDesc      ;
+    String tabRows      ;
+    String tabRegDt     ;
+    String tabRegDt2    ;
+    String tabUpdDt     ;
+    String tabUpdDt2    ;
     String regDtm       ;
+    String regUsrId     ;
+    String updDtm       ;
+    String updUsrId     ;
 
     // 조회조건
     String condJdbcNm; //[조회조건] jdbc명
     String condOwner ; //[조회조건] 소유자
     String condTabNm ; //[조회조건] 테이블명
+
     public String getStsNm() {
         return stsNm;
     }
@@ -107,11 +115,23 @@ public class TabInfo {
     public void setDecimalCnt(String decimalCnt) {
         this.decimalCnt = decimalCnt;
     }
-    public String getColDesc() {
-        return colDesc;
+    public String getTabRows() {
+        return tabRows;
     }
-    public void setColDesc(String colDesc) {
-        this.colDesc = colDesc;
+    public void setTabRows(String tabRows) {
+        this.tabRows = tabRows;
+    }
+    public String getTabRegDt() {
+        return tabRegDt;
+    }
+    public void setTabRegDt(String tabRegDt) {
+        this.tabRegDt = tabRegDt;
+    }
+    public String getTabUpdDt() {
+        return tabUpdDt;
+    }
+    public void setTabUpdDt(String tabUpdDt) {
+        this.tabUpdDt = tabUpdDt;
     }
     public String getRegDtm() {
         return regDtm;
@@ -137,6 +157,35 @@ public class TabInfo {
     public void setCondTabNm(String condTabNm) {
         this.condTabNm = condTabNm;
     }
-
+    public String getTabRegDt2() {
+        return tabRegDt2;
+    }
+    public void setTabRegDt2(String tabRegDt2) {
+        this.tabRegDt2 = tabRegDt2;
+    }
+    public String getTabUpdDt2() {
+        return tabUpdDt2;
+    }
+    public void setTabUpdDt2(String tabUpdDt2) {
+        this.tabUpdDt2 = tabUpdDt2;
+    }
+    public String getRegUsrId() {
+        return regUsrId;
+    }
+    public void setRegUsrId(String regUsrId) {
+        this.regUsrId = regUsrId;
+    }
+    public String getUpdDtm() {
+        return updDtm;
+    }
+    public void setUpdDtm(String updDtm) {
+        this.updDtm = updDtm;
+    }
+    public String getUpdUsrId() {
+        return updUsrId;
+    }
+    public void setUpdUsrId(String updUsrId) {
+        this.updUsrId = updUsrId;
+    }
 
 }

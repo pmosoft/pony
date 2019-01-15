@@ -26,11 +26,6 @@ public class TabInfo {
     String updDtm       ;
     String updUsrId     ;
 
-    // 조회조건
-    String condJdbcNm; //[조회조건] jdbc명
-    String condOwner ; //[조회조건] 소유자
-    String condTabNm ; //[조회조건] 테이블명
-
     public String getStsNm() {
         return stsNm;
     }
@@ -138,24 +133,6 @@ public class TabInfo {
     }
     public void setRegDtm(String regDtm) {
         this.regDtm = regDtm;
-    }
-    public String getCondJdbcNm() {
-        return condJdbcNm;
-    }
-    public void setCondJdbcNm(String condJdbcNm) {
-        this.condJdbcNm = condJdbcNm;
-    }
-    public String getCondOwner() {
-        return condOwner;
-    }
-    public void setCondOwner(String condOwner) {
-        this.condOwner = condOwner;
-    }
-    public String getCondTabNm() {
-        return condTabNm;
-    }
-    public void setCondTabNm(String condTabNm) {
-        this.condTabNm = condTabNm;
     }
     public String getTabRegDt2() {
         return tabRegDt2;

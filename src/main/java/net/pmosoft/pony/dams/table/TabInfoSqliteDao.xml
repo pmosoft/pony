@@ -14,7 +14,7 @@
     -- TableDao.selectMetaTabInfoList
     SELECT
            '추출'                                                                              AS stsNm
-         , UPPER(#{condJdbcNm})                                                               AS jdbcNm
+         , UPPER(#{jdbcNm})                                                               AS jdbcNm
          , UPPER(A.TABLE_SCHEMA)                                                              AS owner
          , UPPER(A.TABLE_NAME)                                                                AS tabNm
          , UPPER(B.TABLE_COMMENT)                                                             AS tabHnm
@@ -44,8 +44,8 @@
          , INFORMATION_SCHEMA.TABLES B
     WHERE  A.TABLE_SCHEMA = B.TABLE_SCHEMA
     AND    A.TABLE_NAME   = B.TABLE_NAME
-    AND    A.TABLE_SCHEMA LIKE CONCAT(CONCAT('%',UPPER(#{condOwner})),'%')
-    AND    A.TABLE_NAME   LIKE CONCAT(CONCAT('%',UPPER(#{condTabNm})),'%')
+    AND    A.TABLE_SCHEMA LIKE CONCAT(CONCAT('%',UPPER(#{owner})),'%')
+    AND    A.TABLE_NAME   LIKE CONCAT(CONCAT('%',UPPER(#{tabNm})),'%')
     ORDER BY A.TABLE_NAME,A.ORDINAL_POSITION
 
 </select>
@@ -146,8 +146,8 @@
                   AND  A.OWNER = B.OWNER
                   AND  A.TAB_NM = B.TAB_NM
                   AND  A.COL_NM = B.COL_NM
-           WHERE  A.JDBC_NM = UPPER(#{condJdbcNm})
-           AND    A.OWNER = UPPER(#{condOwner})
+           WHERE  A.JDBC_NM = UPPER(#{jdbcNm})
+           AND    A.OWNER = UPPER(#{owner})
            AND    B.COL_NM IS NULL
            UNION ALL
            SELECT '삭제' AS STS_NM,A.*
@@ -157,8 +157,8 @@
                   AND  A.OWNER = B.OWNER
                   AND  A.TAB_NM = B.TAB_NM
                   AND  A.COL_NM = B.COL_NM
-           WHERE  A.JDBC_NM = UPPER(#{condJdbcNm})
-           AND    A.OWNER = UPPER(#{condOwner})
+           WHERE  A.JDBC_NM = UPPER(#{jdbcNm})
+           AND    A.OWNER = UPPER(#{owner})
            AND    B.COL_NM IS NULL
            UNION ALL
            SELECT '타입변경' AS STS_NM,A.*
@@ -168,10 +168,10 @@
                   AND  A.OWNER = B.OWNER
                   AND  A.TAB_NM = B.TAB_NM
                   AND  A.COL_NM = B.COL_NM
-                  AND  A.JDBC_NM = UPPER(#{condJdbcNm})
-                  AND  A.OWNER = UPPER(#{condOwner})
-                  AND  B.JDBC_NM = UPPER(#{condJdbcNm})
-                  AND  B.OWNER = UPPER(#{condOwner})
+                  AND  A.JDBC_NM = UPPER(#{jdbcNm})
+                  AND  A.OWNER = UPPER(#{owner})
+                  AND  B.JDBC_NM = UPPER(#{jdbcNm})
+                  AND  B.OWNER = UPPER(#{owner})
            WHERE  A.DATA_TYPE_DESC != B.DATA_TYPE_DESC
            UNION ALL
            SELECT '널변경' AS STS_NM,A.*
@@ -182,10 +182,10 @@
                   AND  A.TAB_NM = B.TAB_NM
                   AND  A.COL_NM = B.COL_NM
                   AND  A.DATA_TYPE_DESC = A.DATA_TYPE_DESC
-                  AND  A.JDBC_NM = UPPER(#{condJdbcNm})
-                  AND  A.OWNER = UPPER(#{condOwner})
-                  AND  B.JDBC_NM = UPPER(#{condJdbcNm})
-                  AND  B.OWNER = UPPER(#{condOwner})
+                  AND  A.JDBC_NM = UPPER(#{jdbcNm})
+                  AND  A.OWNER = UPPER(#{owner})
+                  AND  B.JDBC_NM = UPPER(#{jdbcNm})
+                  AND  B.OWNER = UPPER(#{owner})
            WHERE  A.NULLABLE != B.NULLABLE
           ) A
     ORDER BY A.TAB_NM,A.COL_ID
@@ -245,8 +245,8 @@
          , A.UPD_DTM
          , A.UPD_USR_ID
     FROM   TDACM00080 A
-    WHERE  A.JDBC_NM LIKE ('%'||UPPER(#{condJdbcNm})||'%')
-    AND    A.OWNER LIKE ('%'||UPPER(#{condOwner})||'%')
+    WHERE  A.JDBC_NM LIKE ('%'||UPPER(#{jdbcNm})||'%')
+    AND    A.OWNER LIKE ('%'||UPPER(#{owner})||'%')
     ORDER BY A.JDBC_NM,A.OWNER,A.TAB_NM,A.COL_ID
 </select>
 
@@ -255,8 +255,8 @@
 ********************************************************************************************************************-->
 <delete id="deleteTabCol" parameterType="net.pmosoft.pony.dams.table.TabInfo">
     DELETE FROM TDACM00080
-    WHERE  JDBC_NM = UPPER(#{condJdbcNm})
-    AND    OWNER   = UPPER(#{condOwner})
+    WHERE  JDBC_NM = UPPER(#{jdbcNm})
+    AND    OWNER   = UPPER(#{owner})
 </delete>
 
 <select id="selectTabColList" parameterType="java.util.LinkedHashMap" resultType="java.util.LinkedHashMap">

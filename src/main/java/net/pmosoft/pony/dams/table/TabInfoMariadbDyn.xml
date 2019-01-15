@@ -14,7 +14,7 @@
     -- TableDao.selectMetaTabInfoList
     SELECT
            '추출'                                                                              AS stsNm
-         , UPPER(#{condJdbcNm})                                                               AS jdbcNm
+         , UPPER(#{jdbcNm})                                                               AS jdbcNm
          , UPPER(A.TABLE_SCHEMA)                                                              AS owner
          , UPPER(A.TABLE_NAME)                                                                AS tabNm
          , UPPER(B.TABLE_COMMENT)                                                             AS tabHnm
@@ -44,8 +44,8 @@
          , INFORMATION_SCHEMA.TABLES B
     WHERE  A.TABLE_SCHEMA = B.TABLE_SCHEMA
     AND    A.TABLE_NAME   = B.TABLE_NAME
-    AND    A.TABLE_SCHEMA LIKE CONCAT(CONCAT('%',UPPER(#{condOwner})),'%')
-    AND    A.TABLE_NAME   LIKE CONCAT(CONCAT('%',UPPER(#{condTabNm})),'%')
+    AND    A.TABLE_SCHEMA LIKE CONCAT(CONCAT('%',UPPER(#{owner})),'%')
+    AND    A.TABLE_NAME   LIKE CONCAT(CONCAT('%',UPPER(#{tabNm})),'%')
     ORDER BY A.TABLE_NAME,A.ORDINAL_POSITION
 
 </select>

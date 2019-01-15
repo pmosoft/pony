@@ -14,7 +14,7 @@
     -- TableDao.selectMetaTabInfoList(ORACLE)
     SELECT
            '추출'                                                                                               as stsnm
-         , UPPER(#{condJdbcNm})                                                                                as jdbcnm
+         , UPPER(#{jdbcNm})                                                                                as jdbcnm
          , A.OWNER                                                                                             as owner
          , A.TABLE_NAME                                                                                        as tabNm
          , D.COMMENTS                                                                                          as tabHnm
@@ -47,9 +47,9 @@
            SYS.ALL_OBJECTS      E,
           (SELECT OWNER,TABLE_NAME,COLUMN_NAME
            FROM   SYS.USER_CONS_COLUMNS
-           WHERE  OWNER = #{condOwner}
+           WHERE  OWNER = #{owner}
            AND    CONSTRAINT_NAME IN (SELECT CONSTRAINT_NAME FROM SYS.USER_CONSTRAINTS
-                                      WHERE OWNER=#{condOwner} AND CONSTRAINT_TYPE = 'P')
+                                      WHERE OWNER=#{owner} AND CONSTRAINT_TYPE = 'P')
            ) F
    WHERE  A.OWNER       = B.OWNER
    AND    A.TABLE_NAME  = B.TABLE_NAME
@@ -65,8 +65,8 @@
    AND    A.COLUMN_NAME = F.COLUMN_NAME(+)
    AND    D.TABLE_TYPE  = 'TABLE'
    AND    E.OBJECT_TYPE = 'TABLE'
-   AND    A.OWNER       = #{condOwner}
-   AND    A.TABLE_NAME LIKE '%'||#{condTabNm}||'%'
+   AND    A.OWNER       = #{owner}
+   AND    A.TABLE_NAME LIKE '%'||#{tabNm}||'%'
    ORDER BY A.TABLE_NAME,A.COLUMN_ID
 
 </select>

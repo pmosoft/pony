@@ -12,9 +12,6 @@ public class JdbcInfo {
     String updDtm  ;
     String updUsrId;
 
-    String id  ; // 콤보 ID
-    String name; // 콤보 Name
-
 
     public String getJdbcNm() {
         return jdbcNm;
@@ -70,16 +67,5 @@ public class JdbcInfo {
     public void setUpdUsrId(String updUsrId) {
         this.updUsrId = updUsrId;
     }
-    public String getId() {
-        return id;
-    }
-    public void setId(String id) {
-        this.id = id;
-    }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
+
 }

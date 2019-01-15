@@ -58,7 +58,7 @@ public class TabInfoSrv {
     **********************************************************************************/
     private SqlSession sqlSession(TabInfo inVo){
 
-        JdbcInfo jdbcInfo = new JdbcInfo(); jdbcInfo.setJdbcNm(inVo.getCondJdbcNm());
+        JdbcInfo jdbcInfo = new JdbcInfo(); jdbcInfo.setJdbcNm(inVo.getJdbcNm());
         JdbcInfo jdbcVo = jdbcInfoDao.selectJdbcInfo(jdbcInfo);
         //daoClassPath = (String) codeList.get(0).get("CD_PARAM1");
 

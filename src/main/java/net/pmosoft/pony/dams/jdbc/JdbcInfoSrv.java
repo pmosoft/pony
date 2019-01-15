@@ -1,6 +1,5 @@
 package net.pmosoft.pony.dams.jdbc;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+
+import net.pmosoft.pony.dams.table.TabInfo;
+import net.pmosoft.pony.dams.table.TabInfoDao;
+import net.pmosoft.pony.dams.table.TabInfoSrv;
 
 
 @Service
@@ -21,6 +23,8 @@ public class JdbcInfoSrv {
     @Autowired
     private JdbcInfoValidatorSrv jdbcInfoValidatorSrv;
 
+    @Autowired
+    private TabInfoSrv tabInfoSrv;
 
     public Map<String, Object> saveJdbcInfo(JdbcInfo inVo){
 
@@ -112,22 +116,4 @@ public class JdbcInfoSrv {
         }
         return result;
     }
-
-    public Map<String, Object> testJdbcInfo(JdbcInfo inVo){
-
-        Map<String, Object> result = new HashMap<String, Object>();
-
-        try {
-            List<JdbcInfo> jdbcInfoOutVoList = jdbcInfoDao.selectJdbcInfoList(inVo);
-            result.put("isSuccess", true);
-        } catch (Exception e){
-            result.put("isSuccess", false);
-            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
-            result.put("errSysMsg", e.getMessage());
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-
 }

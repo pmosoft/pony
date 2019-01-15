@@ -43,7 +43,7 @@ import net.pmosoft.pony.dams.table.dynamic.TabDaoFactory;
 public class TabInfoSrv {
 
     @Autowired
-    private TabInfoDao tabDao;
+    private TabInfoDao tabInfoDao;
 
     @Autowired
     private JdbcInfoDao jdbcInfoDao;
@@ -106,11 +106,11 @@ public class TabInfoSrv {
             //System.out.println("tabInfoOutVoList="+tabInfoOutVoList.get(1).getColNm());
 
             // 2단계 : 메타테이블컬럼정보 삭제
-            tabDao.deleteMetaTabInfo(inVo);
+            tabInfoDao.deleteMetaTabInfo(inVo);
 
             // 3단계 : 메타테이블컬럼정보 삽입
             for (int i = 0; i  < tabInfoOutVoList.size(); i++) {
-                tabDao.insertMetaTabInfo(tabInfoOutVoList.get(i));
+                tabInfoDao.insertMetaTabInfo(tabInfoOutVoList.get(i));
             }
 
             result.put("isSuccess", true);
@@ -133,7 +133,7 @@ public class TabInfoSrv {
         Map<String, Object> result = new HashMap<String, Object>();
 
         try{
-            List<TabInfo> tabInfoOutVoList = tabDao.selectCmpTabInfoList(inVo);;
+            List<TabInfo> tabInfoOutVoList = tabInfoDao.selectCmpTabInfoList(inVo);;
             result.put("isSuccess", true);
             result.put("tabInfoOutVoList", tabInfoOutVoList);
         } catch (Exception e){
@@ -153,7 +153,7 @@ public class TabInfoSrv {
         Map<String, Object> result = new HashMap<String, Object>();
 
         try{
-            tabDao.insertCmpTabInfo(inVo);
+            tabInfoDao.insertCmpTabInfo(inVo);
             result.put("isSuccess", true);
             result.put("usrMsg", "입력 되었습니다");
         } catch (Exception e){
@@ -173,7 +173,7 @@ public class TabInfoSrv {
         Map<String, Object> result = new HashMap<String, Object>();
 
         try{
-            List<TabInfo> tabInfoOutVoList = tabDao.selectTabInfoList(inVo);
+            List<TabInfo> tabInfoOutVoList = tabInfoDao.selectTabInfoList(inVo);
             result.put("isSuccess", true);
             result.put("tabInfoOutVoList", tabInfoOutVoList);
         } catch (Exception e){
@@ -193,7 +193,7 @@ public class TabInfoSrv {
         Map<String, Object> result = new HashMap<String, Object>();
 
         try{
-            List<TabInfo> tabInfoOutVoList = tabDao.selectTabList(inVo);
+            List<TabInfo> tabInfoOutVoList = tabInfoDao.selectTabList(inVo);
             //System.out.println(tabInfoOutVoList.size());
             result.put("isSuccess", true);
             result.put("tabInfoOutVoList", tabInfoOutVoList);
@@ -214,7 +214,7 @@ public class TabInfoSrv {
         Map<String, Object> result = new HashMap<String, Object>();
 
         try{
-            List<TabInfo> tabInfoOutVoList = tabDao.selectColList(inVo);
+            List<TabInfo> tabInfoOutVoList = tabInfoDao.selectColList(inVo);
             result.put("isSuccess", true);
             result.put("tabInfoOutVoList", tabInfoOutVoList);
         } catch (Exception e){
@@ -226,14 +226,33 @@ public class TabInfoSrv {
         return result;
     }
 
+    /*
+     * (테스트) 커넥션 테스트
+     * @param jdbcNm,owner,tabNm
+     * */
+    public Map<String, Object> testJdbcInfo(TabInfo inVo){
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        try{
+            List<TabInfo> tabInfoOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectMetaTabInfoList(inVo);
+            result.put("isSuccess", true);
+            result.put("tabInfoOutVoList", tabInfoOutVoList);
+        } catch (Exception e){
+            result.put("isSuccess", false);
+            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
+            result.put("errSysMsg", e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
 
 //    public Map<String, Object> selectInsertData(Map<String,String> params){
 //
 //        Map<String, Object> result = new HashMap<String, Object>();
 //        try{
-//            //TabDaoFactory tabDaoFactory = (TabDaoFactory) Class.forName("net.pmosoft.pony.dams.table.dynamic.TabMariaDbDao").newInstance();
-//            TabDaoFactory tabDaoFactory = (TabDaoFactory) Class.forName( findDao(params) ).newInstance();
-//            String list = tabDaoFactory.selectInsertData(params);
+//            //TabDaoFactory tabInfoDaoFactory = (TabDaoFactory) Class.forName("net.pmosoft.pony.dams.table.dynamic.TabMariaDbDao").newInstance();
+//            TabDaoFactory tabInfoDaoFactory = (TabDaoFactory) Class.forName( findDao(params) ).newInstance();
+//            String list = tabInfoDaoFactory.selectInsertData(params);
 //
 //            result.put("isSuccess", true);
 //            result.put("data", list);
@@ -274,7 +293,7 @@ public class TabInfoSrv {
 //        Map<String, Object> result = new HashMap<String, Object>();
 //
 //        try{
-//            List<Map<String,Object>> list = tabDao.selectTabColList(params);;
+//            List<Map<String,Object>> list = tabInfoDao.selectTabColList(params);;
 //            result.put("isSuccess", true);
 //            result.put("data", list);
 //        } catch (Exception e){
@@ -291,7 +310,7 @@ public class TabInfoSrv {
 //        Map<String, Object> result = new HashMap<String, Object>();
 //
 //        try{
-//            List<Map<String,Object>> list = tabDao.selectTabList(params);;
+//            List<Map<String,Object>> list = tabInfoDao.selectTabList(params);;
 //            result.put("isSuccess", true);
 //            result.put("data", list);
 //        } catch (Exception e){
@@ -314,9 +333,9 @@ public class TabInfoSrv {
 //        System.out.println("paramsaaaaaaaaaaaaaaaaaaaaaaaaaa="+params);
 //
 //        try{
-//            //TabDaoFactory tabDaoFactory = (TabDaoFactory) Class.forName("net.pmosoft.pony.dams.table.dynamic.TabMariaDbDao").newInstance();
-//            TabDaoFactory tabDaoFactory = (TabDaoFactory) Class.forName( findDao(params) ).newInstance();
-//            List<Map<String,Object>> list = tabDaoFactory.selectTabData(params);
+//            //TabDaoFactory tabInfoDaoFactory = (TabDaoFactory) Class.forName("net.pmosoft.pony.dams.table.dynamic.TabMariaDbDao").newInstance();
+//            TabDaoFactory tabInfoDaoFactory = (TabDaoFactory) Class.forName( findDao(params) ).newInstance();
+//            List<Map<String,Object>> list = tabInfoDaoFactory.selectTabData(params);
 //
 //            result.put("isSuccess", true);
 //            result.put("data", list);
@@ -334,9 +353,9 @@ public class TabInfoSrv {
 //        Map<String, Object> result = new HashMap<String, Object>();
 //
 //        try{
-//            //TabDaoFactory tabDaoFactory = (TabDaoFactory) Class.forName("net.pmosoft.pony.dams.table.dynamic.TabMariaDbDao").newInstance();
-//            TabDaoFactory tabDaoFactory = (TabDaoFactory) Class.forName( findDao(params) ).newInstance();
-//            List<Map<String,Object>> list = tabDaoFactory.selectQryData(params);
+//            //TabDaoFactory tabInfoDaoFactory = (TabDaoFactory) Class.forName("net.pmosoft.pony.dams.table.dynamic.TabMariaDbDao").newInstance();
+//            TabDaoFactory tabInfoDaoFactory = (TabDaoFactory) Class.forName( findDao(params) ).newInstance();
+//            List<Map<String,Object>> list = tabInfoDaoFactory.selectQryData(params);
 //
 //            result.put("isSuccess", true);
 //            result.put("data", list);
@@ -355,9 +374,9 @@ public class TabInfoSrv {
 //
 //
 //        try{
-//            //TabDaoFactory tabDaoFactory = (TabDaoFactory) Class.forName("net.pmosoft.pony.dams.table.dynamic.TabMariaDbDao").newInstance();
-//            TabDaoFactory tabDaoFactory = (TabDaoFactory) Class.forName( findDao(params) ).newInstance();
-//            List<Map<String,Object>> list = tabDaoFactory.selectCsvData(params);
+//            //TabDaoFactory tabInfoDaoFactory = (TabDaoFactory) Class.forName("net.pmosoft.pony.dams.table.dynamic.TabMariaDbDao").newInstance();
+//            TabDaoFactory tabInfoDaoFactory = (TabDaoFactory) Class.forName( findDao(params) ).newInstance();
+//            List<Map<String,Object>> list = tabInfoDaoFactory.selectCsvData(params);
 //
 //            result.put("isSuccess", true);
 //            result.put("data", list);
@@ -390,19 +409,19 @@ public class TabInfoSrv {
 //            List<Map<String,Object>> listParams  = gson.fromJson(data, type);
 //
 //            // 1.단계 : 메타테이블컬럼정보 삭제
-//            tabDao.deleteMetaTabCol(params);
+//            tabInfoDao.deleteMetaTabCol(params);
 //
 //            // 2단계 : 메타테이블컬럼정보 삽입
 //            for (int i = 0; i  < listParams.size(); i++) {
-//                tabDao.insertMetaTabCol(listParams.get(i));
+//                tabInfoDao.insertMetaTabCol(listParams.get(i));
 //            }
 //
 //            // 3단계 : 메타테이블정보 삽입
-//            tabDao.deleteMetaTab(params);
+//            tabInfoDao.deleteMetaTab(params);
 //
 //            for (int i = 0; i  < listParams.size(); i++) {
-//                if  (tabDao.selectMetaTabCnt(listParams.get(i))==0) {
-//                    tabDao.insertMetaTab(listParams.get(i));
+//                if  (tabInfoDao.selectMetaTabCnt(listParams.get(i))==0) {
+//                    tabInfoDao.insertMetaTab(listParams.get(i));
 //                }
 //            }
 //

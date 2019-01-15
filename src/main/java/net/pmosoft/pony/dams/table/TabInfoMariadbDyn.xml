@@ -11,7 +11,7 @@
 
 <select id="selectMetaTabInfoList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="net.pmosoft.pony.dams.table.TabInfo">
 
-    -- TableDao.selectMetaTabInfoList
+    -- TableDao.selectMetaTabInfoList(MARIADB)
     SELECT
            '추출'                                                                              AS stsNm
          , UPPER(#{jdbcNm})                                                               AS jdbcNm

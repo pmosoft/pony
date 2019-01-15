@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.pmosoft.pony.dams.jdbc.JdbcInfo;
+
 /**
  * 테이블에 모든 정보에 이쪽으로 모았지만, 추후 하부 패키지로 나눌수 있으며
  * 현재 하부 패키지 구조를 주석으로 표현했다.(2018-04-14 피승현)
@@ -19,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TabInfoCtrl {
 
     @Autowired
-    private TabInfoSrv tabSrv;
+    private TabInfoSrv tabInfoSrv;
 
     /**********************************************************************************
     *
@@ -34,7 +36,7 @@ public class TabInfoCtrl {
      * */
     @RequestMapping(value = "/dams/table/selectMetaTabInfoList")
     public Map<String, Object> selectMetaTabInfoList(@RequestBody TabInfo inVo) {
-        return tabSrv.selectMetaTabInfoList(inVo);
+        return tabInfoSrv.selectMetaTabInfoList(inVo);
     }
 
      /**
@@ -42,7 +44,7 @@ public class TabInfoCtrl {
      */
     @RequestMapping(value = "/dams/table/selectCmpTabInfoList")
     public Map<String, Object> selectCmpTabInfoList(@RequestBody TabInfo inVo) {
-        return tabSrv.selectCmpTabInfoList(inVo);
+        return tabInfoSrv.selectCmpTabInfoList(inVo);
     }
 
      /**
@@ -50,7 +52,7 @@ public class TabInfoCtrl {
      */
     @RequestMapping(value = "/dams/table/saveCmpTabInfoList")
     public Map<String, Object> insertCmpTabInfoList(@RequestBody TabInfo inVo) {
-        return tabSrv.saveCmpTabInfoList(inVo);
+        return tabInfoSrv.saveCmpTabInfoList(inVo);
     }
 
     /**
@@ -58,7 +60,7 @@ public class TabInfoCtrl {
     */
     @RequestMapping(value = "/dams/table/selectTabInfoList")
     public Map<String, Object> selectTabInfoList(@RequestBody TabInfo inVo) {
-        return tabSrv.selectTabInfoList(inVo);
+        return tabInfoSrv.selectTabInfoList(inVo);
     }
 
     /**
@@ -66,7 +68,7 @@ public class TabInfoCtrl {
     */
     @RequestMapping(value = "/dams/table/selectTabList")
     public Map<String, Object> selectTabList(@RequestBody TabInfo inVo) {
-        return tabSrv.selectTabList(inVo);
+        return tabInfoSrv.selectTabList(inVo);
     }
 
     /**
@@ -74,8 +76,18 @@ public class TabInfoCtrl {
     */
     @RequestMapping(value = "/dams/table/selectColList")
     public Map<String, Object> selectColList(@RequestBody TabInfo inVo) {
-        return tabSrv.selectColList(inVo);
+        return tabInfoSrv.selectColList(inVo);
     }
+
+    /**
+     * JDBC 연결 테스트
+     */
+    @RequestMapping(value = "/dams/table/testJdbcInfo")
+    public Map<String, Object> testJdbcInfo(@RequestBody TabInfo inVo) {
+        return tabInfoSrv.testJdbcInfo(inVo);
+    }
+
+
 
 //    /* (개발중) 테이블 스크립트 리턴(메타정보 이용)
 //     * */
@@ -97,7 +109,7 @@ public class TabInfoCtrl {
 //    @RequestMapping(value = "/dams/table/selectQryData")
 //    public Map<String, Object>  selectQryData(@RequestParam Map<String,String> params){
 //        System.out.println("params="+params);
-//        return tabSrv.selectQryData(params);
+//        return tabInfoSrv.selectQryData(params);
 //    }
 //
 //    /**********************************************************************************
@@ -112,7 +124,7 @@ public class TabInfoCtrl {
 //     * */
 //    @RequestMapping(value = "/dams/table/selectInsertData")
 //    public Map<String, Object> selectInsertData(@RequestParam Map<String,String> params){
-//        return tabSrv.selectInsertData(params);
+//        return tabInfoSrv.selectInsertData(params);
 //    }
 //
 //
@@ -122,7 +134,7 @@ public class TabInfoCtrl {
 //     * */
 //    @RequestMapping(value = "/dams/table/selectMetaLodScript")
 //    public Map<String, Object> selectMetaLodScript(@RequestParam Map<String,String> params) {
-//        return tabSrv.selectTabList(params);
+//        return tabInfoSrv.selectTabList(params);
 //    }
 //
 //    /*
@@ -131,7 +143,7 @@ public class TabInfoCtrl {
 //     * */
 //    @RequestMapping(value = "/dams/table/downloadCsvData")
 //    public Map<String, Object>  selectCsvData(@RequestParam Map<String,String> params){
-//        return tabSrv.selectCsvData(params);
+//        return tabInfoSrv.selectCsvData(params);
 //    }
 //
 //
@@ -150,7 +162,7 @@ public class TabInfoCtrl {
 //    @RequestMapping(value = "/dams/table/selectTabColList")
 //    public Map<String, Object> selectTabColList(@RequestParam Map<String,String> params) {
 //        System.out.println(params);
-//        return tabSrv.selectTabColList(params);
+//        return tabInfoSrv.selectTabColList(params);
 //    }
 //
 //    /*
@@ -160,7 +172,7 @@ public class TabInfoCtrl {
 //     * */
 //    @RequestMapping(value = "/dams/table/saveTabCol")
 //    public Map<String, Object> saveTabCol(@RequestParam String params) {
-//        return tabSrv.saveTabCol(params);
+//        return tabInfoSrv.saveTabCol(params);
 //    }
 //
 //    /*
@@ -170,7 +182,7 @@ public class TabInfoCtrl {
 //     * */
 //    @RequestMapping(value = "/dams/table/deleteTabCol")
 //    public Map<String, Object> deleteTabCol(@RequestParam Map<String,String> params) {
-//        return tabSrv.deleteTabCol(params);
+//        return tabInfoSrv.deleteTabCol(params);
 //    }
 //
 //    /*
@@ -180,7 +192,7 @@ public class TabInfoCtrl {
 //     * */
 //    @RequestMapping(value = "/dams/table/selectTabList")
 //    public Map<String, Object> selectTabList(@RequestParam Map<String,String> params) {
-//        return tabSrv.selectTabList(params);
+//        return tabInfoSrv.selectTabList(params);
 //    }
 //
 //    /*
@@ -190,7 +202,7 @@ public class TabInfoCtrl {
 //     * */
 //    @RequestMapping(value = "/dams/table/saveTab")
 //    public Map<String, Object> saveTab(@RequestParam Map<String,String> params) {
-//        return tabSrv.saveTab(params);
+//        return tabInfoSrv.saveTab(params);
 //    }
 //
 //    /*
@@ -200,7 +212,7 @@ public class TabInfoCtrl {
 //     * */
 //    @RequestMapping(value = "/dams/table/deleteTab")
 //    public Map<String, Object> deleteTab(@RequestParam Map<String,String> params) {
-//        return tabSrv.deleteTab(params);
+//        return tabInfoSrv.deleteTab(params);
 //    }
 //
 //    /*
@@ -210,7 +222,7 @@ public class TabInfoCtrl {
 //     * */
 //    @RequestMapping(value = "/dams/table/selectTabData")
 //    public Map<String, Object>  selectTabData(@RequestParam Map<String,String> params){
-//        return tabSrv.selectTabData(params);
+//        return tabInfoSrv.selectTabData(params);
 //    }
 //
 
@@ -226,7 +238,7 @@ public class TabInfoCtrl {
 //     */
 //    @RequestMapping(value = "/dams/table/insertExcelTabColList")
 //    public Map<String, Object> insertExcelTabColList(@RequestParam Map<String,String> params) {
-//        return tabSrv.insertExcelTabColList(params);
+//        return tabInfoSrv.insertExcelTabColList(params);
 //    }
 
 }

@@ -58,12 +58,4 @@ public class JdbcInfoCtrl {
         return jdbcInfoSrv.deleteJdbcInfo(inVo);
     }
 
-    /**
-     * JDBC 연결 테스트
-     */
-    @RequestMapping(value = "/dams/jdbc/testJdbcInfo")
-    public Map<String, Object> testJdbcInfo(@RequestBody JdbcInfo inVo) {
-        return jdbcInfoSrv.testJdbcInfo(inVo);
-    }
-
 }

@@ -173,7 +173,7 @@ public class TabInfoSrv {
         Map<String, Object> result = new HashMap<String, Object>();
 
         try{
-            List<TabInfo> tabInfoOutVoList = tabDao.selectTabInfoList(inVo);;
+            List<TabInfo> tabInfoOutVoList = tabDao.selectTabInfoList(inVo);
             result.put("isSuccess", true);
             result.put("tabInfoOutVoList", tabInfoOutVoList);
         } catch (Exception e){
@@ -185,7 +185,46 @@ public class TabInfoSrv {
         return result;
     }
 
+    /**
+    * (조회)
+    */
+    public Map<String, Object> selectTabList(TabInfo inVo){
 
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        try{
+            List<TabInfo> tabInfoOutVoList = tabDao.selectTabList(inVo);
+            //System.out.println(tabInfoOutVoList.size());
+            result.put("isSuccess", true);
+            result.put("tabInfoOutVoList", tabInfoOutVoList);
+        } catch (Exception e){
+            result.put("isSuccess", false);
+            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
+            result.put("errSysMsg", e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+    * (조회)
+    */
+    public Map<String, Object> selectColList(TabInfo inVo){
+
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        try{
+            List<TabInfo> tabInfoOutVoList = tabDao.selectColList(inVo);
+            result.put("isSuccess", true);
+            result.put("tabInfoOutVoList", tabInfoOutVoList);
+        } catch (Exception e){
+            result.put("isSuccess", false);
+            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
+            result.put("errSysMsg", e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
 
 
 //    public Map<String, Object> selectInsertData(Map<String,String> params){

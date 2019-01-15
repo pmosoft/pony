@@ -65,13 +65,17 @@
 
 <select id="selectComboJdbcList" parameterType="net.pmosoft.pony.dams.jdbc.JdbcInfo" resultType="net.pmosoft.pony.dams.jdbc.JdbcInfo">
     -- JdbcInfoDao.selectJdbcInfoList
-    SELECT ''   AS ID
-         , '선택(jdbc)' AS NAME
+    SELECT '선택(jdbc)' AS JDBC_NM
+         , ''          AS DRIVER
+         , ''          AS URL
+         , ''          AS USR_ID
+         , ''          AS USR_PW
+         , ''          AS REG_DTM
+         , ''          AS REG_USR_ID
+         , ''          AS UPD_DTM
+         , ''          AS UPD_USR_ID
     UNION ALL
-    SELECT JDBC_NM AS ID
-         , JDBC_NM AS NAME
-    FROM   TDACM00010
-    --ORDER BY REG_DTM
+    SELECT * FROM (SELECT * FROM TDACM00010 ORDER BY REG_DTM)
 </select>
 
 

@@ -7,16 +7,16 @@ public class TabInfo {
     String owner        ;
     String tabNm        ;
     String tabHnm       ;
-    String colId        ;
+    int    colId        ;
     String colNm        ;
     String colHnm       ;
     String dataTypeDesc ;
     String nullable     ;
     String pk           ;
     String dataTypeNm   ;
-    String len          ;
+    int    len          ;
     String decimalCnt   ;
-    String tabRows      ;
+    int    tabRows      ;
     String tabRegDt     ;
     String tabRegDt2    ;
     String tabUpdDt     ;
@@ -56,10 +56,10 @@ public class TabInfo {
     public void setTabHnm(String tabHnm) {
         this.tabHnm = tabHnm;
     }
-    public String getColId() {
+    public int getColId() {
         return colId;
     }
-    public void setColId(String colId) {
+    public void setColId(int colId) {
         this.colId = colId;
     }
     public String getColNm() {
@@ -98,10 +98,10 @@ public class TabInfo {
     public void setDataTypeNm(String dataTypeNm) {
         this.dataTypeNm = dataTypeNm;
     }
-    public String getLen() {
+    public int getLen() {
         return len;
     }
-    public void setLen(String len) {
+    public void setLen(int len) {
         this.len = len;
     }
     public String getDecimalCnt() {
@@ -110,10 +110,10 @@ public class TabInfo {
     public void setDecimalCnt(String decimalCnt) {
         this.decimalCnt = decimalCnt;
     }
-    public String getTabRows() {
+    public int getTabRows() {
         return tabRows;
     }
-    public void setTabRows(String tabRows) {
+    public void setTabRows(int tabRows) {
         this.tabRows = tabRows;
     }
     public String getTabRegDt() {
@@ -122,29 +122,29 @@ public class TabInfo {
     public void setTabRegDt(String tabRegDt) {
         this.tabRegDt = tabRegDt;
     }
-    public String getTabUpdDt() {
-        return tabUpdDt;
-    }
-    public void setTabUpdDt(String tabUpdDt) {
-        this.tabUpdDt = tabUpdDt;
-    }
-    public String getRegDtm() {
-        return regDtm;
-    }
-    public void setRegDtm(String regDtm) {
-        this.regDtm = regDtm;
-    }
     public String getTabRegDt2() {
         return tabRegDt2;
     }
     public void setTabRegDt2(String tabRegDt2) {
         this.tabRegDt2 = tabRegDt2;
     }
+    public String getTabUpdDt() {
+        return tabUpdDt;
+    }
+    public void setTabUpdDt(String tabUpdDt) {
+        this.tabUpdDt = tabUpdDt;
+    }
     public String getTabUpdDt2() {
         return tabUpdDt2;
     }
     public void setTabUpdDt2(String tabUpdDt2) {
         this.tabUpdDt2 = tabUpdDt2;
+    }
+    public String getRegDtm() {
+        return regDtm;
+    }
+    public void setRegDtm(String regDtm) {
+        this.regDtm = regDtm;
     }
     public String getRegUsrId() {
         return regUsrId;
@@ -164,5 +164,4 @@ public class TabInfo {
     public void setUpdUsrId(String updUsrId) {
         this.updUsrId = updUsrId;
     }
-
 }

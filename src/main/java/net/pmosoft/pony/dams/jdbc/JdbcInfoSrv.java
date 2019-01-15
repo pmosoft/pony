@@ -79,7 +79,7 @@ public class JdbcInfoSrv {
         Map<String, Object> result = new HashMap<String, Object>();
 
         try {
-            List<JdbcInfo> jdbcInfoOutVoList = jdbcInfoDao.selectJdbcInfoList(inVo);
+            List<JdbcInfo> jdbcInfoOutVoList = jdbcInfoDao.selectComboJdbcList(inVo);
 
             Gson gson = new Gson();
             //System.out.println(gson.toJson(jdbcInfoOutVoList));

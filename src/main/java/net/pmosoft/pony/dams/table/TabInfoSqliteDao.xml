@@ -88,7 +88,7 @@
         ,#{owner}                                                            AS OWNER
         ,#{tabNm}                                                            AS TAB_NM
         ,#{tabHnm}                                                           AS TAB_HNM
-        ,CAST(#{colId} AS INT)                                               AS COL_ID
+        ,#{colId}                                                            AS COL_ID
         ,#{colNm}                                                            AS COL_NM
         ,#{colHnm}                                                           AS COL_HNM
         ,#{dataTypeDesc}                                                     AS DATA_TYPE_DESC
@@ -97,7 +97,7 @@
         ,#{dataTypeNm}                                                       AS DATA_TYPE_NM
         ,CASE WHEN #{len} IN ('',NULL) THEN 0 ELSE #{len} END                AS LEN
         ,CASE WHEN #{decimalCnt} IN ('',NULL) THEN 0 ELSE #{decimalCnt} END  AS DECIMAL_CNT
-        ,CAST(#{tabRows} AS INT)                                             AS TAB_ROWS
+        ,#{tabRows}                                                          AS TAB_ROWS
         ,#{tabRegDt}                                                         AS TAB_REG_DT
         ,#{tabRegDt2}                                                        AS TAB_REG_DT2
         ,#{tabRegDt}                                                         AS TAB_UPD_DT
@@ -245,10 +245,67 @@
          , A.UPD_DTM
          , A.UPD_USR_ID
     FROM   TDACM00080 A
-    WHERE  A.JDBC_NM LIKE ('%'||UPPER(#{jdbcNm})||'%')
-    AND    A.OWNER LIKE ('%'||UPPER(#{owner})||'%')
+    WHERE  UPPER(A.JDBC_NM) LIKE ('%'||UPPER(#{jdbcNm}  )||'%')
+    AND    UPPER(A.OWNER  ) LIKE ('%'||UPPER(#{owner}   )||'%')
+    AND    UPPER(A.TAB_NM ) LIKE ('%'||UPPER(#{tabNm}   )||'%')
+    AND    UPPER(A.TAB_HNM) LIKE ('%'||UPPER(#{tabHnm}  )||'%')
+    AND    UPPER(A.COL_NM ) LIKE ('%'||UPPER(#{colNm}   )||'%')
+    AND    UPPER(A.COL_HNM) LIKE ('%'||UPPER(#{colHnm}  )||'%')
+    AND    A.TAB_ROWS       >= #{tabRows}
+    AND    A.TAB_REG_DT     >= (CASE WHEN #{tabRegDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
+    AND    A.TAB_UPD_DT     >= (CASE WHEN #{tabUpdDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
     ORDER BY A.JDBC_NM,A.OWNER,A.TAB_NM,A.COL_ID
 </select>
+
+
+<select id="selectTabList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="net.pmosoft.pony.dams.table.TabInfo">
+
+    -- TableDao.selectTabList
+    SELECT DISTINCT
+           A.JDBC_NM
+         , A.OWNER
+         , A.TAB_NM
+         , A.TAB_HNM
+         , A.TAB_ROWS
+         , A.TAB_REG_DT
+         , A.TAB_REG_DT2
+         , A.TAB_UPD_DT
+         , A.TAB_UPD_DT2
+    FROM   TDACM00080 A
+    WHERE  UPPER(A.JDBC_NM) LIKE ('%'||UPPER(#{jdbcNm}  )||'%')
+    AND    UPPER(A.OWNER  ) LIKE ('%'||UPPER(#{owner}   )||'%')
+    AND    UPPER(A.TAB_NM ) LIKE ('%'||UPPER(#{tabNm}   )||'%')
+    AND    UPPER(A.TAB_HNM) LIKE ('%'||UPPER(#{tabHnm}  )||'%')
+    AND    A.TAB_ROWS       = A.TAB_ROWS
+    AND    A.TAB_REG_DT     >= (CASE WHEN #{tabRegDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
+    AND    A.TAB_UPD_DT     >= (CASE WHEN #{tabUpdDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
+    ORDER BY A.JDBC_NM,A.OWNER,A.TAB_NM
+</select>
+
+<select id="selectColList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="net.pmosoft.pony.dams.table.TabInfo">
+
+    -- TableDao.selectColList
+    SELECT
+           A.COL_NM
+         , A.COL_HNM
+         , A.DATA_TYPE_DESC
+         , MAX(A.JDBC_NM)  AS JDBC_NM
+         , MAX(A.TAB_NM) AS TAB_NM
+         , COUNT(*)      AS TAB_ROWS
+    FROM   TDACM00080 A
+    WHERE  UPPER(A.JDBC_NM) LIKE ('%'||UPPER(#{jdbcNm}  )||'%')
+    AND    UPPER(A.OWNER  ) LIKE ('%'||UPPER(#{owner}   )||'%')
+    AND    UPPER(A.TAB_NM ) LIKE ('%'||UPPER(#{tabNm}   )||'%')
+    AND    UPPER(A.TAB_HNM) LIKE ('%'||UPPER(#{tabHnm}  )||'%')
+    AND    UPPER(A.COL_NM ) LIKE ('%'||UPPER(#{colNm}   )||'%')
+    AND    UPPER(A.COL_HNM) LIKE ('%'||UPPER(#{colHnm}  )||'%')
+    AND    A.TAB_ROWS       = A.TAB_ROWS
+    AND    A.TAB_REG_DT     >= (CASE WHEN #{tabRegDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
+    AND    A.TAB_UPD_DT     >= (CASE WHEN #{tabUpdDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
+    GROUP BY A.COL_NM, A.COL_HNM,A.DATA_TYPE_DESC
+</select>
+
+
 
 <!--*******************************************************************************************************************
 **                                             (삭제)

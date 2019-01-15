@@ -61,7 +61,21 @@ public class TabInfoCtrl {
         return tabSrv.selectTabInfoList(inVo);
     }
 
+    /**
+    * (조회) 테이블목록을 조회한다.
+    */
+    @RequestMapping(value = "/dams/table/selectTabList")
+    public Map<String, Object> selectTabList(@RequestBody TabInfo inVo) {
+        return tabSrv.selectTabList(inVo);
+    }
 
+    /**
+    * (조회) 컬럼목록을 조회한다.
+    */
+    @RequestMapping(value = "/dams/table/selectColList")
+    public Map<String, Object> selectColList(@RequestBody TabInfo inVo) {
+        return tabSrv.selectColList(inVo);
+    }
 
 //    /* (개발중) 테이블 스크립트 리턴(메타정보 이용)
 //     * */

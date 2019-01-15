@@ -29,6 +29,8 @@ public interface TabInfoDao {
     *                                       조회
     **********************************************************************************/
     List<TabInfo> selectTabInfoList(TabInfo inVo);
+    List<TabInfo> selectTabList(TabInfo inVo);
+    List<TabInfo> selectColList(TabInfo inVo);
 
     //
 //    int selectMetaTabCnt(Map<String,Object> params);

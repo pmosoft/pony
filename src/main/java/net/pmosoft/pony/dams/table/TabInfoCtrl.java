@@ -56,6 +56,15 @@ public class TabInfoCtrl {
     }
 
     /**
+    * (삭제) 테이블정보를 삭제한다
+    */
+    @RequestMapping(value = "/dams/table/deleteTabInfo")
+    public Map<String, Object> deleteTabInfo(@RequestBody TabInfo inVo) {
+        return tabInfoSrv.deleteTabInfo(inVo);
+    }
+
+
+    /**
     * (조회) 추출되어 저장된 테이블정보를 조회한다.
     */
     @RequestMapping(value = "/dams/table/selectTabInfoList")

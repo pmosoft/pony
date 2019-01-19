@@ -15,7 +15,7 @@ public class TabInfo {
     String pk           ;
     String dataTypeNm   ;
     int    len          ;
-    String decimalCnt   ;
+    int    decimalCnt   ;
     int    tabRows      ;
     String tabRegDt     ;
     String tabRegDt2    ;
@@ -104,10 +104,10 @@ public class TabInfo {
     public void setLen(int len) {
         this.len = len;
     }
-    public String getDecimalCnt() {
+    public int getDecimalCnt() {
         return decimalCnt;
     }
-    public void setDecimalCnt(String decimalCnt) {
+    public void setDecimalCnt(int decimalCnt) {
         this.decimalCnt = decimalCnt;
     }
     public int getTabRows() {
@@ -164,4 +164,7 @@ public class TabInfo {
     public void setUpdUsrId(String updUsrId) {
         this.updUsrId = updUsrId;
     }
+
+
+
 }

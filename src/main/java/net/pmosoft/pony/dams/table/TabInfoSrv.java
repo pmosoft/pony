@@ -17,7 +17,7 @@ package net.pmosoft.pony.dams.table;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,20 +27,19 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import net.pmosoft.pony.comm.util.StringUtil;
 import net.pmosoft.pony.dams.jdbc.JdbcInfo;
 import net.pmosoft.pony.dams.jdbc.JdbcInfoDao;
-import net.pmosoft.pony.dams.table.dynamic.TabDaoFactory;
 
 @Service
 public class TabInfoSrv {
+
+    private static Logger logger = LoggerFactory.getLogger(TabInfoSrv.class);
 
     @Autowired
     private TabInfoDao tabInfoDao;
@@ -99,6 +98,8 @@ public class TabInfoSrv {
      * */
     public Map<String, Object> selectMetaTabInfoList(TabInfo inVo){
         Map<String, Object> result = new HashMap<String, Object>();
+        int rowCnt = 0;
+        int commitCnt = 500;
 
         try{
             // 1단계 : DB 메타 테이블컬럼정보 조회
@@ -109,8 +110,21 @@ public class TabInfoSrv {
             tabInfoDao.deleteMetaTabInfo(inVo);
 
             // 3단계 : 메타테이블컬럼정보 삽입
+            List<TabInfo> tabInfoList = new ArrayList<TabInfo>();
+
             for (int i = 0; i  < tabInfoOutVoList.size(); i++) {
-                tabInfoDao.insertMetaTabInfo(tabInfoOutVoList.get(i));
+                //tabInfoDao.insertMetaTabInfo(tabInfoOutVoList.get(i));
+                tabInfoList.add(tabInfoOutVoList.get(i));
+                if(i%commitCnt == 0) {
+                    tabInfoDao.insertMetaTabInfoBulk(tabInfoList);
+                    tabInfoList.clear();
+                     //rowCnt = 0;
+                }
+            }
+
+            if(rowCnt < commitCnt) {
+                logger.debug("rowCnt2=========="+rowCnt);
+                tabInfoDao.insertMetaTabInfoBulk(tabInfoList);
             }
 
             result.put("isSuccess", true);
@@ -154,6 +168,26 @@ public class TabInfoSrv {
 
         try{
             tabInfoDao.insertCmpTabInfo(inVo);
+            result.put("isSuccess", true);
+            result.put("usrMsg", "입력 되었습니다");
+        } catch (Exception e){
+            result.put("isSuccess", false);
+            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
+            result.put("errSysMsg", e.getMessage());
+        }
+
+        return result;
+    }
+
+    /**
+    * (삭제)
+    */
+    public Map<String, Object> deleteTabInfo(TabInfo inVo){
+
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        try{
+            tabInfoDao.deleteTabInfo(inVo);
             result.put("isSuccess", true);
             result.put("usrMsg", "입력 되었습니다");
         } catch (Exception e){

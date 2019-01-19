@@ -14,6 +14,7 @@ public interface TabInfoDao {
     List<TabInfo> selectMetaTabInfoList(TabInfo inVo); // 범용
     void deleteMetaTabInfo(TabInfo inVo);
     void insertMetaTabInfo(TabInfo inVo);
+    void insertMetaTabInfoBulk(List<TabInfo> inVo);
 
     /**********************************************************************************
     *                                       비교
@@ -26,11 +27,17 @@ public interface TabInfoDao {
     void insertCmpTabInfo(TabInfo inVo);
 
     /**********************************************************************************
+    *                                       삭제
+    **********************************************************************************/
+    void deleteTabInfo(TabInfo inVo);
+
+    /**********************************************************************************
     *                                       조회
     **********************************************************************************/
     List<TabInfo> selectTabInfoList(TabInfo inVo);
     List<TabInfo> selectTabList(TabInfo inVo);
     List<TabInfo> selectColList(TabInfo inVo);
+
 
     //
 //    int selectMetaTabCnt(Map<String,Object> params);

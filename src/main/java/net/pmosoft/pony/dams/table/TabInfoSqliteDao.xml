@@ -11,7 +11,7 @@
 
 <select id="selectMetaTabInfoList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="net.pmosoft.pony.dams.table.TabInfo">
 
-    -- TableDao.selectMetaTabInfoList(SQLITE)
+    -- TabInfoDao.selectMetaTabInfoList(SQLITE)
     SELECT
            '추출'                                                                              AS stsNm
          , UPPER(#{jdbcNm})                                                               AS jdbcNm
@@ -51,13 +51,14 @@
 </select>
 
 <delete id="deleteMetaTabInfo" parameterType="net.pmosoft.pony.dams.table.TabInfo">
-    -- TableDao.deleteMetaTabInfo
+
+    -- TabInfoDao.deleteMetaTabInfo
     DELETE FROM TDACM00081
 </delete>
 
 <insert id="insertMetaTabInfo" parameterType="net.pmosoft.pony.dams.table.TabInfo">
 
-    -- TableDao.insertMetaTabInfo
+    -- TabInfoDao.insertMetaTabInfo
     INSERT INTO TDACM00081
     (
          JDBC_NM
@@ -108,12 +109,72 @@
         ,#{updUsrId}                                                         AS UPD_USR_ID
 </insert>
 
+
+<insert id="insertMetaTabInfoBulk" parameterType="net.pmosoft.pony.dams.table.TabInfo">
+
+    -- TabInfoDao.insertMetaTabInfoBulk
+    INSERT INTO TDACM00081
+    (
+         JDBC_NM
+        ,OWNER
+        ,TAB_NM
+        ,TAB_HNM
+        ,COL_ID
+        ,COL_NM
+        ,COL_HNM
+        ,DATA_TYPE_DESC
+        ,NULLABLE
+        ,PK
+        ,DATA_TYPE_NM
+        ,LEN
+        ,DECIMAL_CNT
+        ,TAB_ROWS
+        ,TAB_REG_DT
+        ,TAB_REG_DT2
+        ,TAB_UPD_DT
+        ,TAB_UPD_DT2
+        ,REG_DTM
+        ,REG_USR_ID
+        ,UPD_DTM
+        ,UPD_USR_ID
+    ) values
+    <foreach item="tabInfoList" index="index" collection="list" open="" separator="," close="">
+    (
+         #{tabInfoList.jdbcNm}       -- JDBC_NM
+        ,#{tabInfoList.owner}        -- OWNER
+        ,#{tabInfoList.tabNm}        -- TAB_NM
+        ,#{tabInfoList.tabHnm}       -- TAB_HNM
+        ,#{tabInfoList.colId}        -- COL_ID
+        ,#{tabInfoList.colNm}        -- COL_NM
+        ,#{tabInfoList.colHnm}       -- COL_HNM
+        ,#{tabInfoList.dataTypeDesc} -- DATA_TYPE_DESC
+        ,#{tabInfoList.nullable}     -- NULLABLE
+        ,#{tabInfoList.pk}           -- PK
+        ,#{tabInfoList.dataTypeNm}   -- DATA_TYPE_NM
+        ,#{tabInfoList.len}          -- LEN
+        ,#{tabInfoList.decimalCnt}   -- DECIMAL_CNT
+        ,#{tabInfoList.tabRows}      -- TAB_ROWS
+        ,#{tabInfoList.tabRegDt}     -- TAB_REG_DT
+        ,#{tabInfoList.tabRegDt2}    -- TAB_REG_DT2
+        ,#{tabInfoList.tabRegDt}     -- TAB_UPD_DT
+        ,#{tabInfoList.tabUpdDt2}    -- TAB_UPD_DT2
+        ,#{tabInfoList.regDtm}       -- REG_DTM
+        ,#{tabInfoList.regUsrId}     -- REG_USR_ID
+        ,#{tabInfoList.updDtm}       -- UPD_DTM
+        ,#{tabInfoList.updUsrId}     -- UPD_USR_ID
+    )
+    </foreach>
+
+</insert>
+
+
 <!--*******************************************************************************************************************
 **                                             (비교)
 ********************************************************************************************************************-->
 
 <select id="selectCmpTabInfoList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="net.pmosoft.pony.dams.table.TabInfo">
-    -- TableDao.selectCmpTabInfoList
+
+    -- TabInfoDao.selectCmpTabInfoList
     SELECT
            A.STS_NM
          , A.JDBC_NM
@@ -197,9 +258,8 @@
 **                                             (저장)
 ********************************************************************************************************************-->
 
-
 <insert id="insertCmpTabInfo" parameterType="net.pmosoft.pony.dams.table.TabInfo">
-    -- TableDao.insertCmpTabInfo
+    -- TabInfoDao.insertCmpTabInfo
     INSERT INTO TDACM00080
     SELECT A.*
     FROM   TDACM00081 A
@@ -215,11 +275,25 @@
 </insert>
 
 <!--*******************************************************************************************************************
+**                                             (삭제)
+********************************************************************************************************************-->
+
+<insert id="deleteTabInfo" parameterType="net.pmosoft.pony.dams.table.TabInfo">
+
+    -- TabInfoDao.deleteTabInfo
+    DELETE FROM TDACM00080
+    WHERE  JDBC_NM = UPPER(#{jdbcNm})
+    AND    UPPER(TAB_NM ) LIKE ('%'||UPPER(#{tabNm}   )||'%')
+
+</insert>
+
+
+<!--*******************************************************************************************************************
 **                                             (조회)
 ********************************************************************************************************************-->
 
 <select id="selectTabInfoList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="net.pmosoft.pony.dams.table.TabInfo">
-    -- TableDao.selectTabInfoList
+    -- TabInfoDao.selectTabInfoList
     SELECT
            '등록' AS STS_NM
          , A.JDBC_NM
@@ -260,7 +334,7 @@
 
 <select id="selectTabList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="net.pmosoft.pony.dams.table.TabInfo">
 
-    -- TableDao.selectTabList
+    -- TabInfoDao.selectTabList
     SELECT DISTINCT
            A.JDBC_NM
          , A.OWNER
@@ -284,7 +358,7 @@
 
 <select id="selectColList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="net.pmosoft.pony.dams.table.TabInfo">
 
-    -- TableDao.selectColList
+    -- TabInfoDao.selectColList
     SELECT
            A.COL_NM
          , A.COL_HNM
@@ -317,7 +391,8 @@
 </delete>
 
 <select id="selectTabColList" parameterType="java.util.LinkedHashMap" resultType="java.util.LinkedHashMap">
-    -- TableDao.selectTabColList
+
+    -- TabInfoDao.selectTabColList
     SELECT   A.JDBC_NM
             ,A.OWNER
             ,A.TAB_NM

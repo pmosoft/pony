@@ -328,7 +328,7 @@
     AND    A.TAB_ROWS       >= #{tabRows}
     AND    A.TAB_REG_DT     >= (CASE WHEN #{tabRegDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
     AND    A.TAB_UPD_DT     >= (CASE WHEN #{tabUpdDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
-    ORDER BY A.JDBC_NM,A.OWNER,A.TAB_NM,A.COL_ID
+    ORDER BY ${orderBy} ${ascDesc},A.JDBC_NM,A.OWNER,A.TAB_NM,A.COL_ID
 </select>
 
 
@@ -353,30 +353,39 @@
     AND    A.TAB_ROWS       = A.TAB_ROWS
     AND    A.TAB_REG_DT     >= (CASE WHEN #{tabRegDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
     AND    A.TAB_UPD_DT     >= (CASE WHEN #{tabUpdDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
-    ORDER BY A.JDBC_NM,A.OWNER,A.TAB_NM
+    ORDER BY ${orderBy} ${ascDesc},A.JDBC_NM,A.OWNER,A.TAB_NM
 </select>
 
 <select id="selectColList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="net.pmosoft.pony.dams.table.TabInfo">
 
     -- TabInfoDao.selectColList
-    SELECT
-           A.COL_NM
-         , A.COL_HNM
-         , A.DATA_TYPE_DESC
-         , MAX(A.JDBC_NM)  AS JDBC_NM
-         , MAX(A.TAB_NM) AS TAB_NM
-         , COUNT(*)      AS TAB_ROWS
-    FROM   TDACM00080 A
-    WHERE  UPPER(A.JDBC_NM) LIKE ('%'||UPPER(#{jdbcNm}  )||'%')
-    AND    UPPER(A.OWNER  ) LIKE ('%'||UPPER(#{owner}   )||'%')
-    AND    UPPER(A.TAB_NM ) LIKE ('%'||UPPER(#{tabNm}   )||'%')
-    AND    UPPER(A.TAB_HNM) LIKE ('%'||UPPER(#{tabHnm}  )||'%')
-    AND    UPPER(A.COL_NM ) LIKE ('%'||UPPER(#{colNm}   )||'%')
-    AND    UPPER(A.COL_HNM) LIKE ('%'||UPPER(#{colHnm}  )||'%')
-    AND    A.TAB_ROWS       = A.TAB_ROWS
-    AND    A.TAB_REG_DT     >= (CASE WHEN #{tabRegDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
-    AND    A.TAB_UPD_DT     >= (CASE WHEN #{tabUpdDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
-    GROUP BY A.COL_NM, A.COL_HNM,A.DATA_TYPE_DESC
+    SELECT COL_NM
+         , COL_HNM
+         , DATA_TYPE_DESC
+         , JDBC_NM
+         , TAB_NM
+         , TAB_ROWS
+    FROM   (
+           SELECT
+                  A.COL_NM
+                , A.COL_HNM
+                , A.DATA_TYPE_DESC
+                , MAX(A.JDBC_NM)  AS JDBC_NM
+                , MAX(A.TAB_NM)   AS TAB_NM
+                , COUNT(*)        AS TAB_ROWS
+           FROM   TDACM00080 A
+           WHERE  UPPER(A.JDBC_NM) LIKE ('%'||UPPER(#{jdbcNm}  )||'%')
+           AND    UPPER(A.OWNER  ) LIKE ('%'||UPPER(#{owner}   )||'%')
+           AND    UPPER(A.TAB_NM ) LIKE ('%'||UPPER(#{tabNm}   )||'%')
+           AND    UPPER(A.TAB_HNM) LIKE ('%'||UPPER(#{tabHnm}  )||'%')
+           AND    UPPER(A.COL_NM ) LIKE ('%'||UPPER(#{colNm}   )||'%')
+           AND    UPPER(A.COL_HNM) LIKE ('%'||UPPER(#{colHnm}  )||'%')
+           AND    A.TAB_ROWS       = A.TAB_ROWS
+           AND    A.TAB_REG_DT     >= (CASE WHEN #{tabRegDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
+           AND    A.TAB_UPD_DT     >= (CASE WHEN #{tabUpdDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
+           GROUP BY A.COL_NM, A.COL_HNM,A.DATA_TYPE_DESC
+           )
+    ORDER BY ${orderBy} ${ascDesc},COL_NM, COL_HNM, DATA_TYPE_DESC
 </select>
 
 

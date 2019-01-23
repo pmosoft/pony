@@ -26,6 +26,9 @@ public class TabInfo {
     String updDtm       ;
     String updUsrId     ;
 
+    String orderBy;
+    String ascDesc;
+
     public String getStsNm() {
         return stsNm;
     }
@@ -164,7 +167,18 @@ public class TabInfo {
     public void setUpdUsrId(String updUsrId) {
         this.updUsrId = updUsrId;
     }
-
+    public String getOrderBy() {
+        return orderBy;
+    }
+    public void setOrderBy(String orderBy) {
+        this.orderBy = orderBy;
+    }
+    public String getAscDesc() {
+        return ascDesc;
+    }
+    public void setAscDesc(String ascDesc) {
+        this.ascDesc = ascDesc;
+    }
 
 
 }

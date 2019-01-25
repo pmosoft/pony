@@ -14,7 +14,7 @@
     -- TabInfoDao.selectMetaTabInfoList(SQLITE)
     SELECT
            '추출'                                                                              AS stsNm
-         , UPPER(#{jdbcNm})                                                               AS jdbcNm
+         , UPPER(#{jdbcNm})                                                                   AS jdbcNm
          , UPPER(A.TABLE_SCHEMA)                                                              AS owner
          , UPPER(A.TABLE_NAME)                                                                AS tabNm
          , UPPER(B.TABLE_COMMENT)                                                             AS tabHnm

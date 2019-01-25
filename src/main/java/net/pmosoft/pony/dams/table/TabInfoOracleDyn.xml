@@ -13,8 +13,8 @@
 
     -- TableDao.selectMetaTabInfoList(ORACLE)
     SELECT
-           '추출'                                                                                               as stsnm
-         , UPPER(#{jdbcNm})                                                                                    as jdbcnm
+           '추출'                                                                                               as stsNm
+         , UPPER(#{jdbcNm})                                                                                    as jdbcNm
          , A.OWNER                                                                                             as owner
          , A.TABLE_NAME                                                                                        as tabNm
          , NVL(D.COMMENTS,'')                                                                                  as tabHnm
@@ -22,6 +22,7 @@
          , A.COLUMN_NAME                                                                                       as colNm
          , NVL(B.COMMENTS,'')                                                                                  as colHnm
          , CASE WHEN A.DATA_TYPE IN ('CHAR','VARCHAR','VARCHAR2') THEN A.DATA_TYPE||'('||A.DATA_LENGTH||')'
+                WHEN A.DATA_TYPE IN ('NUMBER') AND A.DATA_PRECISION IS NULL THEN A.DATA_TYPE
                 WHEN A.DATA_TYPE IN ('NUMBER') THEN A.DATA_TYPE||'('||A.DATA_PRECISION||','||A.DATA_SCALE||')'
                 WHEN A.DATA_TYPE IN ('DATE','TIMESTAMP') THEN A.DATA_TYPE
                 ELSE A.DATA_TYPE
@@ -31,11 +32,11 @@
          , A.DATA_TYPE                                                                                         as dataTypeNm
          , A.DATA_LENGTH                                                                                       as len
          , A.DATA_PRECISION                                                                                    as decimalCnt
-         , NVL(C.NUM_ROWS,0)                                                                                   as tabrows
-         , TO_CHAR(E.CREATED,'YYYYMMDD')                                                                       as tabregdt
-         , TO_CHAR(E.CREATED,'YYYY-MM-DD')                                                                     as tabregdt2
-         , TO_CHAR(E.LAST_DDL_TIME,'YYYYMMDD')                                                                 as tabupddt
-         , TO_CHAR(E.LAST_DDL_TIME,'YYYY-MM-DD')                                                               as tabupddt2
+         , NVL(C.NUM_ROWS,0)                                                                                   as tabRows
+         , TO_CHAR(E.CREATED,'YYYYMMDD')                                                                       as tabRegDt
+         , TO_CHAR(E.CREATED,'YYYY-MM-DD')                                                                     as tabRegDt2
+         , TO_CHAR(E.LAST_DDL_TIME,'YYYYMMDD')                                                                 as tabUpdDt
+         , TO_CHAR(E.LAST_DDL_TIME,'YYYY-MM-DD')                                                               as tabUpdDt2
          , TO_CHAR(SYSTIMESTAMP,'YYYYMMDDHH24MISSFF2')                                                         as regDtm
          , ''                                                                                                  as regUsrId
          , TO_CHAR(SYSTIMESTAMP,'YYYYMMDDHH24MISSFF2')                                                         as updDtm
@@ -47,9 +48,9 @@
            SYS.ALL_OBJECTS      E,
           (SELECT OWNER,TABLE_NAME,COLUMN_NAME
            FROM   SYS.USER_CONS_COLUMNS
-           WHERE  OWNER = #{owner}
+           WHERE  UPPER(OWNER) = UPPER(#{owner})
            AND    CONSTRAINT_NAME IN (SELECT CONSTRAINT_NAME FROM SYS.USER_CONSTRAINTS
-                                      WHERE OWNER=#{owner} AND CONSTRAINT_TYPE = 'P')
+                                      WHERE UPPER(OWNER) = UPPER(#{owner}) AND CONSTRAINT_TYPE = 'P')
            ) F
    WHERE  A.OWNER       = B.OWNER
    AND    A.TABLE_NAME  = B.TABLE_NAME
@@ -65,8 +66,8 @@
    AND    A.COLUMN_NAME = F.COLUMN_NAME(+)
    AND    D.TABLE_TYPE  = 'TABLE'
    AND    E.OBJECT_TYPE = 'TABLE'
-   AND    A.OWNER       = #{owner}
-   AND    A.TABLE_NAME LIKE '%'||#{tabNm}||'%'
+   AND    UPPER(A.OWNER) = UPPER(#{owner})
+   AND    UPPER(A.TABLE_NAME) LIKE '%'||UPPER(#{tabNm})||'%'
    ORDER BY A.TABLE_NAME,A.COLUMN_ID
 
 </select>

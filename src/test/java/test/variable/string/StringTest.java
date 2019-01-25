@@ -25,17 +25,12 @@ public class StringTest
         Pattern p; Matcher m;
         String str, pStr;
         str  = ".00223.0039.00151.0091";
-        pStr = "([^.]{3})";
+        //pStr = "([^.]{3})";
         pStr = "([^.]{3}(\\.))";
-        pStr = "([^.]{3}(\\.|$))";
-        pStr = "([^.]{3}(\\.|$))|.";
+        //pStr = "([^.]{3}(\\.|$))";
+        //pStr = "([^.]{3}(\\.|$))|.";
         p = Pattern.compile(pStr); m = p.matcher(str);
         while(m.find()) System.out.println(m.group());
-
-    /*
-            Regexp_replace concat [·],’’.00’
-            , ‘’$1’
-    */
     }
 
     static void 정규식01() {

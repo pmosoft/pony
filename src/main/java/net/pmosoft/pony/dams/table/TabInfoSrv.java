@@ -57,10 +57,10 @@ public class TabInfoSrv {
     **********************************************************************************/
     private SqlSession sqlSession(TabInfo inVo){
 
-        System.out.println("sqlSession");
+        //System.out.println("sqlSession");
         JdbcInfo jdbcInfo = new JdbcInfo(); jdbcInfo.setJdbcNm(inVo.getJdbcNm());
         JdbcInfo jdbcVo = jdbcInfoDao.selectJdbcInfo(jdbcInfo);
-        System.out.println("jdbcVo=="+jdbcVo.getDriver());
+        //System.out.println("jdbcVo=="+jdbcVo.getDriver());
         //daoClassPath = (String) codeList.get(0).get("CD_PARAM1");
 
         String driver = "";
@@ -106,7 +106,7 @@ public class TabInfoSrv {
         try{
             // 1단계 : DB 메타 테이블컬럼정보 조회
             List<TabInfo> tabInfoOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectMetaTabInfoList(inVo);
-            //System.out.println("tabInfoOutVoList="+tabInfoOutVoList.get(1).getColNm());
+            System.out.println("tabInfoOutVoList="+tabInfoOutVoList.size());
 
             // 2단계 : 메타테이블컬럼정보 삭제
             tabInfoDao.deleteMetaTabInfo(inVo);

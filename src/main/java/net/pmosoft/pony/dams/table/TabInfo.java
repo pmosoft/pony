@@ -16,7 +16,7 @@ public class TabInfo {
     String dataTypeNm   ;
     int    len          ;
     int    decimalCnt   ;
-    int    tabRows      ;
+    long   tabRows      ;
     String tabRegDt     ;
     String tabRegDt2    ;
     String tabUpdDt     ;
@@ -113,10 +113,10 @@ public class TabInfo {
     public void setDecimalCnt(int decimalCnt) {
         this.decimalCnt = decimalCnt;
     }
-    public int getTabRows() {
+    public long getTabRows() {
         return tabRows;
     }
-    public void setTabRows(int tabRows) {
+    public void setTabRows(long tabRows) {
         this.tabRows = tabRows;
     }
     public String getTabRegDt() {
@@ -179,6 +179,5 @@ public class TabInfo {
     public void setAscDesc(String ascDesc) {
         this.ascDesc = ascDesc;
     }
-
 
 }

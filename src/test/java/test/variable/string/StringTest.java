@@ -1,5 +1,13 @@
 package test.variable.string;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import net.pmosoft.pony.comm.util.StringUtil;
 
 public class StringTest
@@ -9,7 +17,34 @@ public class StringTest
     {
         //test01();
         //끝문자제거();
-        구분자배열();
+        //구분자배열();
+        정규식02();
+    }
+
+    static void 정규식02() {
+        Pattern p; Matcher m;
+        String str, pStr;
+        str  = ".00223.0039.00151.0091";
+        pStr = "([^.]{3})";
+        pStr = "([^.]{3}(\\.))";
+        pStr = "([^.]{3}(\\.|$))";
+        pStr = "([^.]{3}(\\.|$))|.";
+        p = Pattern.compile(pStr); m = p.matcher(str);
+        while(m.find()) System.out.println(m.group());
+
+    /*
+            Regexp_replace concat [·],’’.00’
+            , ‘’$1’
+    */
+    }
+
+    static void 정규식01() {
+        Pattern p; Matcher m;
+        String str, pStr;
+        str  = "001";
+        pStr = "(^[0-9]*$)";
+        p = Pattern.compile(pStr); m = p.matcher(str);
+        while(m.find()) System.out.println(m.group());
     }
 
     static void 구분자배열() {

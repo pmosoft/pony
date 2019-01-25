@@ -14,24 +14,24 @@
     -- TableDao.selectMetaTabInfoList(ORACLE)
     SELECT
            '추출'                                                                                               as stsnm
-         , UPPER(#{jdbcNm})                                                                                as jdbcnm
+         , UPPER(#{jdbcNm})                                                                                    as jdbcnm
          , A.OWNER                                                                                             as owner
          , A.TABLE_NAME                                                                                        as tabNm
-         , D.COMMENTS                                                                                          as tabHnm
+         , NVL(D.COMMENTS,'')                                                                                  as tabHnm
          , A.COLUMN_ID                                                                                         as colId
          , A.COLUMN_NAME                                                                                       as colNm
-         , B.COMMENTS                                                                                          as colHnm
+         , NVL(B.COMMENTS,'')                                                                                  as colHnm
          , CASE WHEN A.DATA_TYPE IN ('CHAR','VARCHAR','VARCHAR2') THEN A.DATA_TYPE||'('||A.DATA_LENGTH||')'
                 WHEN A.DATA_TYPE IN ('NUMBER') THEN A.DATA_TYPE||'('||A.DATA_PRECISION||','||A.DATA_SCALE||')'
                 WHEN A.DATA_TYPE IN ('DATE','TIMESTAMP') THEN A.DATA_TYPE
                 ELSE A.DATA_TYPE
            END                                                                                                 as dataTypeDesc
          , DECODE(A.NULLABLE,'Y',' ','NOT NULL')                                                               as nullable
-         , DECODE(F.COLUMN_NAME,'NULL','','PK')                                                                as pk
+         , DECODE(F.COLUMN_NAME,NULL,'','PK')                                                                  as pk
          , A.DATA_TYPE                                                                                         as dataTypeNm
          , A.DATA_LENGTH                                                                                       as len
          , A.DATA_PRECISION                                                                                    as decimalCnt
-         , C.NUM_ROWS                                                                                          as tabrows
+         , NVL(C.NUM_ROWS,0)                                                                                   as tabrows
          , TO_CHAR(E.CREATED,'YYYYMMDD')                                                                       as tabregdt
          , TO_CHAR(E.CREATED,'YYYY-MM-DD')                                                                     as tabregdt2
          , TO_CHAR(E.LAST_DDL_TIME,'YYYYMMDD')                                                                 as tabupddt

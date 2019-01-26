@@ -64,12 +64,12 @@ public class TabInfoSrv {
         //daoClassPath = (String) codeList.get(0).get("CD_PARAM1");
 
         String driver = "";
-        if     (jdbcVo.getDriver().equals("oracle" )) driver = "oracle.jdbc.driver.OracleDriver";
-        else if(jdbcVo.getDriver().equals("mariadb")) driver = "org.mariadb.jdbc.Driver";
-        else if(jdbcVo.getDriver().equals("sqlite" )) driver = "org.sqlite.JDBC";
+        //if     (jdbcVo.getDriver().equals("oracle" )) driver = "oracle.jdbc.driver.OracleDriver";
+        //else if(jdbcVo.getDriver().equals("mariadb")) driver = "org.mariadb.jdbc.Driver";
+        //else if(jdbcVo.getDriver().equals("sqlite" )) driver = "org.sqlite.JDBC";
 
         Properties props = new Properties();
-        props.put("driver"      , driver         );
+        props.put("driver"      , "net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
         props.put("url"         , jdbcVo.getUrl()  );
         props.put("username"    , jdbcVo.getUsrId());
         props.put("password"    , jdbcVo.getUsrPw());
@@ -106,7 +106,7 @@ public class TabInfoSrv {
         try{
             // 1단계 : DB 메타 테이블컬럼정보 조회
             List<TabInfo> tabInfoOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectMetaTabInfoList(inVo);
-            System.out.println("tabInfoOutVoList="+tabInfoOutVoList.size());
+            logger.info("tabInfoOutVoList="+tabInfoOutVoList.size());
 
             // 2단계 : 메타테이블컬럼정보 삭제
             tabInfoDao.deleteMetaTabInfo(inVo);

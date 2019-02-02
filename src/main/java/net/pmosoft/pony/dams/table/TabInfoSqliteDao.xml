@@ -50,6 +50,49 @@
 
 </select>
 
+<select id="selectCreateScript" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="net.pmosoft.pony.dams.table.TabInfo">
+
+    -- TabInfoDao.selectMetaTabInfoList(SQLITE)
+    SELECT
+           '추출'                                                                              AS stsNm
+         , UPPER(#{jdbcNm})                                                                   AS jdbcNm
+         , UPPER(A.TABLE_SCHEMA)                                                              AS owner
+         , UPPER(A.TABLE_NAME)                                                                AS tabNm
+         , UPPER(B.TABLE_COMMENT)                                                             AS tabHnm
+         , A.ORDINAL_POSITION                                                                 AS colId
+         , A.COLUMN_NAME                                                                      AS colNm
+         , A.COLUMN_COMMENT                                                                   AS colHnm
+         , CASE WHEN UPPER(A.DATA_TYPE) = 'INT' THEN UPPER(A.DATA_TYPE)
+                ELSE UPPER(A.COLUMN_TYPE)
+           END                                                                                AS dataTypeDesc
+         , CASE WHEN IS_NULLABLE = 'NO' THEN 'NOT NULL' ELSE '' END                           AS nullable
+         , CASE WHEN A.COLUMN_KEY = 'PRI' THEN 'Y' ELSE '' END                                AS pk
+         , UPPER(A.DATA_TYPE)                                                                 AS dataTypeNm
+         , CASE WHEN UPPER(A.DATA_TYPE) IN ('CHAR','VARCHAR') THEN A.CHARACTER_MAXIMUM_LENGTH
+                WHEN UPPER(A.DATA_TYPE) IN ('INT','NUMERIC') THEN A.NUMERIC_PRECISION
+           END                                                                                AS len
+         , A.NUMERIC_SCALE                                                                    AS decimalCnt
+         , B.TABLE_ROWS                                                                       AS tabRows
+         , DATE_FORMAT(B.CREATE_TIME,'%Y%m%d')                                                AS tabRegDt
+         , DATE_FORMAT(B.CREATE_TIME,'%Y-%m-%d')                                              AS tabRegDt2
+         , DATE_FORMAT(B.UPDATE_TIME,'%Y%m%d')                                                AS tabUpdDt
+         , DATE_FORMAT(B.UPDATE_TIME,'%Y-%m-%d')                                              AS tabUpdDt2
+         , DATE_FORMAT(NOW(),'%Y%m%d%H%i')                                                    AS regDtm
+         , ''                                                                                 AS regUsrId
+         , DATE_FORMAT(NOW(),'%Y%m%d%H%i')                                                    AS updDtm
+         , ''                                                                                 AS updUsrId
+    FROM   INFORMATION_SCHEMA.COLUMNS A
+         , INFORMATION_SCHEMA.TABLES B
+    WHERE  A.TABLE_SCHEMA = B.TABLE_SCHEMA
+    AND    A.TABLE_NAME   = B.TABLE_NAME
+    AND    A.TABLE_SCHEMA LIKE CONCAT(CONCAT('%',UPPER(#{owner})),'%')
+    AND    A.TABLE_NAME   LIKE CONCAT(CONCAT('%',UPPER(#{tabNm})),'%')
+    ORDER BY A.TABLE_NAME,A.ORDINAL_POSITION
+
+</select>
+
+
+
 <delete id="deleteMetaTabInfo" parameterType="net.pmosoft.pony.dams.table.TabInfo">
 
     -- TabInfoDao.deleteMetaTabInfo
@@ -322,12 +365,12 @@
     WHERE  UPPER(A.JDBC_NM) LIKE ('%'||UPPER(#{jdbcNm}  )||'%')
     AND    UPPER(A.OWNER  ) LIKE ('%'||UPPER(#{owner}   )||'%')
     AND    UPPER(A.TAB_NM ) LIKE ('%'||UPPER(#{tabNm}   )||'%')
-    AND    UPPER(IFNULL(A.TAB_HNM,'')) LIKE ('%'||UPPER(#{tabHnm}  )||'%')
-    AND    UPPER(A.COL_NM ) LIKE ('%'||UPPER(#{colNm}   )||'%')
-    AND    UPPER(IFNULL(A.COL_HNM,'')) LIKE ('%'||UPPER(#{colHnm}  )||'%')
+    AND    UPPER(IFNULL(A.TAB_HNM,'')) LIKE ('%'||UPPER(IFNULL(#{tabHnm},'')  )||'%')
+    AND    UPPER(A.COL_NM ) LIKE ('%'||UPPER(IFNULL(#{colNm},'')   )||'%')
+    AND    UPPER(IFNULL(A.COL_HNM,'')) LIKE ('%'||UPPER(IFNULL(#{colHnm},'')  )||'%')
     AND    A.TAB_ROWS       >= #{tabRows}
-    AND    A.TAB_REG_DT     >= (CASE WHEN #{tabRegDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
-    AND    A.TAB_UPD_DT     >= (CASE WHEN #{tabUpdDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
+    AND    A.TAB_REG_DT     >= (CASE WHEN IFNULL(#{tabRegDt},'') = '' THEN '19010101' ELSE IFNULL(#{tabRegDt},'') END)
+    AND    A.TAB_UPD_DT     >= (CASE WHEN IFNULL(#{tabUpdDt},'') = '' THEN '19010101' ELSE IFNULL(#{tabRegDt},'') END)
     ORDER BY ${orderBy} ${ascDesc},A.JDBC_NM,A.OWNER,A.TAB_NM,A.COL_ID
 </select>
 

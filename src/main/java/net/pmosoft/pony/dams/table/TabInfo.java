@@ -26,6 +26,7 @@ public class TabInfo {
     String updDtm       ;
     String updUsrId     ;
 
+    boolean chk;
     String orderBy;
     String ascDesc;
 
@@ -178,6 +179,12 @@ public class TabInfo {
     }
     public void setAscDesc(String ascDesc) {
         this.ascDesc = ascDesc;
+    }
+    public boolean isChk() {
+        return chk;
+    }
+    public void setChk(boolean chk) {
+        this.chk = chk;
     }
 
 }

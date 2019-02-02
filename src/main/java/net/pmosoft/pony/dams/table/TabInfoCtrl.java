@@ -1,5 +1,6 @@
 package net.pmosoft.pony.dams.table;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,6 @@ public class TabInfoCtrl {
     *                               테이블정보 추출 및 저장
     *
     **********************************************************************************/
-
-
     /*
      * (추출) 테이블메타정보 조회후 추출테이블정보테이블에 저장후 정보 리턴
      * @param jdbcNm,owner,tabNm
@@ -98,12 +97,19 @@ public class TabInfoCtrl {
 
 
 
-//    /* (개발중) 테이블 스크립트 리턴(메타정보 이용)
-//     * */
-//    @RequestMapping(value = "/dams/table/selectMetaTabScript")
-//    public Map<String, Object> selectMetaTabScript(@RequestParam Map<String,String> params) {
-//        return null;
-//    }
+    /**********************************************************************************
+    *
+    *                                       유틸
+    *
+    **********************************************************************************/
+
+    /*
+     * Create Script 생성
+     * */
+    @RequestMapping(value = "/dams/table/selectCreateScript")
+    public Map<String, Object> selectCreateScript(@RequestBody List<TabInfo> inVo){
+        return tabInfoSrv.selectCreateScript(inVo);
+    }
 
 
 //    /**********************************************************************************
@@ -154,87 +160,6 @@ public class TabInfoCtrl {
 //    public Map<String, Object>  selectCsvData(@RequestParam Map<String,String> params){
 //        return tabInfoSrv.selectCsvData(params);
 //    }
-//
-//
-//
-//    /**********************************************************************************
-//    *
-//    *                              (pony) 테이블 정보
-//    *
-//    *********************************************************************************/
-//
-//    /*
-//     * pony 테이블컬럼정보를 리턴
-//     * @param 조회 조건값
-//     * 추후 이름을 selectLocalTabColList로 변경해 준다.
-//     * */
-//    @RequestMapping(value = "/dams/table/selectTabColList")
-//    public Map<String, Object> selectTabColList(@RequestParam Map<String,String> params) {
-//        System.out.println(params);
-//        return tabInfoSrv.selectTabColList(params);
-//    }
-//
-//    /*
-//     * pony 테이블컬럼정보를 저장
-//     * @param 테이블컬럼정보
-//     * 추후 이름을 selectLocalTabColList로 변경해 준다.
-//     * */
-//    @RequestMapping(value = "/dams/table/saveTabCol")
-//    public Map<String, Object> saveTabCol(@RequestParam String params) {
-//        return tabInfoSrv.saveTabCol(params);
-//    }
-//
-//    /*
-//     * pony 테이블컬럼정보를 삭제
-//     * @param 조회 조건값
-//     * 추후 이름을 selectLocalTabColList로 변경해 준다.
-//     * */
-//    @RequestMapping(value = "/dams/table/deleteTabCol")
-//    public Map<String, Object> deleteTabCol(@RequestParam Map<String,String> params) {
-//        return tabInfoSrv.deleteTabCol(params);
-//    }
-//
-//    /*
-//     * pony 테이블정보를 리턴
-//     * @param 조회 조건값
-//     * 추후 이름을 selectLocalTabColList로 변경해 준다.
-//     * */
-//    @RequestMapping(value = "/dams/table/selectTabList")
-//    public Map<String, Object> selectTabList(@RequestParam Map<String,String> params) {
-//        return tabInfoSrv.selectTabList(params);
-//    }
-//
-//    /*
-//     * pony 테이블정보를 저장
-//     * @param 테이블정보
-//     * 추후 이름을 selectLocalTabColList로 변경해 준다.
-//     * */
-//    @RequestMapping(value = "/dams/table/saveTab")
-//    public Map<String, Object> saveTab(@RequestParam Map<String,String> params) {
-//        return tabInfoSrv.saveTab(params);
-//    }
-//
-//    /*
-//     * pony 테이블정보를 삭제
-//     * @param 조회 조건값
-//     * 추후 이름을 selectLocalTabColList로 변경해 준다.
-//     * */
-//    @RequestMapping(value = "/dams/table/deleteTab")
-//    public Map<String, Object> deleteTab(@RequestParam Map<String,String> params) {
-//        return tabInfoSrv.deleteTab(params);
-//    }
-//
-//    /*
-//     * 테이블 데이터 리턴
-//     * @param DB접속정보 및 테이블명 및 rowcnt
-//     * 추후 이름을 selectLocalTabColList로 변경해 준다.
-//     * */
-//    @RequestMapping(value = "/dams/table/selectTabData")
-//    public Map<String, Object>  selectTabData(@RequestParam Map<String,String> params){
-//        return tabInfoSrv.selectTabData(params);
-//    }
-//
-
 //
 //    /**********************************************************************************
 //    *

@@ -1,0 +1,35 @@
+Ext.define('$extjsPackNm$.$PgmNm$RegView', {
+     extend:'Ext.window.Window' 
+    ,xtype:'$PgmNm$Reg' 
+    ,controller:'$PgmNm$Reg' 
+    ,viewModel:'$PgmNm$Reg'    
+    ,layout : 'form'
+    ,modal : true 
+    ,frame : true
+    ,width : 400
+    ,bodyPadding : 10
+    ,autoShow : true 
+    ,closable : true 
+    ,maximizable : true 
+    ,resizable : true 
+    ,titleAlign : 'center' 
+    ,buttonAlign:'center'
+    ,listeners : { 
+    	//boxready : 'initBtn'
+	}
+    ,title : '등록'
+    ,items: [ 
+      {xtype:'textfield'     , name:'제목'            , bind:{value:'{TITLE}'}      , fieldLabel:'제목'     }
+     ,{xtype:'textfield'     , name:'내용'            , bind:{value:'{CONTENT}'}    , fieldLabel:'내용'     }
+     ,{xtype:'hiddenfield'   , name:'등록일시'        , bind:{value:'{REG_DT}'}     , fieldLabel:'등록일시' }
+     ,{xtype:'hiddenfield'   , name:'등록자'          , bind:{value:'{REG_USR_ID}'} , fieldLabel:'등록자'   }
+     ,{xtype:'displayfield'  , name:'변경일시'        , bind:{value:'{UPD_DT}'}     , fieldLabel:'변경일시' }
+     ,{xtype:'displayfield'  , name:'변경자'          , bind:{value:'{UPD_USR_ID}'} , fieldLabel:'변경자'   }
+     ]
+    ,buttons: [
+      {name:'initBtn' , text:'초기화' , handler:'initBtn'}
+     ,{name:'saveBtn' , text:'저장'  , handler:'saveBtn'}
+     ,{name:'delBtn'  , text:'삭제'  , handler:'delBtn'}
+     ,{name:'closeBtn', text:'닫기'  , handler:'closeBtn'}
+     ]
+});

@@ -1,0 +1,129 @@
+<nav class="navbar navbar-expand-lg sticky-top">
+  <a class="navbar-brand" href="#">Pony</a>
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav ml-3 mr-3">
+      <li class="nav-item dropdown" ngbDropdown>
+        <a href="javascript:void(0)" class="nav-link ml-2" ngbDropdownToggle>
+          <i class="fa fa-fw fa-database"></i>&nbsp;Table<b class="caret"></b>
+        </a>
+        <div class="dropdown-menu-right" ngbDropdownMenu>
+          <a class="dropdown-item" routerLink="/tab-col-list" [routerLinkActive]="['router-link-active']" >
+            <i class="fa fa-fw fa-database"></i>&nbsp;{{ '테이블컬럼' | translate }}
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" routerLink="/tab-list" [routerLinkActive]="['router-link-active']" >
+            <i class="fa fa-fw fa-database"></i>&nbsp;{{ '테이블' | translate }}
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" routerLink="/col-list" [routerLinkActive]="['router-link-active']" >
+            <i class="fa fa-fw fa-database"></i>&nbsp;{{ '컬럼' | translate }}
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" routerLink="/tab-info-ext" [routerLinkActive]="['router-link-active']" >
+            <i class="fa fa-fw fa-save"></i>&nbsp;{{ '테이블정보추출' | translate }}
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" routerLink="/code-list" [routerLinkActive]="['router-link-active']" >
+            <i class="fa fa-fw fa-database"></i>&nbsp;{{ '코드' | translate }}
+          </a>
+        </div>
+      </li>
+    </ul>
+    <ul class="navbar-nav mr-3">
+      <li class="nav-item dropdown" ngbDropdown>
+        <a href="javascript:void(0)" class="nav-link ml-2" ngbDropdownToggle>
+          <i class="fa fa-fw fa-exchange"></i>&nbsp;Gens<b class="caret"></b>
+        </a>
+        <div class="dropdown-menu-right" ngbDropdownMenu>
+          <a class="dropdown-item" href="javascript:void(0)">
+            <i class="fa fa-fw fa-exchange"></i>&nbsp;{{ '영문용어생성' | translate }}
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="javascript:void(0)">
+            <i class="fa fa-fw fa-exchange"></i>&nbsp;{{ '한글용어생성' | translate }}
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" routerLink="/tran-camel" [routerLinkActive]="['router-link-active']" >
+            <i class="fa fa-fw fa-exchange"></i>&nbsp;{{ '한글주석생성' | translate }}
+          </a>
+        </div>
+      </li>
+    </ul>
+    <ul class="navbar-nav mr-3">
+      <li class="nav-item dropdown" ngbDropdown>
+        <a href="javascript:void(0)" class="nav-link ml-2" ngbDropdownToggle>
+          <i class="fa fa-fw fa-exchange"></i>&nbsp;Trans<b class="caret"></b>
+        </a>
+        <div class="dropdown-menu-right" ngbDropdownMenu>
+          <a class="dropdown-item" routerLink="/tran-camel" [routerLinkActive]="['router-link-active']" >
+            <i class="fa fa-fw fa-exchange"></i>&nbsp;{{ 'Camel' | translate }}
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" routerLink="/delimeter" [routerLinkActive]="['router-link-active']" >
+            <i class="fa fa-fw fa-exchange"></i>&nbsp;{{ 'Delimeter' | translate }}
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="javascript:void(0)">
+            <i class="fa fa-fw fa-exchange"></i>&nbsp;{{ 'CharacterSet' | translate }}
+          </a>
+        </div>
+      </li>
+    </ul>
+    <ul class="navbar-nav mr-3">
+      <li class="nav-item dropdown" ngbDropdown>
+        <a href="javascript:void(0)" class="nav-link ml-2" ngbDropdownToggle>
+          <i class="fa fa-fw fa-copy"></i>&nbsp;Clone<b class="caret"></b>
+        </a>
+        <div class="dropdown-menu-right" ngbDropdownMenu>
+          <a class="dropdown-item" routerLink="/clone-angular" [routerLinkActive]="['router-link-active']" >
+            <i class="fa fa-fw fa-copy"></i>&nbsp;{{ 'Angular' | translate }}
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" routerLink="/clone-spring" [routerLinkActive]="['router-link-active']" >
+            <i class="fa fa-fw fa-copy"></i>&nbsp;{{ 'Spring' | translate }}
+          </a>
+        </div>
+      </li>
+    </ul>
+    <ul class="navbar-nav mr-3">
+      <li class="nav-item dropdown" ngbDropdown>
+        <a href="javascript:void(0)" class="nav-link ml-2" ngbDropdownToggle>
+          <i class="fa fa-fw fa-exchange"></i>&nbsp;ETT<b class="caret"></b>
+        </a>
+        <div class="dropdown-menu-right" ngbDropdownMenu>
+          <a class="dropdown-item" routerLink="/tran-camel" [routerLinkActive]="['router-link-active']" >
+            <i class="fa fa-fw fa-exchange"></i>&nbsp;{{ 'Csv' | translate }}
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="javascript:void(0)">
+            <i class="fa fa-fw fa-exchange"></i>&nbsp;{{ 'SingleTable' | translate }}
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="javascript:void(0)">
+            <i class="fa fa-fw fa-exchange"></i>&nbsp;{{ 'QueryTable' | translate }}
+          </a>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <ul class="navbar-nav mr-sm-4 mr-5">
+    <li class="nav-item dropdown" ngbDropdown>
+      <a href="javascript:void(0)" class="nav-link ml-2" ngbDropdownToggle>
+        <i class="fa fa-fw fa-gear"></i>&nbsp;Settings<b class="caret"></b>
+      </a>
+      <div class="dropdown-menu-right mr-5" ngbDropdownMenu>
+        <a class="dropdown-item" routerLink="/jdbc-info" [routerLinkActive]="['router-link-active']" >
+          <i class="fa fa-fw fa-save"></i>&nbsp;{{ 'JDBC' | translate }}
+        </a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="javascript:void(0)">
+          <i class="fa fa-fw fa-save"></i>&nbsp;{{ 'Code' | translate }}
+        </a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="javascript:void(0)">
+          <i class="fa fa-fw fa-copyright"></i>&nbsp;{{ 'License' | translate }}
+        </a>
+      </div>
+    </li>
+  </ul>
+</nav>

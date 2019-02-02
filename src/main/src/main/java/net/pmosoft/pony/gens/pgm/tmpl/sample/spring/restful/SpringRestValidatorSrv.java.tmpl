@@ -1,0 +1,91 @@
+package $packNm$;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.web.context.WebApplicationContext;
+
+@WebAppConfiguration // 웹 컨텍스트 테스트 활성화
+
+@Service
+public class $PgmNm$ValidatorSrv {
+
+	public Map<String, String> validateSave$PgmNm$(Map<String, String> target) {
+
+		System.out.println("validateSave$PgmNm$");
+
+		Map<String, String> errors = new HashMap<String, String>();
+		System.out.println("validateSave$PgmNm$11");
+
+//		if (target.get("$PgmNm$_ID").length() < 5 || target.get("$PgmNm$_ID").length() > 15) {
+//			errors.put("errUserMsg", "유저아이디를 5자리에서 14자리로 입력해 주시기 바랍니다.");
+//		} else if  (target.get("$PgmNm$_EMAIL").length() < 5 || target.get("$PgmNm$_EMAIL").length() > 15) {
+//			errors.put("errUserMsg", "이메일 형식이 아닙니다.");
+//		} else if  (target.get("$PgmNm$_PW").length() < 5 || target.get("$PgmNm$_PW").length() > 15) {
+//			errors.put("errUserMsg", "유저암호를 5자리에서 14자리로 입력해 주시기 바랍니다.");
+//		} else if  (!target.get("$PgmNm$_PW").equals(target.get("$PgmNm$_PW2"))) {
+//			errors.put("errUserMsg", "암호와 암호확인을 일치시켜 주십시요.");
+//		} else if  (target.get("$PgmNm$_NM").length() < 5 || target.get("$PgmNm$_NM").length() > 15) {
+//			errors.put("errUserMsg", "성명을 5자리에서 14자리로 입력해 주시기 바랍니다.");
+//		}
+		System.out.println("validateSave$PgmNm$55");
+
+		return errors;
+	}
+
+
+	public Map<String, String> validateDelete$PgmNm$(Map<String, String> target) {
+
+		Map<String, String> errors = new HashMap<String, String>();
+//		if (target.get("$PgmNm$_ID").length() < 5 || target.get("$PgmNm$_ID").length() > 15) {
+//			errors.put("errUserMsg", "유저아이디를 5자리에서 14자리로 입력해 주시기 바랍니다.");
+//		} else if  ($PgmNm$Dao.select$PgmNm$Cnt(target)==0) {
+//			errors.put("errUserMsg", "아이디가 미존재합니다.");
+//		}
+
+		return errors;
+	}
+
+	
+    public Map<String, String> validateSave$PgmNm$Info(Map<String, String> target) {
+
+        System.out.println("validateSave$PgmNm$Info");
+        
+        Map<String, String> errors = new HashMap<String, String>();
+        System.out.println("validateSave$PgmNm$Info11");
+        
+//      if (target.get("$PgmNm$Info_ID").length() < 5 || target.get("$PgmNm$Info_ID").length() > 15) {
+//          errors.put("errUserMsg", "유저아이디를 5자리에서 14자리로 입력해 주시기 바랍니다.");
+//      } else if  (target.get("$PgmNm$Info_EMAIL").length() < 5 || target.get("$PgmNm$Info_EMAIL").length() > 15) {
+//          errors.put("errUserMsg", "이메일 형식이 아닙니다.");
+//      } else if  (target.get("$PgmNm$Info_PW").length() < 5 || target.get("$PgmNm$Info_PW").length() > 15) {
+//          errors.put("errUserMsg", "유저암호를 5자리에서 14자리로 입력해 주시기 바랍니다.");
+//      } else if  (!target.get("$PgmNm$Info_PW").equals(target.get("$PgmNm$Info_PW2"))) {
+//          errors.put("errUserMsg", "암호와 암호확인을 일치시켜 주십시요.");
+//      } else if  (target.get("$PgmNm$Info_NM").length() < 5 || target.get("$PgmNm$Info_NM").length() > 15) {
+//          errors.put("errUserMsg", "성명을 5자리에서 14자리로 입력해 주시기 바랍니다.");
+//      }
+        System.out.println("validateSave$PgmNm$Info55");
+        
+        return errors;
+    }
+    
+    
+    public Map<String, String> validateDelete$PgmNm$Info(Map<String, String> target) {
+        
+        Map<String, String> errors = new HashMap<String, String>();
+//      if (target.get("$PgmNm$Info_ID").length() < 5 || target.get("$PgmNm$Info_ID").length() > 15) {
+//          errors.put("errUserMsg", "유저아이디를 5자리에서 14자리로 입력해 주시기 바랍니다.");
+//      } else if  ($PgmNm$InfoDao.select$PgmNm$InfoCnt(target)==0) {
+//          errors.put("errUserMsg", "아이디가 미존재합니다.");
+//      }   
+            
+        return errors;
+    }
+    	
+	
+	
+}

@@ -262,6 +262,53 @@ public class TabInfoSrv {
         return result;
     }
 
+    /**
+    * (조회)
+    */
+    public Map<String, Object> selectCreateScript(List<TabInfo> inVo){
+        System.out.println("selectCreateScript");
+        System.out.println("inVo.size()="+inVo.size());
+
+        Map<String, Object> result = new HashMap<String, Object>();
+        String str = "";
+        String pk = "";
+
+
+        try{
+            for (int i = 0; i < inVo.size(); i++) {
+                if(inVo.get(i).chk){
+                    inVo.get(i).setOrderBy("1");
+                    List<TabInfo> tab = tabInfoDao.selectTabInfoList(inVo.get(i));
+                    //System.out.println("outVo="+outVo.size());
+                    str += "--DROP TABLE "+inVo.get(i).getOwner()+"."+inVo.get(i).getTabNm()+";\n";
+                    str += "CREATE TABLE "+inVo.get(i).getOwner()+"."+inVo.get(i).getTabNm()+"\n";
+                    str += "(\n";
+                    pk  += " CONSTRAINT "+inVo.get(i).getTabNm()+"_PK PRIMARY KEY(";
+
+                    for (int j = 0; j < tab.size(); j++) {
+                        str += (j>0) ? "," : " ";
+                        str += tab.get(j).colNm +" "+ tab.get(j).dataTypeDesc +" "+ tab.get(j).nullable+"\n";
+                        //System.out.println("tabNm="+tabNm);
+                        if(tab.get(j).pk.equals("Y")) pk += tab.get(j).colNm + ",";
+                    }
+                    pk += ")";pk = pk.replace(",)", ")");
+                    str += pk+"\n";
+                    str += ");\n";
+                    pk = "";
+                }
+            }
+            result.put("isSuccess", true);
+            result.put("createScript", str);
+        } catch (Exception e){
+            result.put("isSuccess", false);
+            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
+            result.put("errSysMsg", e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
     /*
      * (테스트) 커넥션 테스트
      * @param jdbcNm,owner,tabNm

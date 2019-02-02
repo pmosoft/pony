@@ -1,0 +1,55 @@
+<div class="clearfix mb-3">
+  <div class="float-left"> Table > 컬럼조회  </div>
+  <div class="float-right">
+    <button type="button" class="btn btn-outline-primary mr-2 btn-sm" (click)="onDownloadExcel()">
+        <i class="fa fa-file-excel-o"></i>&nbsp;엑셀
+    </button>
+    <button type="button" class="btn btn-outline-primary mr-2 btn-sm" (click)="onSelectColList()">
+      <i class="fa fa-tasks fa-fw"></i>&nbsp;조회
+    </button>
+  </div>
+</div>
+<div class="mb-4">
+  <div class="clearfix">
+    <div class="float-left">
+        <select class="btn btn-outline-primary btn-sm mr-2" (change)="onChangeComboJdbc($event.target.selectedIndex)" >
+          <option *ngFor="let combo of comboJdbc" [value]="combo.jdbcNm" >{{combo.jdbcNm}}</option>
+        </select>
+        <input [(ngModel)]="tabInfoInVo.colNm"    class="btn btn-outline-primary btn-sm mr-2" (keyup.enter)="onSelectColList()" placeholder="컬럼명">
+        <input [(ngModel)]="tabInfoInVo.colHnm"   class="btn btn-outline-primary btn-sm mr-2" (keyup.enter)="onSelectColList()" placeholder="컬럼한글명">
+        <input [(ngModel)]="tabInfoInVo.tabNm"    class="btn btn-outline-primary btn-sm mr-2" (keyup.enter)="onSelectColList()" placeholder="테이블명">
+        <input [(ngModel)]="tabInfoInVo.tabHnm"   class="btn btn-outline-primary btn-sm mr-2" (keyup.enter)="onSelectColList()" placeholder="테이블한글명">
+        <select class="btn btn-outline-primary btn-sm mr-2" (change)="onChangeComboOrderBy($event.target.selectedIndex)"  >
+          <option *ngFor="let combo of comboOrderBy" [value]="combo.value" >{{combo.name}}</option>
+        </select>
+        <select class="btn btn-outline-primary btn-sm mr-2" (change)="onChangeComboAscDesc($event.target.selectedIndex)"  >
+          <option *ngFor="let combo of comboAscDesc" [value]="combo.value" >{{combo.name}}</option>
+        </select>
+    </div>
+  </div>
+</div>
+
+<div class="text-center">
+  <table class="table table-sm table-bordered table-hover">
+    <thead>
+      <tr>
+        <th style="width:100px;" scope="col">컬럼명</th>
+        <th style="width:100px;" scope="col">컬럼한글명</th>
+        <th style="width:100px;" scope="col">타입</th>
+        <th style="width: 80px;" scope="col">Rows</th>
+        <th style="width:100px;" scope="col">테이블명</th>
+        <th style="width:100px;" scope="col">JDBC</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let tabInfoOutVo of tabInfoOutVoList; let i=index">
+        <td class="text-left" >{{tabInfoOutVo.colNm         }}</td>
+        <td class="text-left" >{{tabInfoOutVo.colHnm        }}</td>
+        <td class="text-left" >{{tabInfoOutVo.dataTypeDesc  }}</td>
+        <td class="text-right">{{tabInfoOutVo.tabRows|number}}</td>
+        <td                   >{{tabInfoOutVo.tabNm         }}</td>
+        <td                   >{{tabInfoOutVo.jdbcNm        }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

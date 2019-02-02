@@ -1,0 +1,18 @@
+package $packNm$;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper
+public interface $PgmNm$Dao {
+
+	List<Map<String, Object>> select$PgmNm$List(Map<String,String> params);
+	int select$PgmNm$Cnt(Map<String,String> params);
+	void insert$PgmNm$(Map<String,String> params);
+	void delete$PgmNm$(Map<String,String> params);
+	void update$PgmNm$(Map<String,String> params);
+
+}
+

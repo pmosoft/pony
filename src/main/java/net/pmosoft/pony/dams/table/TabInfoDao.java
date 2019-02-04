@@ -38,7 +38,11 @@ public interface TabInfoDao {
     List<TabInfo> selectTabList(TabInfo inVo);
     List<TabInfo> selectColList(TabInfo inVo);
 
+    /**********************************************************************************
+    *                                       유틸
+    **********************************************************************************/
     List<TabInfo> selectCreateScript(TabInfo inVo);
+    List<Map<String, Object>> selectTabQryList(TabInfo inVo);
 
     //
 //    int selectMetaTabCnt(Map<String,Object> params);

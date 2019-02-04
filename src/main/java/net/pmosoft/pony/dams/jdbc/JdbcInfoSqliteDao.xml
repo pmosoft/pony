@@ -58,7 +58,7 @@
          , UPD_DTM
          , UPD_USR_ID
     FROM   TDACM00010
-    WHERE  JDBC_NM = #{jdbcNm}
+    WHERE  UPPER(JDBC_NM) = UPPER(#{jdbcNm})
     ORDER BY REG_DTM
 </select>
 

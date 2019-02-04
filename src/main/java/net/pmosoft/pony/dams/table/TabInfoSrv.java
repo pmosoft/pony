@@ -308,6 +308,30 @@ public class TabInfoSrv {
         return result;
     }
 
+    /**
+    * (조회)
+    */
+    public Map<String, Object> selectTabQryList(TabInfo inVo){
+
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        try{
+            List<Map<String,Object>> tabQryOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectTabQryList(inVo);
+            logger.info("tabInfoOutVoList="+tabQryOutVoList.size());
+            //logger.info("tabInfoOutVoList="+tabQryOutVoList.get(0).get(0));
+
+            result.put("isSuccess", true);
+            result.put("tabQryOutVoList", tabQryOutVoList);
+        } catch (Exception e){
+            result.put("isSuccess", false);
+            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
+            result.put("errSysMsg", e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
 
     /*
      * (테스트) 커넥션 테스트
@@ -345,68 +369,6 @@ public class TabInfoSrv {
 //            result.put("errSysMsg", e.getMessage());
 //            //e.printStackTrace();
 //        }
-//        return result;
-//    }
-//
-//    /**********************************************************************************
-//    *
-//    *                               ExtractMetaTabCol
-//    *
-//    **********************************************************************************/
-//
-//    private String findDao(Map<String,String> params){
-//
-//        String daoClassPath = "";
-//        Map<String,String> params2 = new HashMap<String,String>();
-//
-//        params2.put("CD_ID_NM","DYN_DAO_CD");
-//        params2.put("CD_NM",params.get("dbType"));
-////        List<Map<String,Object>> codeList = codeDao.selectCodeExt(params2);
-////        daoClassPath = (String) codeList.get(0).get("CD_PARAM1");
-//
-//        return daoClassPath;
-//    }
-//
-//    /**********************************************************************************
-//    *                                  Tab 분석
-//    **********************************************************************************/
-//
-//    public Map<String, Object> selectTabColList(Map<String,String> params){
-//
-//        Map<String, Object> result = new HashMap<String, Object>();
-//
-//        try{
-//            List<Map<String,Object>> list = tabInfoDao.selectTabColList(params);;
-//            result.put("isSuccess", true);
-//            result.put("data", list);
-//        } catch (Exception e){
-//            result.put("isSuccess", false);
-//            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
-//            result.put("errSysMsg", e.getMessage());
-//            e.printStackTrace();
-//        }
-//        return result;
-//    }
-//
-//    public Map<String, Object> selectTabList(Map<String,String> params){
-//
-//        Map<String, Object> result = new HashMap<String, Object>();
-//
-//        try{
-//            List<Map<String,Object>> list = tabInfoDao.selectTabList(params);;
-//            result.put("isSuccess", true);
-//            result.put("data", list);
-//        } catch (Exception e){
-//            result.put("isSuccess", false);
-//            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
-//            result.put("errSysMsg", e.getMessage());
-//            e.printStackTrace();
-//        }
-//        return result;
-//    }
-//
-//    public Map<String, Object> deleteTab(Map<String,String> params){
-//        Map<String, Object> result = new HashMap<String, Object>();
 //        return result;
 //    }
 //

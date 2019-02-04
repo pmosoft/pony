@@ -111,6 +111,14 @@ public class TabInfoCtrl {
         return tabInfoSrv.selectCreateScript(inVo);
     }
 
+    /*
+    * 테이블 데이터 리턴
+    * @param DB접속정보 및 테이블명 혹은 쿼리 및 rowcnt
+    * */
+    @RequestMapping(value = "/dams/table/selectTabQryList")
+    public Map<String, Object> selectTabQryList(@RequestBody TabInfo inVo){
+        return tabInfoSrv.selectTabQryList(inVo);
+    }
 
 //    /**********************************************************************************
 //    *

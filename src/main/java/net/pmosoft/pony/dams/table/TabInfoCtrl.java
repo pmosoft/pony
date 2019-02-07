@@ -31,32 +31,31 @@ public class TabInfoCtrl {
     **********************************************************************************/
     /*
      * (추출) 테이블메타정보 조회후 추출테이블정보테이블에 저장후 정보 리턴
-     * @param jdbcNm,owner,tabNm
-     * */
+     */
     @RequestMapping(value = "/dams/table/selectMetaTabInfoList")
     public Map<String, Object> selectMetaTabInfoList(@RequestBody TabInfo inVo) {
         return tabInfoSrv.selectMetaTabInfoList(inVo);
     }
 
      /**
-     * (비교) 추출테이블정보테이블과 현재 테이블정보테이블과 비교한 정보를 리턴한다.
-     */
+      * (비교) 추출테이블정보테이블과 현재 테이블정보테이블과 비교한 정보를 리턴한다.
+      */
     @RequestMapping(value = "/dams/table/selectCmpTabInfoList")
     public Map<String, Object> selectCmpTabInfoList(@RequestBody TabInfo inVo) {
         return tabInfoSrv.selectCmpTabInfoList(inVo);
     }
 
      /**
-     * (반영) 신규-변경 테이블정보를 반영한다
-     */
+      * (반영) 신규-변경 테이블정보를 반영한다
+      */
     @RequestMapping(value = "/dams/table/saveCmpTabInfoList")
     public Map<String, Object> insertCmpTabInfoList(@RequestBody TabInfo inVo) {
         return tabInfoSrv.saveCmpTabInfoList(inVo);
     }
 
     /**
-    * (삭제) 테이블정보를 삭제한다
-    */
+     * (삭제) 테이블정보를 삭제한다
+     */
     @RequestMapping(value = "/dams/table/deleteTabInfo")
     public Map<String, Object> deleteTabInfo(@RequestBody TabInfo inVo) {
         return tabInfoSrv.deleteTabInfo(inVo);
@@ -64,24 +63,24 @@ public class TabInfoCtrl {
 
 
     /**
-    * (조회) 추출되어 저장된 테이블정보를 조회한다.
-    */
+     * (조회) 추출되어 저장된 테이블정보를 조회한다.
+     */
     @RequestMapping(value = "/dams/table/selectTabInfoList")
     public Map<String, Object> selectTabInfoList(@RequestBody TabInfo inVo) {
         return tabInfoSrv.selectTabInfoList(inVo);
     }
 
     /**
-    * (조회) 테이블목록을 조회한다.
-    */
+     * (조회) 테이블목록을 조회한다.
+     */
     @RequestMapping(value = "/dams/table/selectTabList")
     public Map<String, Object> selectTabList(@RequestBody TabInfo inVo) {
         return tabInfoSrv.selectTabList(inVo);
     }
 
     /**
-    * (조회) 컬럼목록을 조회한다.
-    */
+     * (조회) 컬럼목록을 조회한다.
+     */
     @RequestMapping(value = "/dams/table/selectColList")
     public Map<String, Object> selectColList(@RequestBody TabInfo inVo) {
         return tabInfoSrv.selectColList(inVo);
@@ -105,19 +104,50 @@ public class TabInfoCtrl {
 
     /*
      * Create Script 생성
-     * */
+     */
     @RequestMapping(value = "/dams/table/selectCreateScript")
     public Map<String, Object> selectCreateScript(@RequestBody List<TabInfo> inVo){
         return tabInfoSrv.selectCreateScript(inVo);
     }
 
     /*
-    * 테이블 데이터 리턴
-    * @param DB접속정보 및 테이블명 혹은 쿼리 및 rowcnt
-    * */
+     * 테이블 쿼리 데이터 리턴
+     */
     @RequestMapping(value = "/dams/table/selectTabQryList")
     public Map<String, Object> selectTabQryList(@RequestBody TabInfo inVo){
         return tabInfoSrv.selectTabQryList(inVo);
+    }
+
+    /*
+     * 다운로드 Insert 문장
+     */
+    @RequestMapping(value = "/dams/table/downloadInsStat")
+    public Map<String, Object> downloadInsStat(@RequestBody TabInfo inVo){
+        return tabInfoSrv.downloadInsStat(inVo);
+    }
+
+    /*
+     * 다운로드 Excel로 데이터 출력
+     */
+    @RequestMapping(value = "/dams/table/downloadExcel")
+    public Map<String, Object> downloadExcel(@RequestBody TabInfo inVo){
+        return tabInfoSrv.downloadExcel(inVo);
+    }
+
+    /*
+     * 다운로드 Comma File
+     */
+    @RequestMapping(value = "/dams/table/downloadCommaFile")
+    public Map<String, Object> downloadCommaFile(@RequestBody TabInfo inVo){
+        return tabInfoSrv.downloadCommaFile(inVo);
+    }
+
+    /*
+     * 다운로드 Bar File
+     */
+    @RequestMapping(value = "/dams/table/downloadBarFile")
+    public Map<String, Object> downloadBarFile(@RequestBody TabInfo inVo){
+        return tabInfoSrv.downloadBarFile(inVo);
     }
 
 //    /**********************************************************************************

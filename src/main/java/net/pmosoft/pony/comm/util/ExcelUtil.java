@@ -24,16 +24,16 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 public class ExcelUtil {
 
-    
+
 	public void downRsToExcel(ResultSet rs, String filePathNm) throws SQLException {
 		Workbook xlsWb;
 		Sheet sheet1;
 		Row row = null;
 		Cell cell = null;
-		
+
 		xlsWb = new HSSFWorkbook();
 		sheet1 = xlsWb.createSheet("sheet1");
-		
+
 		//---------------------------------------
 		// Header
 		//---------------------------------------
@@ -46,7 +46,7 @@ public class ExcelUtil {
 			System.out.println(rsmd.getColumnName(i+1));
 			cell.setCellValue(rsmd.getColumnName(i+1));
 		}
-		
+
 		//---------------------------------------
 		// Data
 		//---------------------------------------
@@ -56,12 +56,12 @@ public class ExcelUtil {
 			for (int i = 0; i < colCnt; i++) {
 				cell = row.createCell(i);
 				cell.setCellValue(rs.getString(i+1));
-				System.out.println("i="+i+" "+rsmd.getColumnName(i+1)+"   "+rs.getString(i+1));				
+				System.out.println("i="+i+" "+rsmd.getColumnName(i+1)+"   "+rs.getString(i+1));
 			}
 			System.out.println("j="+j);
 			j++;
 		}
-	
+
 		//---------------------------------------
 		// Create Excel File
 		//---------------------------------------
@@ -75,7 +75,7 @@ public class ExcelUtil {
 			System.out.println("IOException >> "+ ie.toString());
 		}
 	}
-	
+
 
     public void downListToExcel(List<Map<String,String>> list, String filePathNm) throws SQLException {
         Workbook xlsWb;
@@ -83,13 +83,13 @@ public class ExcelUtil {
         Row row = null;
         Cell cell = null;
 
-        System.out.println("downListToExcel");        
-        
+        System.out.println("downListToExcel");
+
         xlsWb = new HSSFWorkbook();
         sheet1 = xlsWb.createSheet("sheet1");
-        
+
         System.out.println("list.size()="+list.size());
-       
+
         //---------------------------------------
         // Data
         //---------------------------------------
@@ -100,64 +100,128 @@ public class ExcelUtil {
                 cell = row.createCell(j);
                 cell.setCellValue(entry.getKey());
                 j++;
-            }        
+            }
 
             for (int i = 0; i < list.size(); i++) {
                 row = sheet1.createRow(i+1);
-                j=0;    
+                j=0;
                 for (Map.Entry<String, String> entry : list.get(i).entrySet()) {
                     cell = row.createCell(j);
                     cell.setCellValue(entry.getValue());
                     j++;
                     //System.out.println("Item : " + entry.getKey() + " Count : " + entry.getValue());
-                }        
+                }
             }
         }
-    
+
         //---------------------------------------
         // Create Excel File
         //---------------------------------------
         try {
             File xlsFile = new File(filePathNm);
-            
-            System.out.println(filePathNm);     
-            
-            System.out.println("downListToExcel1");        
-            
+
+            System.out.println(filePathNm);
+
+            System.out.println("downListToExcel1");
+
             FileOutputStream fileOut = new FileOutputStream(xlsFile);
-            System.out.println("downListToExcel2");        
+            System.out.println("downListToExcel2");
 
             xlsWb.write(fileOut);
-            System.out.println("downListToExcel3");        
-            
+            System.out.println("downListToExcel3");
+
             fileOut.close();
-            System.out.println("downListToExcel4");        
+            System.out.println("downListToExcel4");
 
 
         } catch (Exception e) {
-            System.out.println("downListToExcel5");        
+            System.out.println("downListToExcel5");
 
             e.printStackTrace();
         }
-    }	
-	
+    }
+
+    public void downListToExcel2(List<Map<String,Object>> list, String filePathNm) throws SQLException {
+        Workbook xlsWb;
+        Sheet sheet1;
+        Row row = null;
+        Cell cell = null;
+
+        System.out.println("downListToExcel");
+
+        xlsWb = new HSSFWorkbook();
+        sheet1 = xlsWb.createSheet("sheet1");
+
+        System.out.println("list.size()="+list.size());
+
+        //---------------------------------------
+        // Data
+        //---------------------------------------
+        if(list.size()>0){
+            row = sheet1.createRow(0);
+            int j=0;
+            for (Map.Entry<String, Object> entry : list.get(0).entrySet()) {
+                cell = row.createCell(j);
+                cell.setCellValue(entry.getKey());
+                j++;
+            }
+
+            for (int i = 0; i < list.size(); i++) {
+                row = sheet1.createRow(i+1);
+                j=0;
+                for (Map.Entry<String, Object> entry : list.get(i).entrySet()) {
+                    cell = row.createCell(j);
+                    cell.setCellValue(entry.getValue().toString());
+                    j++;
+                    //System.out.println("Item : " + entry.getKey() + " Count : " + entry.getValue());
+                }
+            }
+        }
+
+        //---------------------------------------
+        // Create Excel File
+        //---------------------------------------
+        try {
+            File xlsFile = new File(filePathNm);
+
+            System.out.println(filePathNm);
+
+            System.out.println("downListToExcel1");
+
+            FileOutputStream fileOut = new FileOutputStream(xlsFile);
+            System.out.println("downListToExcel2");
+
+            xlsWb.write(fileOut);
+            System.out.println("downListToExcel3");
+
+            fileOut.close();
+            System.out.println("downListToExcel4");
+
+
+        } catch (Exception e) {
+            System.out.println("downListToExcel5");
+
+            e.printStackTrace();
+        }
+    }
+
     public List<Map<String,String>> xlsToList(String filePathNm) {
-        
+
         List<Map<String,String>> list = new ArrayList<Map<String,String>>();
-        
+
         try {
             FileInputStream fis;
 
             fis = new FileInputStream(filePathNm);
             HSSFWorkbook workbook = new HSSFWorkbook(fis);
-            
+
             int rowindex = 0;
             int columnindex = 0;
-    
+
             HSSFSheet sheet = workbook.getSheetAt(0);
-            
+
             List<String> cols = new ArrayList<String>();
-    
+
             int rows = sheet.getPhysicalNumberOfRows();
             for (rowindex = 0; rowindex < rows; rowindex++) {
                 // 행을 읽는다
@@ -168,7 +232,7 @@ public class ExcelUtil {
                     Map<String,String> map = new LinkedHashMap<String,String>();
                     for (columnindex = 0; columnindex <= cells; columnindex++) {
                         // 셀값을 읽는다
-                        
+
                         String value = (row.getCell(columnindex)==null)?"":row.getCell(columnindex).toString();
     //                    String value = "";
                         // 셀이 빈값일경우를 위한 널체크
@@ -195,7 +259,7 @@ public class ExcelUtil {
     //                        }
     //
     //                    }
-                        //System.out.println("value="+value);                    
+                        //System.out.println("value="+value);
                         if(rowindex == 0){
                             cols.add(value);
                         } else {
@@ -209,10 +273,10 @@ public class ExcelUtil {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
+
         //System.out.println(list);
-        
+
         return list;
-    }   
-    
+    }
+
 }

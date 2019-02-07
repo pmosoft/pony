@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.pmosoft.pony.dams.table.TabInfoDao">
+
+<!--*******************************************************************************************************************
+**                                             (추출) 테이블정보 추출 및 저장
+********************************************************************************************************************-->
+
+<select id="selectMetaTabInfoList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="net.pmosoft.pony.dams.table.TabInfo">
+    -- TabInfoDao.selectMetaTabInfoList(SQLITE)
+</select>
+
+</mapper>

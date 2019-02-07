@@ -18,7 +18,16 @@ public class StringTest
         //test01();
         //끝문자제거();
         //구분자배열();
-        정규식02();
+        //정규식02();
+        Contain();
+    }
+
+    static void Contain() {
+        String str = "int";
+        if(str.contains("var2char|null")) System.out.println("varchar"); else System.out.println("na");
+        if(str.matches(".*(var2char|null).*")) System.out.println("varchar"); else System.out.println("na");
+        if(str.toUpperCase().matches(".*(NUMBER|INT|NUMERIC).*")) System.out.println("varchar"); else System.out.println("na");
+
     }
 
     static void 정규식02() {

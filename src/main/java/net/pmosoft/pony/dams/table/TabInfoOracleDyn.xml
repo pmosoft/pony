@@ -17,10 +17,10 @@
          , UPPER(#{jdbcNm})                                                                                    as jdbcNm
          , A.OWNER                                                                                             as owner
          , A.TABLE_NAME                                                                                        as tabNm
-         , NVL(D.COMMENTS,'')                                                                                  as tabHnm
+         , NVL(D.COMMENTS,' ')                                                                                 as tabHnm
          , A.COLUMN_ID                                                                                         as colId
          , A.COLUMN_NAME                                                                                       as colNm
-         , NVL(B.COMMENTS,'')                                                                                  as colHnm
+         , NVL(B.COMMENTS,' ')                                                                                 as colHnm
          , CASE WHEN A.DATA_TYPE IN ('CHAR','VARCHAR','VARCHAR2') THEN A.DATA_TYPE||'('||A.DATA_LENGTH||')'
                 WHEN A.DATA_TYPE IN ('NUMBER') AND A.DATA_PRECISION IS NULL THEN A.DATA_TYPE
                 WHEN A.DATA_TYPE IN ('NUMBER') THEN A.DATA_TYPE||'('||A.DATA_PRECISION||','||A.DATA_SCALE||')'
@@ -28,7 +28,7 @@
                 ELSE A.DATA_TYPE
            END                                                                                                 as dataTypeDesc
          , DECODE(A.NULLABLE,'Y',' ','NOT NULL')                                                               as nullable
-         , DECODE(F.COLUMN_NAME,NULL,'','PK')                                                                  as pk
+         , DECODE(F.COLUMN_NAME,NULL,' ','Y')                                                                  as pk
          , A.DATA_TYPE                                                                                         as dataTypeNm
          , A.DATA_LENGTH                                                                                       as len
          , A.DATA_PRECISION                                                                                    as decimalCnt
@@ -38,9 +38,9 @@
          , TO_CHAR(E.LAST_DDL_TIME,'YYYYMMDD')                                                                 as tabUpdDt
          , TO_CHAR(E.LAST_DDL_TIME,'YYYY-MM-DD')                                                               as tabUpdDt2
          , TO_CHAR(SYSTIMESTAMP,'YYYYMMDDHH24MISSFF2')                                                         as regDtm
-         , ''                                                                                                  as regUsrId
+         , ' '                                                                                                 as regUsrId
          , TO_CHAR(SYSTIMESTAMP,'YYYYMMDDHH24MISSFF2')                                                         as updDtm
-         , ''                                                                                                  as updUsrId
+         , ' '                                                                                                 as updUsrId
    FROM    SYS.ALL_TAB_COLUMNS  A,
            SYS.ALL_COL_COMMENTS B,
            SYS.ALL_TABLES       C,
@@ -72,13 +72,27 @@
 
 </select>
 
-
 <select id="selectTabQryList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="java.util.LinkedHashMap">
 <![CDATA[
     -- TableDao.selectTabQryList(ORACLE)
     SELECT * FROM ${tabNm} WHERE ROWNUM <= 5000
 ]]>
 </select>
+
+<select id="selectInsStat" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="java.util.LinkedHashMap">
+<![CDATA[
+    -- TableDao.selectInsStat(ORACLE)
+    SELECT * FROM ${tabNm}
+]]>
+</select>
+
+<select id="selectDataCnt" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="int">
+<![CDATA[
+    -- TableDao.selectInsStat(ORACLE)
+    SELECT COUNT(*) CNT FROM ${tabNm}
+]]>
+</select>
+
 
 
 </mapper>

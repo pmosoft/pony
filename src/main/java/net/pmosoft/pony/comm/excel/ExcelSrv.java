@@ -34,10 +34,10 @@ public class ExcelSrv {
 
         Map<String, Object> result = new HashMap<String, Object>();
 
-         
+
         String data = params.get("data");
         System.out.println("data="+data);
-        Gson gson = new Gson(); 
+        Gson gson = new Gson();
         Type type = new TypeToken<List<Map<String,String>>>() {}.getType();
         List<Map<String,String>> listParams  = gson.fromJson(data, type);
         System.out.println(listParams);
@@ -46,49 +46,49 @@ public class ExcelSrv {
             excelDown.downListToExcel(listParams,App.excelPath+params.get("fileNm"));
             Runtime run = Runtime.getRuntime ();
             run.exec ("cmd /c start excel.exe "+App.excelPath+params.get("fileNm"));
-            
+
             result.put("isSuccess", true);
-            
-        } catch (Exception e) { 
-            
+
+        } catch (Exception e) {
+
             result.put("isSuccess", false);
             result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
             result.put("errSysMsg", e.getMessage());
             e.printStackTrace();
 
         }
-        
-        
+
+
         return result;
 	}
 
     public JSONObject  uploadExcel(ArrayList<MultipartFile> files) {
          String fileNm = files.get(0).getOriginalFilename();
          //System.out.println("fileNm="+fileNm);
-         
+
          JSONObject jsonObj = new JSONObject();
-         
+
          try {
 //             for (int i = 0; i < files.size(); i++) {
 //                 byte[] bytes = files.get(i).getBytes();
 //                 Path path = Paths.get(App.excelPath + fileNm);
 //                 Files.write(path, bytes);
-//             } 
+//             }
              byte[] bytes = files.get(0).getBytes();
              Path path = Paths.get(App.excelPath + fileNm);
              Files.write(path, bytes);
-             
+
              ExcelUtil eu = new ExcelUtil();
-             List<Map<String,String>> list = eu.xlsToList(App.excelPath + fileNm); 
+             List<Map<String,String>> list = eu.xlsToList(App.excelPath + fileNm);
 
              jsonObj.put("success", true);
              jsonObj.put("isSuccess", true);
              jsonObj.put("successMsg", "업로드 되었습니다");
              jsonObj.put("data", list);
-             
+
          } catch (Exception e) {
              //e.printStackTrace();
-            
+
              System.out.println("ExcelSrv asdfasdfasdfasdf");
              jsonObj.put("isSuccess", false);
              jsonObj.put("errUsrMsg", "시스템 장애가 발생하였습니다");
@@ -96,37 +96,37 @@ public class ExcelSrv {
          } finally {
              return jsonObj;
          }
-         
+
 
     }
-    
+
     public JSONObject  uploadExcel2(MultipartFile files) {
         String fileNm = files.getOriginalFilename();
         //System.out.println("fileNm="+fileNm);
-        
+
         JSONObject jsonObj = new JSONObject();
-        
+
         try {
 //            for (int i = 0; i < files.size(); i++) {
 //                byte[] bytes = files.get(i).getBytes();
 //                Path path = Paths.get(App.excelPath + fileNm);
 //                Files.write(path, bytes);
-//            } 
+//            }
             byte[] bytes = files.getBytes();
             Path path = Paths.get(App.excelPath + fileNm);
             System.out.println(App.excelPath + fileNm);
             Files.write(path, bytes);
-             
-            List<Map<String,String>> list = null; 
+
+            List<Map<String,String>> list = null;
 
             jsonObj.put("success", true);
             jsonObj.put("isSuccess", true);
             jsonObj.put("successMsg", "업로드 되었습니다");
             jsonObj.put("data", list);
-            
+
         } catch (Exception e) {
             //e.printStackTrace();
-           
+
             System.out.println("ExcelSrv asdfasdfasdfasdf");
             jsonObj.put("isSuccess", false);
             jsonObj.put("errUsrMsg", "시스템 장애가 발생하였습니다");
@@ -134,8 +134,8 @@ public class ExcelSrv {
         } finally {
             return jsonObj;
         }
-        
 
-   }     
-    
+
+   }
+
 }

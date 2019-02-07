@@ -24,14 +24,14 @@
          , CASE WHEN UPPER(A.DATA_TYPE) = 'INT' THEN UPPER(A.DATA_TYPE)
                 ELSE UPPER(A.COLUMN_TYPE)
            END                                                                                AS dataTypeDesc
-         , CASE WHEN IS_NULLABLE = 'NO' THEN 'NOT NULL' ELSE '' END                           AS nullable
-         , CASE WHEN A.COLUMN_KEY = 'PRI' THEN 'Y' ELSE '' END                                AS pk
+         , CASE WHEN IS_NULLABLE = 'NO' THEN 'NOT NULL' ELSE ' ' END                          AS nullable
+         , CASE WHEN A.COLUMN_KEY = 'PRI' THEN 'Y' ELSE ' ' END                               AS pk
          , UPPER(A.DATA_TYPE)                                                                 AS dataTypeNm
          , CASE WHEN UPPER(A.DATA_TYPE) IN ('CHAR','VARCHAR') THEN A.CHARACTER_MAXIMUM_LENGTH
                 WHEN UPPER(A.DATA_TYPE) IN ('INT','NUMERIC') THEN A.NUMERIC_PRECISION
            END                                                                                AS len
          , A.NUMERIC_SCALE                                                                    AS decimalCnt
-         , B.TABLE_ROWS                                                                       AS tabRows
+         , IFNULL(B.TABLE_ROWS,0)                                                             AS tabRows
          , DATE_FORMAT(B.CREATE_TIME,'%Y%m%d')                                                AS tabRegDt
          , DATE_FORMAT(B.CREATE_TIME,'%Y-%m-%d')                                              AS tabRegDt2
          , DATE_FORMAT(B.UPDATE_TIME,'%Y%m%d')                                                AS tabUpdDt
@@ -56,6 +56,20 @@
     -- TableDao.selectTabQryList(MARIADB)
     SELECT * FROM ${tabNm} limit 5000
 
+</select>
+
+<select id="selectInsStat" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="java.util.LinkedHashMap">
+<![CDATA[
+    -- TableDao.selectInsStat(MARIADB)
+    SELECT * FROM ${tabNm}
+]]>
+</select>
+
+<select id="selectDataCnt" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="int">
+<![CDATA[
+    -- TableDao.selectInsStat(MARIADB)
+    SELECT COUNT(*) CNT FROM ${tabNm}
+]]>
 </select>
 
 

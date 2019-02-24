@@ -54,7 +54,7 @@
 <select id="selectTabQryList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="java.util.LinkedHashMap">
 
     -- TableDao.selectTabQryList(MARIADB)
-    SELECT * FROM ${tabNm} limit 5000
+    SELECT * FROM ${tabNm} ORDER BY ${orderBy} ${ascDesc} limit 5000
 
 </select>
 

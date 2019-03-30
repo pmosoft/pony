@@ -1,5 +1,9 @@
 package net.pmosoft.pony.comm.util;
 
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class StringUtil {
 
    public static String padRight(String s, int n) {
@@ -64,7 +68,7 @@ public class StringUtil {
     /**
      * 배열을 받아 연결될 문자열로 연결한다 이때 각 엘레먼트 사이에 구분문자열을 추가한다.
      */
-    public static String StringJoin(Object aStr[], String padStr){
+    public static String stringJoin(Object aStr[], String padStr){
     	StringBuffer strBuff = new StringBuffer();
 
     	int i = aStr.length;
@@ -76,6 +80,24 @@ public class StringUtil {
     		strBuff.append(aStr[j].toString());
     	}
     	return strBuff.toString();
+    }
+
+    /**
+     * 리스트를 sysout으로 출력
+     */
+    public static void printList(ArrayList<String> arrayList){
+        for (int i = 0; i < arrayList.size(); i++) {
+            System.out.println(arrayList.get(i));
+        }
+    }
+
+    /**
+     * 정규식에 일치하는 패턴 그룹정보를 리턴
+     */
+    public static String patternMatch(String str, String rule) {
+        Pattern p; Matcher m;
+        p = Pattern.compile(rule); m = p.matcher(str); m.find();
+        return m.group();
     }
 
 }

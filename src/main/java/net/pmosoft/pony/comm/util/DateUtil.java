@@ -13,23 +13,23 @@ import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
 public class DateUtil {
-	
+
     /*
      * yyyyMMddHHmmss
      * */
 	public static String getDate(String strFormat) {
-		
+
 		Calendar cal = Calendar.getInstance();
 		Date currentTime = cal.getTime();
 
 		//SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
 		SimpleDateFormat formatter = new SimpleDateFormat(strFormat);
 		String ndate = formatter.format(currentTime);
-		
+
 		return ndate;
 	}
-	
-	
+
+
 	public static Date getCurrentDate() {
 		try {
 			TimeZone tz = new SimpleTimeZone( 9 * 60 * 60 * 1000, "KST" );
@@ -39,13 +39,13 @@ public class DateUtil {
     }
 
 	/**
-     * 
+     *
      * 현재 일자를 원하는 format 으로 변경하여 문자열로 리턴<br>
-     * 
+     *
      * @author sung hyun jung
      * @version 1.0
      * @modifydate 2001 5. 19.
-     * 
+     *
      * @param date_format 날짜 반환 유형
      *                                  yyyy - 년도
      *                                  MM - 월
@@ -54,7 +54,7 @@ public class DateUtil {
      *                                  mm - 분
      *                                  ss - 초
      * @return 문자열
-     */    
+     */
 	public static String getTodayString(String date_format) {
 		String dateStr = "";
 		try {
@@ -66,13 +66,13 @@ public class DateUtil {
 	}
 
     /**
-     * 
+     *
      * 현재 일자를 YYYYMMDD 형식으로 리턴<br>
-     * 
+     *
      * @author sung hyun jung
      * @version 1.0
      * @modifydate 2001 11. 22.
-     * 
+     *
      * @param date_format 날짜 반환 유형
      *                                  yyyy - 년도
      *                                  MM - 월
@@ -81,7 +81,7 @@ public class DateUtil {
      *                                  mm - 분
      *                                  ss - 초
      * @return 문자열
-     */    
+     */
 	public static String getTodayString2() {
 		SimpleTimeZone kst = new SimpleTimeZone(0x1ee6280, "KST");
 		Calendar cal = Calendar.getInstance(kst);
@@ -100,13 +100,13 @@ public class DateUtil {
 	}
 
     /**
-     * 
+     *
      * 입력한 일자를 원하는 format 으로 변경하여 문자열로 리턴<br>
-     * 
+     *
      * @author sung hyun jung
      * @version 1.0
      * @modifydate 2001 5. 19.
-     * 
+     *
      * @param date_format 날짜 반환 유형
      *                                  yyyy - 년도
      *                                  MM - 월
@@ -115,7 +115,7 @@ public class DateUtil {
      *                                  mm - 분
      *                                  ss - 초
      * @return 문자열
-     */    
+     */
 	public static String getDateString(Date dt, String date_format) {
 		String dateStr = "";
 		try {
@@ -156,17 +156,17 @@ public class DateUtil {
 		} catch (Exception e) {}
 		return dateStr;
 	}
-	
+
    /**
-    * 
-    * 
+    *
+    *
     * JDBC용 특정 시점의 DATE를 리턴한다.<br>
-    * 
+    *
     * @author sung hyun jung
     * @version 1.0
     * @createdate 2001 6. 2.
     * @modifydate 2001 6. 2.
-    * 
+    *
     * @param dt 변환하고자 하는 날짜.
     * @return yyyy-MM-dd hh:mm:ss 형태의 날짜시간만 리턴
     */
@@ -181,15 +181,15 @@ public class DateUtil {
 	}
 
     /**
-     * 
-     * 
+     *
+     *
      * JDBC용 특정 시점의 DATE를 리턴한다.!<br>
      *
      * @author sung hyun jung
      * @version 1.0
      * @createdate 2001 6. 2.
      * @modifydate 2001 6. 2.
-     * 
+     *
      * @param dt
      * @return yyyy-mm-dd 포멧의 날짜만 리턴.
      */
@@ -200,19 +200,19 @@ public class DateUtil {
 		} else {
 			d = dt;
         }
-		return new java.sql.Date(d.getTime());  
+		return new java.sql.Date(d.getTime());
 	}
 
     /**
-     * 
-     * 
+     *
+     *
      * JDBC용 특정 시점의 시간을 리턴한다.!<br>
-     * 
+     *
      * @author sung hyun jung
      * @version 1.0
      * @createdate 2001 6. 2.
      * @modifydate 2001 6. 2.
-     * 
+     *
      * @param dt
      * @return hh:mm:ss 포멧의 시간만 리턴.
      */
@@ -227,15 +227,15 @@ public class DateUtil {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * 입력받은 String오브젝트를 특정한 포멧 형식의 Date 형으로 만들어 리턴 <br>
      * 예) stringToDate("2001-06-01", "yyyy-'-'MM'-'dd")<br>
-     * 
+     *
      * @author sung hyun jung
      * @version 1.0
      * @modifydate 2001 6. 7.
-     * 
+     *
      * @param d
      * @param format
      * @return
@@ -250,15 +250,15 @@ public class DateUtil {
 	}
 
     /**
-     * 
-     * 
+     *
+     *
      * 입력받은 String오브젝트를 특정한 포멧 형식의 Date 형으로 만들어 리턴 <br>
      * 예) stringToDate("2001-06-01", "yyyy-'-'MM'-'dd")<br>
-     * 
+     *
      * @author sung hyun jung
      * @version 1.0
      * @modifydate 2001 6. 7.
-     * 
+     *
      * @param d
      * @param format
      * @return
@@ -273,13 +273,13 @@ public class DateUtil {
 	}
 
     /**
-     * 
+     *
      * 주어진 날짜 문자열을 java.util.Date 형으로 반환한다.<br>
-     * 
+     *
      * @author sung hyun jung
      * @version 1.0
      * @modifydate 2001 6. 10.
-     * 
+     *
      * @param d
      * @return
      */
@@ -291,16 +291,16 @@ public class DateUtil {
         } catch (Exception dfdf) { }
         return ch;
     }
-	
-    
+
+
     /**
-     * 
+     *
      * 주어진 문자열을 java.util.Date 형으로 반환한다.<br>
-     * 
+     *
      * @author sung hyun jung
      * @version 1.0
      * @modifydate 2001 7. 2.
-     * 
+     *
      * @param d
      * @param format
      * @return
@@ -313,15 +313,15 @@ public class DateUtil {
 		} catch(Exception dfdf) { }
 		return ch;
     }
-    
+
     /**
-     * 
+     *
      * 오늘 날짜가 두 날짜 사이에 존재하는지 확인한다.<br>
-     * 
+     *
      * @author sung hyun jung
      * @version 1.0
      * @modifydate 2001 6. 10.
-     * 
+     *
      * @param first
      * @param second
      * @return
@@ -332,26 +332,26 @@ public class DateUtil {
         java.util.Date end = null;
         java.util.Date current = null;
 
-        try {            
+        try {
         	start = getDate(first, format);
             end = getDate(second, format);
             current = getDate(getTodayString(format), format);
         } catch (Exception pe) {
-        	return false;               
+        	return false;
         }
-        if ((start.before(current) && end.after(current)) || start.equals(current) || end.equals(current)) 
+        if ((start.before(current) && end.after(current)) || start.equals(current) || end.equals(current))
         	flag= true;
         return flag;
 	}
-    
+
     /**
-     * 
+     *
      * 주어진 날짜에 일자를 더한 날짜를 구한다.<br>
-     * 
+     *
      * @author sung hyun jung
      * @version 1.0
      * @modifydate 2001 11. 26.
-     * 
+     *
      * @param date
      * @param amount
      * @return
@@ -365,7 +365,7 @@ public class DateUtil {
 
      /**
       * 해당 주의 일요일부터 토요일까지의 날짜를 리턴
-      * 
+      *
       * @param year
       * @param month
       * @param date
@@ -388,13 +388,13 @@ public class DateUtil {
 
         return week;
 	}
-    
-    
+
+
 	private static String getFullDate(Calendar g, int i, Format format) {
 		g.add(Calendar.DATE, i);
 		return format.format(g.getTime());
     }
-    
+
     /**
      * 날짜문자열을 날짜표시타입으로 변환한다. <BR>
      * (예) 19981210 --> 1998-12-10  delimeter(-)        <BR>
@@ -425,15 +425,15 @@ public class DateUtil {
 
      /**
       * 두 날짜의 차이를 일수로 구하기
-      * 
+      *
       * @param nYear1
       * @param nMonth1
       * @param date
       * @param nYear2
       * @param nMonth2
-      * @param nDate2     
+      * @param nDate2
       * @return
-      */     
+      */
 	public static  int getDifferenceOfDate ( int nYear1, int nMonth1, int nDate1, int nYear2, int nMonth2, int nDate2) {
 		Calendar cal = Calendar.getInstance ( );
 		int nTotalDate1 = 0, nTotalDate2 = 0, nDiffOfYear = 0, nDiffOfDay = 0;
@@ -460,16 +460,16 @@ public class DateUtil {
 		nTotalDate2 += nDiffOfDay;
 
 		return nTotalDate1-nTotalDate2;
-	} 
-	 
+	}
+
      /**
       * 날짜로 요일구하기
-      * 
+      *
       * @param year
       * @param month
-      * @param date  
+      * @param date
       * @return
-      */    	 
+      */
 	public static String getWeekNm(int year,int month,int day) {
 		//제라의 공식
 		//그레고리력(1582년 10월 15일) 이후에만 적용된다
@@ -489,7 +489,7 @@ public class DateUtil {
 		//연월일만으로 요일을 계산하는 제라의 공식이 있다.
 		//서기 a백 b년 c월 d일의 요일을 알아보자.(단, 1월과 2월은 전년의 13월과 14월로 생각한다.)
 		//1. 먼저, w=[21a/4]+[5b/4]+[26(c+1)/10]+d-1 을 계산한다. (여기서 [x]는 가우스의 기호로써 x 이하의 정수 가운데 최대인 정수를 말한다.)
-		//2. 다음에 w를 7로 나눈 나머지를 구하고, 그 나머지가 0, 1, 2, 3, 4, 5, 6에 따라서 요일을 일, 월, 화, 수, 목, 금, 토로 한다. 
+		//2. 다음에 w를 7로 나눈 나머지를 구하고, 그 나머지가 0, 1, 2, 3, 4, 5, 6에 따라서 요일을 일, 월, 화, 수, 목, 금, 토로 한다.
 		int W = (21 * a / 4) + (5 * b / 4) + (26 * (c + 1) / 10) + d - 1;
 		W %= 7;
 
@@ -500,7 +500,7 @@ public class DateUtil {
 	public static void main(String[] arg) {
 		System.out.println("★★★★★★★★★★★★★★★[key] " + getDateString(getCurrentDate()));
 	}
-	
+
 	/**
 	 * from ~ to 기간동안의 특정요일을 반환한다.
 	 * @param from
@@ -511,7 +511,7 @@ public class DateUtil {
 	public static String[] getDayOfWeek(String from, String to, String[] week) {
 		int term = getDaysBetween(from, to, "yyyyMMdd");
 		int year, month, day;
-		String strWeek = StringUtil.StringJoin(week, ",");
+		String strWeek = StringUtil.stringJoin(week, ",");
 		ArrayList<String> list = new ArrayList<String>();
 		try {
 			SimpleDateFormat formatter = new SimpleDateFormat ("yyyyMMdd", java.util.Locale.KOREA);
@@ -647,11 +647,11 @@ public class DateUtil {
 		}
 
 		return new Timestamp (afterCal.getTime().getTime() );
-	}	
-		
-	
-	
-	
+	}
+
+
+
+
 	/**
 	 * 해당년월일의 마지막 날짜를 구한다.
 	 *
@@ -665,8 +665,8 @@ public class DateUtil {
 		Calendar cal = Calendar.getInstance();
 		cal.set(year,month-1, 1);
 		int lastDateOfMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-		 
+
 		return lastDateOfMonth;
-	}	
-	
+	}
+
 }

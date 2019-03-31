@@ -147,13 +147,12 @@ public class FileUtil {
      * 파일을 읽어서 String으로 변환(인코딩 반영)
      * */
     public static String fileToString(String pathFileNm, String encoding) {
-        BufferedReader br = null;
         String src = "";
         try {
             File file = new File(pathFileNm);
             if (file.isFile()) {
-                br = new BufferedReader(new InputStreamReader(new FileInputStream(pathFileNm),encoding));
-                while (true) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(pathFileNm),encoding));
+                while (br.ready()) {
                     String str = br.readLine();
                     if (str != null)
                         src += str + "\n";
@@ -163,7 +162,7 @@ public class FileUtil {
                 br.close();
             }
         } catch (Exception e) {
-            logger.info("e=" + e.getMessage());
+            logger.info("" + e.getMessage());
         }
 
         return src;
@@ -175,7 +174,14 @@ public class FileUtil {
      * 파일을 읽어서 리스트로 반환(UTF-8)
      * */
     public static ArrayList<String> fileToList(String pathFileNm) {
-        return fileToList(pathFileNm,"");
+        ArrayList<String> retList = new ArrayList<String>();
+        try {
+            String encoding = detectEncoding(pathFileNm);
+            retList = fileToList(pathFileNm,encoding);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return retList;
     }
 
     /*
@@ -183,25 +189,20 @@ public class FileUtil {
      * */
     public static ArrayList<String> fileToList(String pathFileNm, String encoding) {
         ArrayList<String> al = new ArrayList<String>();
-        FileInputStream from = null;
-        BufferedReader br = null;
+        String line = "";
         File f = new File(pathFileNm);
         if(!f.exists()) logger.info("No exists File");
         if(!f.canRead()) logger.info("Read protected");
 
         try {
-            from = new FileInputStream(f);
-            br = new BufferedReader(new InputStreamReader(from,encoding));
-
-            while( br.ready()) {
-                al.add(br.readLine());
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(pathFileNm),encoding));
+            while (br.ready()) {
+                line = br.readLine();
+                al.add(line);
             }
-            //logger.info("al="+al.get(1));
-        } catch(Exception ex){
-            logger.info("selectFileResult error: " + ex);
-        } finally {
-            if(from!=null) try{from.close();}catch(IOException e){}
-            if(br!=null) try{br.close();}catch(IOException e){}
+        } catch(Exception e){
+            logger.info(""+e);
+            //logger.info("encoding="+encoding+":"+line);
         }
         return al;
     }
@@ -236,7 +237,6 @@ public class FileUtil {
      * */
     @SuppressWarnings("resource")
     public static String detectEncoding(String pathFileNm) throws Exception {
-
         try {
             byte[] buf = new byte[4096];
             java.io.FileInputStream fis;
@@ -248,7 +248,6 @@ public class FileUtil {
             }
             detector.dataEnd();
             String encoding = detector.getDetectedCharset();
-            logger.info("encoding="+encoding);
 
             //encoding = encoding.replace("WINDOWS-1252", "EUC-KR");
             if (encoding != null) {

@@ -1,10 +1,8 @@
 package test.variable.string;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Base64.Decoder;
+import java.util.Base64.Encoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,6 +19,37 @@ public class StringTest
         //정규식02();
         Contain();
     }
+
+
+    static void Base64() {
+
+        String text = "ktko";
+        byte[] targetBytes = text.getBytes();
+
+        Encoder encoder = Base64.getEncoder();
+        byte[] encodedBytes = encoder.encode(targetBytes);
+
+        Decoder decoder = Base64.getDecoder();
+        byte[] decodedBytes = decoder.decode(encodedBytes);
+
+        System.out.println("인코딩 전 : " + text);
+        System.out.println("인코딩 text : " + new String(encodedBytes));
+        System.out.println("디코딩 text : " + new String(decodedBytes));
+    }
+
+    static void Base64_2() {
+        String text = "ktko";
+
+        //byte[] encodedBytes = Base64.encodeBase64(text.getBytes());
+
+        //byte[] decodedBytes = Base64.decodeBase64(encodedBytes);
+
+        //System.out.println("인코딩 전 : " + text);
+        //System.out.println("인코딩 text : " + new String(encodedBytes));
+        //System.out.println("디코딩 text : " + new String(decodedBytes));
+          
+    }
+
 
     static void Contain() {
         String str = "int";

@@ -22,14 +22,27 @@ public class FileUtil {
     private static Logger logger = LoggerFactory.getLogger(FileUtil.class);
 
     public static void main(String[] args) {
-        dirFileInfo("c:/pony/", ".*.java");
+        testDirFileInfo();
     }
 
+    public static void testDirFileInfo(){
+        String pathFileNm = ""; String fileNm = "";
+        pathFileNm = "c:/pony/";
+        fileNm = ".*.java";
+        dirFileInfoPrint(pathFileNm, fileNm);
+    }
+
+    public static void dirFileInfoPrint(String pathFileNm, String fileNm){
+        List<HashMap<String, String>> srcInfoList = new ArrayList<HashMap<String, String>>();
+        List<HashMap<String, String>> retList = dirFileInfo(pathFileNm, fileNm, srcInfoList);
+        for (int i = 0; i < retList.size(); i++) {
+            System.out.println(retList.get(i).get("pathFileNm"));
+        }
+    }
     /*
      * 해당 파일 경로 밑에 모든 파일 및 경로 정보를 출력한다
      * */
-    public static List<HashMap<String, String>> dirFileInfo(String pathFileNm, String fileNm){
-        List<HashMap<String, String>> srcInfoList = new ArrayList<HashMap<String, String>>();
+    public static List<HashMap<String, String>> dirFileInfo(String pathFileNm, String fileNm, List<HashMap<String, String>> srcInfoList){
         File dir = new File(pathFileNm);
         File[] fileList = dir.listFiles();
 
@@ -46,7 +59,7 @@ public class FileUtil {
                     //logger.info(file.getPath().replace('\\', '/').replace("D:/workspace/", ""));
 
                 } else if (file.isDirectory()) {
-                    dirFileInfo(file.getCanonicalPath().toString(),fileNm);
+                    dirFileInfo(file.getCanonicalPath().toString(),fileNm, srcInfoList);
                 }
             }
         } catch (Exception e) {}

@@ -10,7 +10,7 @@ import net.pmosoft.pony.comm.util.StringUtil;
 
 public class TranSrvOnlyServer {
 	private static Logger loger = LoggerFactory.getLogger(TranSrvOnlyServer.class);
-	static String pathFileNm = "C:..../pony/src/net/pmosoft/pony/tran/tran.dat";
+	static String pathFileNm = "d:/fframe/workspace/pony/src/main/java/net/pmosoft/pony/tran/tran.dat";
 
 	public static void main(String[] args) {
 		tranBarToCamel(pathFileNm);

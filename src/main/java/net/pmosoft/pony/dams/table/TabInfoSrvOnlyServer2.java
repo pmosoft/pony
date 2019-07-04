@@ -21,10 +21,10 @@ import org.slf4j.LoggerFactory;
 import net.pmosoft.pony.comm.util.FileUtil;
 import net.pmosoft.pony.dams.table.dynamic.TabDaoFactory;
 
-public class TabInfoSrvOnlyServer {
+public class TabInfoSrvOnlyServer2 {
 
 
-    private static Logger logger = LoggerFactory.getLogger(TabInfoSrvOnlyServer.class);
+    private static Logger logger = LoggerFactory.getLogger(TabInfoSrvOnlyServer2.class);
 
     static String pathFileNm = "C:.../dams/table/src.dat";
 
@@ -35,15 +35,17 @@ public class TabInfoSrvOnlyServer {
 
     public Map<String, String> params = new HashMap<String, String>();
 
-    TabInfoSrvOnlyServer(){
+    TabInfoSrvOnlyServer2(){
         params.put("datasource", "pony");
-        params.put("dbDriver", "core.log.jdbc.driver.OracleDriver");
-        params.put("dbConn","jdbc:oracle:thin:@10.232.191.26:1841:Raaa");
-        params.put("dbUser","aaa");
-        params.put("dbPassword","dfdf");
-        params.put("dbType", "ORACLE");
-        params.put("dbOwner","ddfd");
-        DBConn();
+        params.put("dbDriver", "org.mariadb.jdbc.Driver");
+        params.put("dbConn","jdbc:mariadb://pmosoft.net:3306/sttl");
+        params.put("dbUser","sttl");
+        params.put("dbPassword","s1234");
+        params.put("dbType", "MARIADB");
+        params.put("dbOwner","sttl");
+
+        try { tabDaoFactory = (TabDaoFactory) Class.forName("net.pmmosoft.p...TabOracleDao").newInstance(); } catch (Exception e) { e.printStackTrace(); }
+        //DBConn();
     }
 
     public static void main(String[] args) {
@@ -54,7 +56,7 @@ public class TabInfoSrvOnlyServer {
     public static void testInsertStat() {
 
         String tabNm = "";  String condition = "";
-        TabInfoSrvOnlyServer tabInfoSrv = new TabInfoSrvOnlyServer();
+        TabInfoSrvOnlyServer2 tabInfoSrv = new TabInfoSrvOnlyServer2();
         tabNm = "aaa";
         condition = " WHERE AA = 'SS'";
         tabInfoSrv.insertStat(tabNm,condition);
@@ -62,7 +64,7 @@ public class TabInfoSrvOnlyServer {
     }
 
     public static void testmultiInsertStat() {
-        TabInfoSrvOnlyServer tabInfoSrv = new TabInfoSrvOnlyServer();
+        TabInfoSrvOnlyServer2 tabInfoSrv = new TabInfoSrvOnlyServer2();
         tabInfoSrv.multiInsertStat();
 
     }
@@ -118,18 +120,6 @@ public class TabInfoSrvOnlyServer {
 
     //  테이블명단위 insert문 생성(싱글 테이블)
     public void insertStat(String tabNm, String condition){
-            try {
-                tabDaoFactory = (TabDaoFactory) Class.forName("net.pmmosoft.p...TabOracleDao").newInstance();
-            } catch (InstantiationException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
             params.put("TAB_NM",tabNm);
             params.put("CONDITION",condition);
             try {

@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.util.Map;
 
 
-public class DbConnection {
+public class DbCon {
 
     public Connection conn = null;
     

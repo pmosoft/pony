@@ -1,5 +1,7 @@
 package net.pmosoft.pony.dams.table;
 
+import net.pmosoft.pony.dams.jdbc.JdbcInfo;
+
 public class TabInfo {
 
     String stsNm        ;
@@ -29,6 +31,13 @@ public class TabInfo {
     boolean chk;
     String orderBy;
     String ascDesc;
+
+    boolean chkWhere    ;
+    String txtWhere     ;
+    boolean chkSelect   ;
+    String txtSelect    ;
+
+    JdbcInfo jdbcInfo;
 
     public String getStsNm() {
         return stsNm;
@@ -185,6 +194,36 @@ public class TabInfo {
     }
     public void setChk(boolean chk) {
         this.chk = chk;
+    }
+    public JdbcInfo getJdbcInfo() {
+        return jdbcInfo;
+    }
+    public void setJdbcInfo(JdbcInfo jdbcInfo) {
+        this.jdbcInfo = jdbcInfo;
+    }
+    public boolean isChkWhere() {
+        return chkWhere;
+    }
+    public void setChkWhere(boolean chkWhere) {
+        this.chkWhere = chkWhere;
+    }
+    public String getTxtWhere() {
+        return txtWhere;
+    }
+    public void setTxtWhere(String txtWhere) {
+        this.txtWhere = txtWhere;
+    }
+    public boolean isChkSelect() {
+        return chkSelect;
+    }
+    public void setChkSelect(boolean chkSelect) {
+        this.chkSelect = chkSelect;
+    }
+    public String getTxtSelect() {
+        return txtSelect;
+    }
+    public void setTxtSelect(String txtSelect) {
+        this.txtSelect = txtSelect;
     }
 
 }

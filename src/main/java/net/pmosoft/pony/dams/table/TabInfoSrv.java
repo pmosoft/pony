@@ -59,30 +59,37 @@ public class TabInfoSrv {
     @Autowired
     private TabInfoValidatorSrv tabValidatorSrv;
 
+    public static void main(String[] args) {
+        //testInsertStat();
+        //testParseSrctoTabInfo();
+    }
+
+
     /**********************************************************************************
     *
     *                               JDBC Mybatis Session
     *
     **********************************************************************************/
     private SqlSession sqlSession(TabInfo inVo){
-
-        //System.out.println("sqlSession");
-        JdbcInfo jdbcInfo = new JdbcInfo(); jdbcInfo.setJdbcNm(inVo.getJdbcNm());
-        JdbcInfo jdbcVo = jdbcInfoDao.selectJdbcInfo(jdbcInfo);
-        //System.out.println("jdbcVo=="+jdbcVo.getDriver());
-        //daoClassPath = (String) codeList.get(0).get("CD_PARAM1");
-
-        String driver = "";
-        //if     (jdbcVo.getDriver().equals("oracle" )) driver = "oracle.jdbc.driver.OracleDriver";
-        //else if(jdbcVo.getDriver().equals("mariadb")) driver = "org.mariadb.jdbc.Driver";
-        //else if(jdbcVo.getDriver().equals("sqlite" )) driver = "org.sqlite.JDBC";
-
+        JdbcInfo jdbcVo = new JdbcInfo();
         Properties props = new Properties();
         props.put("driver"      , "net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
-        props.put("url"         , jdbcVo.getUrl()  );
-        props.put("username"    , jdbcVo.getUsrId());
-        props.put("password"    , jdbcVo.getUsrPw());
-        props.put("mapper"      , "net/pmosoft/pony/dams/table/TabInfo"+StringUtil.replaceFirstCharUpperCase(jdbcVo.getDriver())+"Dyn.xml");
+
+        if(inVo.jdbcInfo != null){
+            props.put("url"         , inVo.jdbcInfo.getUrl()  );
+            props.put("username"    , inVo.jdbcInfo.getUsrId());
+            props.put("password"    , inVo.jdbcInfo.getUsrPw());
+            props.put("mapper"      , "net/pmosoft/pony/dams/table/TabInfo"+StringUtil.replaceFirstCharUpperCase(inVo.jdbcInfo.getDriver())+"Dyn.xml");
+        } else {
+            JdbcInfo jdbcInfo = new JdbcInfo();;
+            jdbcInfo.setJdbcNm(inVo.getJdbcNm());
+            jdbcVo = jdbcInfoDao.selectJdbcInfo(jdbcInfo);
+            //daoClassPath = (String) codeList.get(0).get("CD_PARAM1");
+            props.put("url"         , jdbcVo.getUrl()  );
+            props.put("username"    , jdbcVo.getUsrId());
+            props.put("password"    , jdbcVo.getUsrPw());
+            props.put("mapper"      , "net/pmosoft/pony/dams/table/TabInfo"+StringUtil.replaceFirstCharUpperCase(jdbcVo.getDriver())+"Dyn.xml");
+        }
 
         SqlSession session = null;
 
@@ -314,7 +321,7 @@ public class TabInfoSrv {
             for (int i = 0; i < inVo.size(); i++) {
                 if(inVo.get(i).chk){
                     inVo.get(i).setOrderBy("1");
-                    List<TabInfo> tab = tabInfoDao.selectTabInfoList(inVo.get(i));
+                    List<TabInfo> tab = sqlSession(inVo.get(i)).getMapper(TabInfoDao.class).selectMetaTabInfoList(inVo.get(i));
                     //System.out.println("outVo="+outVo.size());
                     str += "--DROP TABLE "+inVo.get(i).getOwner()+"."+inVo.get(i).getTabNm()+";\n";
                     str += "CREATE TABLE "+inVo.get(i).getOwner()+"."+inVo.get(i).getTabNm()+"\n";
@@ -384,7 +391,7 @@ public class TabInfoSrv {
                 String s02 = "";
                 PrintWriter writer = null;
                 writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(App.excelPath+fileNm)));
-                List<TabInfo> tabInfoOutVoList = tabInfoDao.selectTabInfoList(inVo);
+                List<TabInfo> tabInfoOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectMetaTabInfoList(inVo);
                 List<Map<String,Object>> insStatOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectInsStat(inVo);
                 logger.info("tabInfoOutVoList="+insStatOutVoList.size());
                 for (int i = 0; i < insStatOutVoList.size(); i++) {

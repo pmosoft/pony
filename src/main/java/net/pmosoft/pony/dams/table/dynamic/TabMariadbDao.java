@@ -24,7 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.pmosoft.pony.comm.db.DbConnection;
+import net.pmosoft.pony.comm.db.DbCon;
 import net.pmosoft.pony.comm.db.LoggableStatement;
 import net.pmosoft.pony.comm.util.StringUtil;
 
@@ -51,7 +51,7 @@ SELECT * FROM DUAL
         List<Map<String, Object>> listRs = new ArrayList<Map<String, Object>>();
 
         try {
-            DbConnection dbConn = new DbConnection();
+            DbCon dbConn = new DbCon();
             conn = dbConn.getConnection(params);
 
             qry  = "--                                                                                         \n";
@@ -111,7 +111,7 @@ SELECT * FROM DUAL
         List<Map<String, Object>> listRs = new ArrayList<Map<String, Object>>();
 
         try {
-            DbConnection dbConn = new DbConnection();
+            DbCon dbConn = new DbCon();
             conn = dbConn.getConnection(params);
 
             //원본쿼리 : net.pmosoft.pony.dams.table.TabMariadbDao.xml - insertMetaTabColList

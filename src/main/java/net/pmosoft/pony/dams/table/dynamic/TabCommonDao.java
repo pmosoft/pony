@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.pmosoft.pony.comm.db.DbConnection;
+import net.pmosoft.pony.comm.db.DbCon;
 import net.pmosoft.pony.comm.db.LoggableStatement;
 
     
@@ -106,7 +106,7 @@ public class TabCommonDao implements TabDaoFactory {
         List<Map<String, Object>> listRs = new ArrayList<Map<String, Object>>();
         
         try {
-            DbConnection dbConn = new DbConnection();
+            DbCon dbConn = new DbCon();
             conn = dbConn.getConnection(params);
             qry  = "SELECT  * FROM " + params.get("TAB_NM") + " \n";
             //qry += "WHERE                                   \n";
@@ -160,7 +160,7 @@ public class TabCommonDao implements TabDaoFactory {
             /****************************
              * DB접속하여 RS 수보
              ****************************/
-            DbConnection dbConn = new DbConnection();
+            DbCon dbConn = new DbCon();
             conn = dbConn.getConnection(params);
             qry  = params.get("qry");
             //qry  = "SELECT PKG_FUL_NM FROM pony.TDACM00010 \n";
@@ -225,7 +225,7 @@ public class TabCommonDao implements TabDaoFactory {
             /****************************
              * DB접속하여 RS 수보
              ****************************/
-            DbConnection dbConn = new DbConnection();
+            DbCon dbConn = new DbCon();
             conn = dbConn.getConnection(params);
             qry  = "SELECT  * FROM " + params.get("TAB_NM") + " \n";
             //System.out.println(qry);

@@ -7,11 +7,15 @@ import java.util.regex.Pattern;
 public class StringUtil {
 
    public static String padRight(String s, int n) {
-        return String.format("%1$-" + n + "s", s);
+       String result = s;
+       if(n > 0) result = String.format("%1$-" + n + "s", s) + s;
+       return result;
    }
 
    public static String padLeft(String s, int n) {
-       return String.format("%1$" + n + "s", s);
+       String result = s;
+       if(n > 0) result = String.format("%1$" + n + "s", s) + s;
+       return result;
    }
 
     /*

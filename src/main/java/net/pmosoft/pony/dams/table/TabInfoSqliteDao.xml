@@ -280,15 +280,16 @@
     FROM   TDACM00080 A
     WHERE  UPPER(A.JDBC_NM) LIKE ('%'||UPPER(#{jdbcNm}  )||'%')
     AND    UPPER(A.OWNER  ) LIKE ('%'||UPPER(#{owner}   )||'%')
-    AND    UPPER(A.TAB_NM ) LIKE ('%'||UPPER(#{tabNm}   )||'%')
+    AND    UPPER(A.TAB_NM ) LIKE (UPPER(#{tabNm}   )||'%')
     AND    UPPER(IFNULL(A.TAB_HNM,'')) LIKE ('%'||UPPER(IFNULL(#{tabHnm},'')  )||'%')
-    AND    UPPER(A.COL_NM ) LIKE ('%'||UPPER(IFNULL(#{colNm},'')   )||'%')
+    AND    UPPER(A.COL_NM ) LIKE (UPPER(IFNULL(#{colNm},'')   )||'%')
     AND    UPPER(IFNULL(A.COL_HNM,'')) LIKE ('%'||UPPER(IFNULL(#{colHnm},'')  )||'%')
     AND    UPPER(A.JDBC_NM) IN (SELECT DISTINCT UPPER(JDBC_NM) FROM TDACM00010)    
     AND    A.TAB_ROWS       >= #{tabRows}
     AND    A.TAB_REG_DT     >= (CASE WHEN IFNULL(#{tabRegDt},'') = '' THEN '19010101' ELSE IFNULL(#{tabRegDt},'') END)
     AND    A.TAB_UPD_DT     >= (CASE WHEN IFNULL(#{tabUpdDt},'') = '' THEN '19010101' ELSE IFNULL(#{tabRegDt},'') END)
     ORDER BY ${orderBy} ${ascDesc},A.JDBC_NM,A.OWNER,A.TAB_NM,A.COL_ID
+    LIMIT 5000
 </select>
 
 

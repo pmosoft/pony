@@ -37,7 +37,10 @@ public class TabInfo {
     boolean chkSelect   ;
     String txtSelect    ;
 
-    JdbcInfo jdbcInfo;
+    String qry          ;
+
+
+    JdbcInfo jdbcInfo = new JdbcInfo();
 
     public String getStsNm() {
         return stsNm;
@@ -224,6 +227,12 @@ public class TabInfo {
     }
     public void setTxtSelect(String txtSelect) {
         this.txtSelect = txtSelect;
+    }
+    public String getQry() {
+        return qry;
+    }
+    public void setQry(String qry) {
+        this.qry = qry;
     }
 
 }

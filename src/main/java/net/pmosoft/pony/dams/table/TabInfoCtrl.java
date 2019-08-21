@@ -101,6 +101,13 @@ public class TabInfoCtrl {
     *                                       유틸
     *
     **********************************************************************************/
+    /*
+     * 테이블 쿼리 데이터 리턴
+     */
+    @RequestMapping(value = "/dams/table/selectTabQryList")
+    public Map<String, Object> selectTabQryList(@RequestBody TabInfo inVo){
+        return tabInfoSrv.selectTabQryList(inVo);
+    }
 
     /*
      * Create Script 생성
@@ -111,12 +118,29 @@ public class TabInfoCtrl {
     }
 
     /*
-     * 테이블 쿼리 데이터 리턴
+     * Select Script 생성 (SELECT)
      */
-    @RequestMapping(value = "/dams/table/selectTabQryList")
-    public Map<String, Object> selectTabQryList(@RequestBody TabInfo inVo){
-        return tabInfoSrv.selectTabQryList(inVo);
+    @RequestMapping(value = "/dams/table/selectColScript")
+    public Map<String, Object> selectColScript(@RequestBody TabInfo inVo){
+        return tabInfoSrv.selectColScript(inVo);
     }
+
+    /*
+     * Select Script 생성 (SELECT + FROM)
+     */
+    @RequestMapping(value = "/dams/table/selectColFromScript")
+    public Map<String, Object> selectColFromScript(@RequestBody TabInfo inVo){
+        return tabInfoSrv.selectColFromScript(inVo);
+    }
+
+    /*
+     * Select Script 생성 (SELECT + FROM + WHERE)
+     */
+    @RequestMapping(value = "/dams/table/selectColFromWhereScript")
+    public Map<String, Object> selectColFromWhereScript(@RequestBody TabInfo inVo){
+        return tabInfoSrv.selectColFromWhereScript(inVo);
+    }
+
 
     /*
      * 다운로드 Insert 문장

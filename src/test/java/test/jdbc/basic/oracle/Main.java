@@ -42,7 +42,7 @@ class TestJdbcBasicOracle {
     void DBConn(){
 
         //String DB_URL = "jdbc:oracle:thin:@localhost:1521/ORCL"; String DB_USER = "scott"; String DB_PASSWORD = "tiger";
-        String DB_URL = "jdbc:oracle:thin:@localhost:1521/ORCL"; String DB_USER = "scott"; String DB_PASSWORD = "tiger";
+        String DB_URL = "jdbc:oracle:thin:@localhost:9951/IAMLTE"; String DB_USER = "cellplan"; String DB_PASSWORD = "cell_2012";
 
         try {
         	Class.forName("oracle.jdbc.driver.OracleDriver");

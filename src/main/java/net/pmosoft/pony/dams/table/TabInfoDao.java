@@ -41,8 +41,9 @@ public interface TabInfoDao {
     /**********************************************************************************
     *                                       유틸
     **********************************************************************************/
-    List<TabInfo> selectCreateScript(TabInfo inVo);
+    List<Map<String, Object>> selectCommonQryList(TabInfo inVo);
     List<Map<String, Object>> selectTabQryList(TabInfo inVo);
+    List<TabInfo> selectCreateScript(TabInfo inVo);
     List<Map<String, Object>> selectInsStat(TabInfo inVo);
     int selectDataCnt(TabInfo inVo);
 

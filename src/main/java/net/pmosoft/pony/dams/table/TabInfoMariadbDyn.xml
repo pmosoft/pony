@@ -51,6 +51,13 @@
 </select>
 
 
+<select id="selectCommonQryList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="java.util.LinkedHashMap">
+<![CDATA[
+    -- TableDao.selectCommonQryList(MARIADB)
+    ${qry}
+]]>
+</select>
+
 <select id="selectTabQryList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="java.util.LinkedHashMap">
 
     -- TableDao.selectTabQryList(MARIADB)

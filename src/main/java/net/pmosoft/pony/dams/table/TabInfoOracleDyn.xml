@@ -75,7 +75,7 @@
 <select id="selectTabQryList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="java.util.LinkedHashMap">
 <![CDATA[
     -- TableDao.selectTabQryList(ORACLE)
-    SELECT * FROM ${tabNm} WHERE ROWNUM <= 5000
+    SELECT * FROM ${tabNm} WHERE ROWNUM <= 100
 ]]>
 </select>
 

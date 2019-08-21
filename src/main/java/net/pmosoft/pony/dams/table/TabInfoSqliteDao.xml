@@ -65,7 +65,7 @@
         ,#{regDtm}                                                           AS REG_DTM
         ,#{regUsrId}                                                         AS REG_USR_ID
         ,#{updDtm}                                                           AS UPD_DTM
-        ,#{updUsrId}                                                         AS UPD_USR_ID
+        ,#{updUsrId}                                                         AS UPD_USR_ID 
 </insert>
 
 
@@ -284,6 +284,7 @@
     AND    UPPER(IFNULL(A.TAB_HNM,'')) LIKE ('%'||UPPER(IFNULL(#{tabHnm},'')  )||'%')
     AND    UPPER(A.COL_NM ) LIKE ('%'||UPPER(IFNULL(#{colNm},'')   )||'%')
     AND    UPPER(IFNULL(A.COL_HNM,'')) LIKE ('%'||UPPER(IFNULL(#{colHnm},'')  )||'%')
+    AND    UPPER(A.JDBC_NM) IN (SELECT DISTINCT UPPER(JDBC_NM) FROM TDACM00010)    
     AND    A.TAB_ROWS       >= #{tabRows}
     AND    A.TAB_REG_DT     >= (CASE WHEN IFNULL(#{tabRegDt},'') = '' THEN '19010101' ELSE IFNULL(#{tabRegDt},'') END)
     AND    A.TAB_UPD_DT     >= (CASE WHEN IFNULL(#{tabUpdDt},'') = '' THEN '19010101' ELSE IFNULL(#{tabRegDt},'') END)
@@ -304,12 +305,13 @@
          , A.TAB_REG_DT2
          , A.TAB_UPD_DT
          , A.TAB_UPD_DT2
-    FROM   TDACM00080 A
+    FROM   TDACM00080 A 
     WHERE  UPPER(A.JDBC_NM) LIKE ('%'||UPPER(#{jdbcNm}  )||'%')
     AND    UPPER(A.OWNER  ) LIKE ('%'||UPPER(#{owner}   )||'%')
     AND    UPPER(A.TAB_NM ) LIKE ('%'||UPPER(#{tabNm}   )||'%')
     AND    UPPER(IFNULL(A.TAB_HNM,'')) LIKE ('%'||UPPER(#{tabHnm}  )||'%')
-    AND    A.TAB_ROWS       = A.TAB_ROWS
+    AND    UPPER(A.JDBC_NM) IN (SELECT DISTINCT UPPER(JDBC_NM) FROM TDACM00010)     
+    AND    A.TAB_ROWS       = A.TAB_ROWS 
     AND    A.TAB_REG_DT     >= (CASE WHEN #{tabRegDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
     AND    A.TAB_UPD_DT     >= (CASE WHEN #{tabUpdDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
     ORDER BY ${orderBy} ${ascDesc},A.JDBC_NM,A.OWNER,A.TAB_NM
@@ -339,6 +341,7 @@
            AND    UPPER(IFNULL(A.TAB_HNM,'')) LIKE ('%'||UPPER(#{tabHnm}  )||'%')
            AND    UPPER(A.COL_NM ) LIKE ('%'||UPPER(#{colNm}   )||'%')
            AND    UPPER(IFNULL(A.COL_HNM,'')) LIKE ('%'||UPPER(#{colHnm}  )||'%')
+           AND    UPPER(A.JDBC_NM) IN (SELECT DISTINCT UPPER(JDBC_NM) FROM TDACM00010)                
            AND    A.TAB_ROWS       = A.TAB_ROWS
            AND    A.TAB_REG_DT     >= (CASE WHEN #{tabRegDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
            AND    A.TAB_UPD_DT     >= (CASE WHEN #{tabUpdDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
@@ -386,6 +389,7 @@
             AND A.TAB_NM = B.TAB_NM
     WHERE   1=1
     AND     A.JDBC_NM        LIKE CONCAT(CONCAT('%',#{DB_CONN_CD_NM}),'%')
+    AND    UPPER(A.JDBC_NM) IN (SELECT DISTINCT UPPER(JDBC_NM) FROM TDACM00010)         
     AND  (
           (#{tabChk} = 'false' AND #{searchKeyCombo} = 'JDBC_NM'        AND A.JDBC_NM    LIKE CONCAT(CONCAT('%',#{searchValue}),'%'))
            OR

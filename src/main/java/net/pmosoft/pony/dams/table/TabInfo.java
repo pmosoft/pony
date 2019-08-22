@@ -37,6 +37,8 @@ public class TabInfo {
     boolean chkSelect   ;
     String txtSelect    ;
 
+    String whereColTab  ;
+
     String qry          ;
 
 
@@ -233,6 +235,12 @@ public class TabInfo {
     }
     public void setQry(String qry) {
         this.qry = qry;
+    }
+    public String getWhereColTab() {
+        return whereColTab;
+    }
+    public void setWhereColTab(String whereColTab) {
+        this.whereColTab = whereColTab;
     }
 
 }

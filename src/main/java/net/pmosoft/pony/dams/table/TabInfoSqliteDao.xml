@@ -282,8 +282,20 @@
     AND    UPPER(A.OWNER  ) LIKE (UPPER(#{owner}   )||'%')
     AND    UPPER(A.TAB_NM ) LIKE (UPPER(#{tabNm}   )||'%')
     AND    UPPER(IFNULL(A.TAB_HNM,'')) LIKE (UPPER(IFNULL(#{tabHnm},'')  )||'%')
-    AND    UPPER(A.COL_NM ) LIKE (UPPER(IFNULL(#{colNm},'')   )||'%')
-    AND    UPPER(IFNULL(A.COL_HNM,'')) LIKE (UPPER(IFNULL(#{colHnm},'')  )||'%')
+    AND   (
+            (#{whereColTab} = 'COL' 
+                AND UPPER(A.COL_NM ) LIKE (UPPER(IFNULL(#{colNm},'')   )||'%')
+                AND UPPER(IFNULL(A.COL_HNM,'')) LIKE (UPPER(IFNULL(#{colHnm},'')  )||'%')
+            )   
+           OR
+            (#{whereColTab} = 'TAB' AND UPPER(A.TAB_NM ) IN (
+                SELECT DISTINCT UPPER(TAB_NM)
+                FROM   TDACM00080
+                WHERE  UPPER(COL_NM ) LIKE (UPPER(#{colNm}   )||'%')
+                AND    UPPER(COL_HNM) LIKE (UPPER(#{colHnm}  )||'%')                    
+                )
+             )     
+           )      
     AND    UPPER(A.JDBC_NM) IN (SELECT DISTINCT UPPER(JDBC_NM) FROM TDACM00010)
     AND    A.TAB_ROWS       >= #{tabRows}
     AND    A.TAB_REG_DT     >= (CASE WHEN IFNULL(#{tabRegDt},'') = '' THEN '19010101' ELSE IFNULL(#{tabRegDt},'') END)
@@ -324,7 +336,7 @@
                 WHERE  UPPER(COL_NM ) LIKE (UPPER(#{colNm}   )||'%')
                 AND    UPPER(COL_HNM) LIKE (UPPER(#{colHnm}  )||'%')                    
                 )
-            )    
+            )     
            )      
     ORDER BY ${orderBy} ${ascDesc},A.JDBC_NM,A.OWNER,A.TAB_NM
 </select>

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Implementation-Title: pony
 Implementation-Version: 0.0.1-SNAPSHOT
-Built-By: Administrator
+Built-By: P147970
 Implementation-Vendor-Id: net.pmosoft.pony
 Build-Jdk: 1.8.0_191-1-ojdkbuild
 Implementation-URL: http://projects.spring.io/spring-boot/pony/

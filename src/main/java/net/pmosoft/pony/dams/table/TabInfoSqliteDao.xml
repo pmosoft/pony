@@ -315,6 +315,14 @@
     AND    A.TAB_ROWS       = A.TAB_ROWS
     AND    A.TAB_REG_DT     >= (CASE WHEN #{tabRegDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
     AND    A.TAB_UPD_DT     >= (CASE WHEN #{tabUpdDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
+    AND  (
+          (#{tabChk} = 'false' AND UPPER(A.TAB_NM ) IN (
+                SELECT DISTINCT UPPER(TAB_NM)
+                FROM   TDACM00080
+                WHERE  1=1
+                )
+         )
+
     ORDER BY ${orderBy} ${ascDesc},A.JDBC_NM,A.OWNER,A.TAB_NM
 </select>
 

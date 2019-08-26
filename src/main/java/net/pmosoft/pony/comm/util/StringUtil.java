@@ -6,6 +6,15 @@ import java.util.regex.Pattern;
 
 public class StringUtil {
 
+    public static void main(String[] args) {
+        testSqlTabScript();
+    }
+
+    public static void testSqlTabScript(){
+        String sql = "aaa\nbbb";
+
+    }
+
    public static String padRight(String s, int n) {
        String result = s;
        if(n > 0) result = String.format("%1$-" + n + "s", s) + s;

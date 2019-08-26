@@ -226,6 +226,10 @@ public class TabInfoSrv {
 
         Map<String, Object> result = new HashMap<String, Object>();
 
+        System.out.println("inVo====="+inVo);
+        System.out.println("inVo====="+inVo.chkWhereTabs);
+        System.out.println("inVo====="+inVo.whereTabs);
+
         try{
             List<TabInfo> tabInfoOutVoList = tabInfoDao.selectTabInfoList(inVo);
             result.put("isSuccess", true);
@@ -266,6 +270,9 @@ public class TabInfoSrv {
     public Map<String, Object> selectColList(TabInfo inVo){
 
         Map<String, Object> result = new HashMap<String, Object>();
+
+        System.out.println("inVo.whereTabs=="+inVo.whereTabs);
+        //if(inVo.chkWhereTabs) inVo.whereTabs = "";
 
         try{
             List<TabInfo> tabInfoOutVoList = tabInfoDao.selectColList(inVo);

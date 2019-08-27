@@ -12,6 +12,14 @@ public class StringUtil {
 
     public static void testSqlTabScript(){
         String sql = "aaa\nbbb";
+        System.out.println(sql);
+
+        String[] words = sql.split("\\s");
+        System.out.println("words=="+words.length);
+
+        for (String wo : words ){
+            System.out.println(wo);
+        }
 
     }
 

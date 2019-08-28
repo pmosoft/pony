@@ -226,19 +226,10 @@ public class TabInfoSrv {
 
         Map<String, Object> result = new HashMap<String, Object>();
 
-        System.out.println("inVo1====="+inVo);
         System.out.println("inVo2====="+inVo.chkWhereTabs);
         System.out.println("inVo3====="+inVo.whereTabs);
-        System.out.println("inVo4====="+inVo.whereTabs.split("\n"));
-
-        String[] words = inVo.whereTabs.split("\\s");
-
-        System.out.println("words=="+words.length);
-
-        for (String wo : words ){
-            System.out.println(wo);
-        }
-
+        System.out.println(StringUtil.inParams(inVo.whereTabs));
+        inVo.setWhereInTabs(StringUtil.inParams(inVo.whereTabs));
         try{
             List<TabInfo> tabInfoOutVoList = tabInfoDao.selectTabInfoList(inVo);
             result.put("isSuccess", true);

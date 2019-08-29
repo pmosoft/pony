@@ -11,9 +11,28 @@ public class StringUtil {
     }
 
     public static void testSqlTabScript(){
-        String sql = "aaa\nbbb";
-
+        System.out.println(inParams("aaa\nbbb"));
     }
+
+    /**
+     * "aaa\nbbb"를 'aaa','bbb'로 변형. in 조건문에서 사용
+     */
+    public static String inParams(String str) {
+        //String sql = "aaa\nbbb";
+        //System.out.println(sql);
+
+        String[] words = str.split("\\s");
+        //System.out.println("words=="+words.length);
+
+        String inParams = "";
+        for (int i = 0; i < words.length; i++) {
+            if(i < words.length-1) inParams += "'"+words[i]+"',";
+            else inParams += "'"+words[i]+"'";
+        }
+        //System.out.println(inParams);
+        return inParams;
+    }
+
 
    public static String padRight(String s, int n) {
        String result = s;

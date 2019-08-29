@@ -39,8 +39,10 @@ public class TabInfo {
 
     String whereColTab  ;
 
+    // in 조건문의 params
     boolean chkWhereTabs;
     String whereTabs    ;
+    String whereInTabs  ;
 
     String qry          ;
 
@@ -256,6 +258,12 @@ public class TabInfo {
     }
     public void setWhereTabs(String whereTabs) {
         this.whereTabs = whereTabs;
+    }
+    public String getWhereInTabs() {
+        return whereInTabs;
+    }
+    public void setWhereInTabs(String whereInTabs) {
+        this.whereInTabs = whereInTabs;
     }
 
 }

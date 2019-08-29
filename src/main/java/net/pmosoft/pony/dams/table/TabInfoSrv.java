@@ -226,10 +226,10 @@ public class TabInfoSrv {
 
         Map<String, Object> result = new HashMap<String, Object>();
 
-        System.out.println("inVo====="+inVo);
-        System.out.println("inVo====="+inVo.chkWhereTabs);
-        System.out.println("inVo====="+inVo.whereTabs);
-
+        System.out.println("inVo2====="+inVo.chkWhereTabs);
+        System.out.println("inVo3====="+inVo.whereTabs);
+        System.out.println(StringUtil.inParams(inVo.whereTabs));
+        inVo.setWhereInTabs(StringUtil.inParams(inVo.whereTabs));
         try{
             List<TabInfo> tabInfoOutVoList = tabInfoDao.selectTabInfoList(inVo);
             result.put("isSuccess", true);

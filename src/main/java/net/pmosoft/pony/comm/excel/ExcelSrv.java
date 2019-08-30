@@ -37,6 +37,7 @@ public class ExcelSrv {
 
         String data = params.get("data");
         System.out.println("data="+data);
+        System.out.println("data="+data);
         Gson gson = new Gson();
         Type type = new TypeToken<List<Map<String,String>>>() {}.getType();
         List<Map<String,String>> listParams  = gson.fromJson(data, type);

@@ -1,5 +1,10 @@
 package net.pmosoft.pony.gens.teos;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.pmosoft.pony.comm.util.FileUtil;
+import net.pmosoft.pony.tran.kbcard.tab.TabNmVo;
 
 public class ExtractTabInfoFromSrc {
     // common
@@ -18,11 +24,12 @@ public class ExtractTabInfoFromSrc {
     ArrayList mciInfo = new ArrayList();
     
     // file
-    String screenNm = "";
-    String screenTitle = "";
-    String fileNm = "";
-    ArrayList src;
+    String pathFileNm = "";
+    String src;
 
+    ArrayList<String> tabNmList = new ArrayList<String>();
+    
+    
     public static void main(String[] args) {
         ExtractTabInfoFromSrc extract = new ExtractTabInfoFromSrc();
         extract.executeFile();
@@ -33,10 +40,10 @@ public class ExtractTabInfoFromSrc {
      * 단일파일 처리
      * */
     void executeFile() {
-        this.fileNm = "D:/fframe/workspace/asis/src/CellPlan/Swing/Apt/CAptParameter.cpp";
-        fileToList(this.fileNm);
-        parseFile(this.fileNm);
-        printMciInfo();        
+        pathFileNm = "D:/fframe/workspace/asis/src/CellPlanCommon/Analysis/CDBAnalysisResult.cpp";
+        qryTabNm();
+        fileToString(pathFileNm);
+        extractTabInfo(pathFileNm);
     }
     
     /*
@@ -57,16 +64,10 @@ public class ExtractTabInfoFromSrc {
         // 해당파일별 파싱 처리
         for (int i = 0; i < fileNmList.size(); i++) {
             System.out.println(i);
-            fileToList(dir+fileNmList.get(i).toString());
-            parseFile(dir+fileNmList.get(i).toString());
+            fileToString(dir+fileNmList.get(i).toString());
+            //parseFile(dir+fileNmList.get(i).toString());
         }
 
-        // 최종결과 출력
-        //printMciInfo();
-        
-        // 최종결과 출력
-        printInsertStat();
-        
         System.out.println("End");
                 
     }
@@ -79,82 +80,66 @@ public class ExtractTabInfoFromSrc {
         
         List<HashMap<String,String>> al = fileUtil.dirFileInfo(dir, matchFile, fileNmList);
         for (int i = 0; i < al.size(); i++) {
-            //System.out.println(al.get(i).get("fileNm"));
-            fileNmList.add(al.get(i).get("fileNm"));
+            //System.out.println(al.get(i).get("pathFileNm"));
+            fileNmList.add(al.get(i).get("pathFileNm"));
         }
     }
 
     /*
-     * [2단계] 파일을 읽어서 리스트로 변환
+     * [2단계] 파일을 읽어서 스트링으로 변환
      * */
-    void fileToList(String fileNm) {
-        FileUtil fileUtil = new FileUtil();
-        src = fileUtil.fileToList(fileNm);
+    void fileToString(String pathFileNm) {
+        src = FileUtil.fileToString(pathFileNm,"euc-kr");
     }
     
     /*
-     * [3단계] 파일내역을 파싱하여 화면별 MCI 정보 생성
+     * [3단계] 테이블명 맵핑정보를 리스트로 생성
      * */
-    void parseFile(String fileNm) {
-        
-        String src2 = "";
-        String src3 = "";
-        String src4 = "";
-        
-        String matchStr = "";
-        Pattern p; Matcher m;
-        
-        // screenNm
-        System.out.println(fileNm);
-        //p = Pattern.compile("[A-Z]{3}[0-9A-Z]{8}"); m=p.matcher(fileNm); m.find();
-        //screenNm = m.group().toString();
-        //System.out.println(screenNm);
-        
-        for (int i = 0; i < src.size(); i++) {
-            src2 = src.get(i).toString().replace("\"", "'");
-            
-            if(src2.contains("BODY ScreenTitle=")){
-                p = Pattern.compile("ScreenNo='[A-Z]{3}[0-9A-Z]{8}'"); m=p.matcher(src2); m.find();
-                src3 = m.group();
-                p = Pattern.compile("[A-Z]{3}[0-9A-Z]{8}"); m=p.matcher(src3); m.find();
-                screenNm = m.group();
+    void qryTabNm() {
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
 
-                //System.out.println("src2="+src2);
-                p = Pattern.compile("ScreenTitle='[a-zA-Z[ㄱ-ㅎ가-힣0-9 /()]+'"); m=p.matcher(src2); m.find();
-                src3 = m.group();
-                p = Pattern.compile("^ScreenTitle='[a-zA-Z[ㄱ-ㅎ가-힣0-9 /()]+'"); m=p.matcher(src3); m.find();
-                screenTitle = m.group().toString().replace(",", " ");
-                //System.out.println("screenTitle ="+screenTitle =);
+        String DB_URL = "jdbc:sqlite:C:/pony/pony.db";
+        String DB_USER = "";
+        String DB_PASSWORD = "";
+       
+        try {
+            Class.forName("org.sqlite.JDBC");
+            conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+            stmt = conn.createStatement();
+            String query = "SELECT DISTINCT TAB_NM FROM TDACM00080 WHERE UPPER(JDBC_NM) = 'EOS_DEV'";          
+            rs = stmt.executeQuery(query);
+            while (rs.next()) { 
+                //System.out.println(rs.getString("TAB_NM"));
+                tabNmList.add(rs.getString("TAB_NM"));
             }
-            
-            if(src2.contains("TranID TranId=")){
-                p = Pattern.compile("ScreenNo='[A-Z]{3}[0-9A-Z]{5}[A-Z][0-9]"); m=p.matcher(src2); m.find();
-                src3 = m.group();
-                mciInfo.add(screenNm+","+screenTitle+','+src3);
+        } catch ( Exception e ) { e.printStackTrace(); } finally {try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }}
+    }
+    
+
+    /*
+     * [4단계] 소스에서 테이블 추출
+     * */
+    void extractTabInfo(String pathFileNm) {
+        System.out.println("extractTabInfo start");
+        
+        try {
+            System.out.println(pathFileNm);
+            System.out.println("tabNmList.size()==="+tabNmList.size());
+            for (int i = 0; i < tabNmList.size(); i++) {
+                if(src.contains(tabNmList.get(i))) 
+                    System.out.println(tabNmList.get(i));
             }
-            
-        }        
+        }  catch(Exception e){}
+        
+        System.out.println("extractTabInfo end");
         
     }
 
     /*
-     * [4단계] 최종 MCI 정보 출력
+     * [5단계] 엑셀로 출력
      * */
-    void printMciInfo() {
-        for (int i = 0; i < mciInfo.size(); i++) {
-            System.out.println(mciInfo.get(i));
-        }
-    
-    }
-    
-    /*
-     * [5단계] 최종 MCI 정보 Insert문장으로 출력
-     * */
-    void printInsertStat() {
-        System.out.println("--DELETE FROM 인젠트화면정보");
-        for (int i = 0; i < mciInfo.size(); i++) {
-            System.out.println("INSERT INTO 인젠트화면정보 VALUES ("+mciInfo.get(i).toString().replace(",", "','")+"')");
-        }
-    }
-    
+    void ToExcel() {
+    }    
 }

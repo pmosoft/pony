@@ -141,5 +141,12 @@ public class ExtractTabInfoFromSrc {
      * [5단계] 엑셀로 출력
      * */
     void ToExcel() {
+    }
+    
+    /*
+     * [5단계] DB로 저장
+     * */
+    void ToDB() {
     }    
+    
 }

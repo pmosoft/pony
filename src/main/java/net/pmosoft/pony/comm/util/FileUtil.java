@@ -27,19 +27,19 @@ public class FileUtil {
 
     public static void testDelFiles(){
         delFiles("F:/../",".*java");
-    }    
+    }
 
     public static void testListToFile(){
         System.out.println("start");
         FileUtil fileUtil = new FileUtil();
-        
+
         ArrayList<String> arrayList =new ArrayList<String>();
         arrayList.add("aaaa");arrayList.add("bbbb");arrayList.add("cccc");arrayList.add("dddd");
-        
+
         fileUtil.listToFile(arrayList, "c:///");
         System.out.println("end");
-    }    
-    
+    }
+
     public static void testDirFileInfo(){
         String pathFileNm = ""; String fileNm = "";
         pathFileNm = "c:/pony/";
@@ -66,8 +66,8 @@ public class FileUtil {
                 File file = fileList[i];
                 if (file.isFile() && file.getName().matches(fileNm)) {
                     HashMap<String, String> map = new HashMap<String, String>();
-                    map.put("fileName",  file.getName());
-                    map.put("pathFileNm",  file.getPath().replace('\\', '/'));
+                    map.put("fileNm",  file.getName());
+                    map.put("pathNm",  file.getPath().replace('\\', '/'));
 
                     srcInfoList.add(map);
 

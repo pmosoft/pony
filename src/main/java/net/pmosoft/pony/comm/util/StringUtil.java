@@ -132,4 +132,22 @@ public class StringUtil {
         return m.group();
     }
 
+    /**
+     * 
+     */
+    public static String trimNull(String str) {
+        if(str==null) str="";
+        str = str.trim().replace("null", "");
+        return str;
+    }
+
+    /**
+     * 
+     */
+    public static String zeroNull(String str) {
+        if(str==null) str="0";
+        str = str.trim().replace("null", "0");
+        return str;
+    }
+    
 }

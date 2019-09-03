@@ -8,11 +8,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Map;
 
+import net.pmosoft.pony.comm.excel.ExcelSrv;
 import net.pmosoft.pony.comm.util.FileUtil;
-import net.pmosoft.pony.tran.kbcard.tab.TabNmVo;
 
 public class ExtractTabInfoFromSrc {
     // common
@@ -27,8 +26,13 @@ public class ExtractTabInfoFromSrc {
     String pathFileNm = "";
     String src;
 
+    // table    
     ArrayList<String> tabNmList = new ArrayList<String>();
     
+
+    // result    
+    //ArrayList<SrcTabVo> srcTabInfoList = new ArrayList<SrcTabVo>();
+    List<Map<String,String>> srcTabInfoList = new ArrayList<Map<String,String>>();
     
     public static void main(String[] args) {
         ExtractTabInfoFromSrc extract = new ExtractTabInfoFromSrc();
@@ -44,6 +48,8 @@ public class ExtractTabInfoFromSrc {
         qryTabNm();
         fileToString(pathFileNm);
         extractTabInfo(pathFileNm);
+        //ToExcel();
+        //ToDB();
     }
     
     /*
@@ -90,6 +96,7 @@ public class ExtractTabInfoFromSrc {
      * */
     void fileToString(String pathFileNm) {
         src = FileUtil.fileToString(pathFileNm,"euc-kr");
+        //System.out.println("src==="+src);
     }
     
     /*
@@ -123,15 +130,21 @@ public class ExtractTabInfoFromSrc {
      * */
     void extractTabInfo(String pathFileNm) {
         System.out.println("extractTabInfo start");
-        
+        Map<String, String> map = new HashMap<String, String>();
         try {
             System.out.println(pathFileNm);
             System.out.println("tabNmList.size()==="+tabNmList.size());
             for (int i = 0; i < tabNmList.size(); i++) {
                 if(src.contains(tabNmList.get(i))) 
+                    //map = new HashMap<String, String>();
+                    map.put(pathFileNm, tabNmList.get(i));
+                    //map.put("aa", "bb");
+
                     System.out.println(tabNmList.get(i));
             }
-        }  catch(Exception e){}
+            srcTabInfoList.add(map);
+            
+        }  catch(Exception e){ e.printStackTrace(); }
         
         System.out.println("extractTabInfo end");
         
@@ -141,12 +154,18 @@ public class ExtractTabInfoFromSrc {
      * [5단계] 엑셀로 출력
      * */
     void ToExcel() {
+        ExcelSrv excelSrv = new ExcelSrv();
+        excelSrv.downloadExcel(srcTabInfoList,"srcTabInfo.xls");
     }
     
     /*
      * [5단계] DB로 저장
      * */
     void ToDB() {
+        for (int i = 0; i < srcTabInfoList.size(); i++) {
+            System.out.println(srcTabInfoList.get(i).get(pathFileNm));
+            
+        }
     }    
     
 }

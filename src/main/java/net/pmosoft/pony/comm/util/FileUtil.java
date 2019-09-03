@@ -25,6 +25,21 @@ public class FileUtil {
         testDirFileInfo();
     }
 
+    public static void testDelFiles(){
+        delFiles("F:/../",".*java");
+    }    
+
+    public static void testListToFile(){
+        System.out.println("start");
+        FileUtil fileUtil = new FileUtil();
+        
+        ArrayList<String> arrayList =new ArrayList<String>();
+        arrayList.add("aaaa");arrayList.add("bbbb");arrayList.add("cccc");arrayList.add("dddd");
+        
+        fileUtil.listToFile(arrayList, "c:///");
+        System.out.println("end");
+    }    
+    
     public static void testDirFileInfo(){
         String pathFileNm = ""; String fileNm = "";
         pathFileNm = "c:/pony/";
@@ -183,6 +198,7 @@ public class FileUtil {
 
 
 
+
     /*
      * 파일을 읽어서 리스트로 반환(UTF-8)
      * */
@@ -244,6 +260,26 @@ public class FileUtil {
         }
     }
 
+    /*
+     * String을 파일로 생성
+     * */
+    public static void stringToFile(String str, String pathFileNm) {
+        BufferedWriter bw = null;
+
+        try {
+            bw = new BufferedWriter(new FileWriter(pathFileNm,false));
+            bw.write(str);
+            bw.flush();
+            logger.info("writerList : "+pathFileNm);
+        } catch (Exception e) {
+            try {
+                bw.flush();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+            e.printStackTrace();
+        }
+    }
 
     /*
      * 파일 인코인 확인

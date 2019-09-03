@@ -72,7 +72,7 @@ public class ExtractTabInfoFromSrc {
         // 해당파일별 파싱 처리
         for (int i = 0; i < fileInfoList.size(); i++) {
             System.out.println(i);
-            fileToString(dir+fileInfoList.get(i).toString());
+            fileToString(fileInfoList.get(i).get("pathFileNm")+fileInfoList.get(i).get("fileName"));
             extractTabInfo(dir+fileInfoList.get(i).toString());
         }
         ToExcel();

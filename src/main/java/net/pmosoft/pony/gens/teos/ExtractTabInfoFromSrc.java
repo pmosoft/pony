@@ -68,12 +68,13 @@ public class ExtractTabInfoFromSrc {
         //System.out.println("m.group()="+m.group());
 
         System.out.println("fileInfoList.size()="+fileInfoList.size());
+        qryTabNm();
 
         // 해당파일별 파싱 처리
         for (int i = 0; i < fileInfoList.size(); i++) {
             System.out.println(i);
-            fileToString(fileInfoList.get(i).get("pathFileNm")+fileInfoList.get(i).get("fileName"));
-            extractTabInfo(dir+fileInfoList.get(i).toString());
+            fileToString(fileInfoList.get(i).get("pathFileNm"));
+            extractTabInfo(fileInfoList.get(i).get("pathFileNm"));
         }
         ToExcel();
 
@@ -85,7 +86,9 @@ public class ExtractTabInfoFromSrc {
      * [1단계] 폴더내에 파일정보를 리스트에 저장
      * */
     void dirToList() {
-        FileUtil.dirFileInfo(dir, matchFile, fileInfoList);
+        fileInfoList = FileUtil.dirFileInfo(dir, matchFile, fileInfoList);
+        System.out.println("fileInfoList="+fileInfoList.size());
+
     }
 
     /*

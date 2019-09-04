@@ -42,8 +42,9 @@ public class FileUtil {
 
     public static void testDirFileInfo(){
         String pathFileNm = ""; String fileNm = "";
-        pathFileNm = "c:/pony/";
-        fileNm = ".*.java";
+        //pathFileNm = "c:/pony/"; fileNm = ".*.java";
+        pathFileNm = "D:/fframe/workspace/asis/src/"; fileNm = ".*cpp";
+
         dirFileInfoPrint(pathFileNm, fileNm);
     }
 
@@ -66,8 +67,9 @@ public class FileUtil {
                 File file = fileList[i];
                 if (file.isFile() && file.getName().matches(fileNm)) {
                     HashMap<String, String> map = new HashMap<String, String>();
+                    //System.out.println(file.getName());
                     map.put("fileNm",  file.getName());
-                    map.put("pathNm",  file.getPath().replace('\\', '/'));
+                    map.put("pathFileNm",  file.getPath().replace('\\', '/'));
 
                     srcInfoList.add(map);
 

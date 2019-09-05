@@ -117,30 +117,32 @@ public class TabInfoCtrl {
         return tabInfoSrv.selectCreateScript(inVo);
     }
 
-    /*
-     * Select Script 생성 (SELECT)
-     */
-    @RequestMapping(value = "/dams/table/selectColScript")
-    public Map<String, Object> selectColScript(@RequestBody TabInfo inVo){
-        return tabInfoSrv.selectColScript(inVo);
-    }
-
-    /*
-     * Select Script 생성 (SELECT + FROM)
-     */
-    @RequestMapping(value = "/dams/table/selectColFromScript")
-    public Map<String, Object> selectColFromScript(@RequestBody TabInfo inVo){
-        return tabInfoSrv.selectColFromScript(inVo);
-    }
-
-    /*
-     * Select Script 생성 (SELECT + FROM + WHERE)
-     */
-    @RequestMapping(value = "/dams/table/selectColFromWhereScript")
-    public Map<String, Object> selectColFromWhereScript(@RequestBody TabInfo inVo){
-        return tabInfoSrv.selectColFromWhereScript(inVo);
-    }
-
+//////////    /*
+//////////     * Select Script 생성 (SELECT)
+//////////     */
+//////////    @RequestMapping(value = "/dams/table/selectColScript")
+//////////    public Map<String, Object> selectColScript(@RequestBody TabInfo inVo){
+//////////        return tabInfoSrv.selectColScript(inVo);
+//////////    }
+//////////
+    
+    
+//////////    /*
+//////////     * Select Script 생성 (SELECT + FROM)
+//////////     */
+//////////    @RequestMapping(value = "/dams/table/selectColFromScript")
+//////////    public Map<String, Object> selectColFromScript(@RequestBody TabInfo inVo){
+//////////        return tabInfoSrv.selectColFromScript(inVo);
+//////////    }
+//////////
+//////////    /*
+//////////     * Select Script 생성 (SELECT + FROM + WHERE)
+//////////     */
+//////////    @RequestMapping(value = "/dams/table/selectColFromWhereScript")
+//////////    public Map<String, Object> selectColFromWhereScript(@RequestBody TabInfo inVo){
+//////////        return tabInfoSrv.selectColFromWhereScript(inVo);
+//////////    }
+//////////
 
     /*
      * 다운로드 Insert 문장

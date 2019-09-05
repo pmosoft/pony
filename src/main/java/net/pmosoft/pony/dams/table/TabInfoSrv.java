@@ -56,22 +56,14 @@ public class TabInfoSrv {
     @Autowired
     private JdbcInfoDao jdbcInfoDao;
 
-    @Autowired
-    private TabInfoValidatorSrv tabValidatorSrv;
-
-    public static void main(String[] args) {
-        TabInfoSrv tabInfoSrv = new TabInfoSrv();
-         tabInfoSrv.selectColScriptTest();
-        //tabInfoSrv.selectTabQryListTest();
-
-    }
-
 
     /**********************************************************************************
     *
-    *                               JDBC Mybatis Session
+    *                               JDBC_Mybatis_SqlSession
     *
     **********************************************************************************/
+    public void ________JDBC_Mybatis_SqlSession________(){}
+
     private SqlSession sqlSession(TabInfo inVo){
         JdbcInfo jdbcVo = new JdbcInfo();
         Properties props = new Properties();
@@ -107,9 +99,10 @@ public class TabInfoSrv {
 
     /**********************************************************************************
     *
-    *                               테이블정보 추출 및 저장
+    *                               Pony테이블모듈_로컬DB
     *
     **********************************************************************************/
+    public void __________Pony테이블모듈_로컬DB__________(){}
 
     /*
      * (추출) 테이블메타정보 조회후 추출테이블정보테이블에 저장후 정보 리턴
@@ -311,22 +304,11 @@ public class TabInfoSrv {
     *                                       유틸
     *
     **********************************************************************************/
-
-    public void selectTabQryListTest() {
-        TabInfo tabInfo = new TabInfo();
-        tabInfo.jdbcInfo.setUrl("jdbc:log4jdbc:mariadb://pmosoft.net:3306/sttl");
-        tabInfo.jdbcInfo.setUsrId("sttl");
-        tabInfo.jdbcInfo.setUsrPw("s1234");
-        tabInfo.jdbcInfo.setDriver("Mariadb");
-        tabInfo.setOwner("sttl"); tabInfo.setTabNm("TSYUR00020");
-        tabInfo.setChkSelect(true);tabInfo.setTxtSelect("Select *");
-        Map<String, Object> map = selectTabQryList(tabInfo);
-        //System.out.println(map.get("sqlScript"));
-    }
-
-
+    public void _______________유틸_______________(){}
+    
     /*
-     * 동적 쿼리문 결과 리턴
+     * 동적 쿼리문
+     * (if isChkSelect or isChkWhere)
      */
     public String getCommonQry(TabInfo inVo){
         String qry = "";
@@ -349,7 +331,54 @@ public class TabInfoSrv {
     }
 
     /*
-     * 테이블 쿼리 데이터 리턴
+     * SELECT 문장 생성
+     * (if isChkSelect or isChkWhere)
+     */
+    public Map<String, Object> selectSelectScript(TabInfo inVo){
+
+        Map<String, Object> result = new HashMap<String, Object>();
+        String str = "";
+        String pkCol = "";
+        int maxColLen = 0;
+        try{
+            List<TabInfo> tab = sqlSession(inVo).getMapper(TabInfoDao.class).selectMetaTabInfoList(inVo);
+            str += "SELECT \n";
+
+            for (int i = 0; i < tab.size(); i++) {
+                if(maxColLen <= tab.get(i).colNm.length()) maxColLen = tab.get(i).colNm.length();
+            }
+
+            System.out.println(maxColLen);
+            for (int i = 0; i < tab.size(); i++) {
+                str += (i>0) ? "     , " : "       ";
+                System.out.println(tab.get(i).colNm+"="+tab.get(i).colNm.length() );
+                //System.out.println(StringUtil.padRight("a",maxColLen-tab.get(i).colNm.length()));
+                str += tab.get(i).colNm + StringUtil.padRight(" ",maxColLen-tab.get(i).colNm.length()) + "    -- "+ tab.get(i).colHnm+"\n";
+                //System.out.println("tabNm="+tabNm);
+                if(tab.get(i).pk.equals("Y")) { pkCol += "AND "+tab.get(i).colNm + " = ''\n"; }
+            }
+            if(inVo.isChkSelect()) {
+                str += "FROM   "+inVo.owner.toUpperCase()+"."+inVo.tabNm+"\n";
+            }
+            if(inVo.isChkWhere()) {
+                str += "WHERE 1=1 "+"\n";
+                str += pkCol+"\n";
+            }
+
+            result.put("isSuccess", true);
+            result.put("sqlScript", str);
+        } catch (Exception e){
+            result.put("isSuccess", false);
+            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
+            result.put("errSysMsg", e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+    
+    
+    /*
+     * 테이블 쿼리 데이터 생성
      */
     public Map<String, Object> selectTabQryList(TabInfo inVo){
 
@@ -371,10 +400,8 @@ public class TabInfoSrv {
         return result;
     }
 
-
-
     /*
-     * Create Script 생성
+     * 테이블 생성 스크립드
      */
     public Map<String, Object> selectCreateScript(List<TabInfo> inVo){
         System.out.println("selectCreateScript");
@@ -421,94 +448,7 @@ public class TabInfoSrv {
         return result;
     }
 
-    public void selectColScriptTest() {
-        TabInfo tabInfo = new TabInfo();
-        tabInfo.jdbcInfo.setUrl("jdbc:log4jdbc:mariadb://pmosoft.net:3306/sttl");
-        tabInfo.jdbcInfo.setUsrId("sttl");
-        tabInfo.jdbcInfo.setUsrPw("s1234");
-        tabInfo.jdbcInfo.setDriver("Mariadb");
-        tabInfo.setOwner("sttl"); tabInfo.setTabNm("TSYUR00010");
-        Map<String, Object> map = selectColScript(tabInfo);
-        System.out.println(map.get("sqlScript"));
-    }
 
-
-    /*
-     * Select Script 생성 (SELECT)
-     */
-    public Map<String, Object> selectColScript(TabInfo inVo){
-        Map<String, Object> result = new HashMap<String, Object>();
-        result = selectSelectScript(inVo,1);
-        return result;
-    }
-
-    /*
-     * Select Script 생성 (SELECT + FROM)
-     */
-    public Map<String, Object> selectColFromScript(TabInfo inVo){
-        Map<String, Object> result = new HashMap<String, Object>();
-        result = selectSelectScript(inVo,2);
-        return result;
-    }
-
-
-    /*
-     * Select Script 생성 (SELECT + FROM + WHERE)
-     */
-    public Map<String, Object> selectColFromWhereScript(TabInfo inVo){
-        Map<String, Object> result = new HashMap<String, Object>();
-        result = selectSelectScript(inVo,3);
-        return result;
-    }
-
-    /*
-     * Select Script 메인 모듈
-     */
-    public Map<String, Object> selectSelectScript(TabInfo inVo, int cd){
-
-        Map<String, Object> result = new HashMap<String, Object>();
-        String str = "";
-        String pk = "";
-        String pkCol = "";
-        boolean isPk = false;
-        int maxColLen = 0;
-        System.out.println(inVo);
-        try{
-            List<TabInfo> tab = sqlSession(inVo).getMapper(TabInfoDao.class).selectMetaTabInfoList(inVo);
-            str += "SELECT \n";
-
-
-            for (int i = 0; i < tab.size(); i++) {
-                if(maxColLen <= tab.get(i).colNm.length()) maxColLen = tab.get(i).colNm.length();
-            }
-
-            System.out.println(maxColLen);
-            for (int i = 0; i < tab.size(); i++) {
-                str += (i>0) ? "     , " : "       ";
-                System.out.println(tab.get(i).colNm+"="+tab.get(i).colNm.length() );
-                //System.out.println(StringUtil.padRight("a",maxColLen-tab.get(i).colNm.length()));
-                str += tab.get(i).colNm + StringUtil.padRight(" ",maxColLen-tab.get(i).colNm.length()) + "    -- "+ tab.get(i).colHnm+"\n";
-                //System.out.println("tabNm="+tabNm);
-                if(tab.get(i).pk.equals("Y")) { pkCol += "AND "+tab.get(i).colNm + " = ''\n"; }
-            }
-            if(cd==2||cd==3) {
-                str += "FROM   "+inVo.owner.toUpperCase()+"."+inVo.tabNm+"\n";
-            }
-            if(cd==3) {
-                str += "WHERE 1=1 "+"\n";
-                str += pkCol+"\n";
-            }
-
-            result.put("isSuccess", true);
-            result.put("sqlScript", str);
-        } catch (Exception e){
-            result.put("isSuccess", false);
-            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
-            result.put("errSysMsg", e.getMessage());
-            e.printStackTrace();
-        }
-        return result;
-    }
 
 
 
@@ -674,55 +614,4 @@ public class TabInfoSrv {
         }
         return result;
     }
-
-
-//
-//    /**********************************************************************************
-//    *
-//    *                                   Excel Upload
-//    *
-//    **********************************************************************************/
-//
-//    public Map<String, Object> insertExcelTabColList(Map<String,String> params){
-//
-//
-//        Map<String, Object> result = new HashMap<String, Object>();
-//
-//        try{
-//
-//            String data = params.get("data");
-//            Gson gson = new Gson();
-//            Type type = new TypeToken<List<Map<String,String>>>() {}.getType();
-//            List<Map<String,Object>> listParams  = gson.fromJson(data, type);
-//
-//            // 1.단계 : 메타테이블컬럼정보 삭제
-//            tabInfoDao.deleteMetaTabCol(params);
-//
-//            // 2단계 : 메타테이블컬럼정보 삽입
-//            for (int i = 0; i  < listParams.size(); i++) {
-//                tabInfoDao.insertMetaTabCol(listParams.get(i));
-//            }
-//
-//            // 3단계 : 메타테이블정보 삽입
-//            tabInfoDao.deleteMetaTab(params);
-//
-//            for (int i = 0; i  < listParams.size(); i++) {
-//                if  (tabInfoDao.selectMetaTabCnt(listParams.get(i))==0) {
-//                    tabInfoDao.insertMetaTab(listParams.get(i));
-//                }
-//            }
-//
-//            result.put("isSuccess", true);
-//            //result.put("data", list);
-//        } catch (Exception e){
-//            result.put("isSuccess", false);
-//            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
-//            result.put("errSysMsg", e.getMessage());
-//            e.printStackTrace();
-//        }
-//        return result;
-//    }
-//
-
-
 }

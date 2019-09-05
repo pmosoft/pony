@@ -3,9 +3,15 @@ package net.pmosoft.pony.dams.table;
 import net.pmosoft.pony.dams.jdbc.JdbcInfo;
 
 public class TabInfo {
-    
-    public JdbcInfo jdbcInfo = new JdbcInfo();
 
+    //-------------------------------
+    // JDBC    
+    //-------------------------------
+    JdbcInfo jdbcInfo = new JdbcInfo();
+
+    //-------------------------------
+    // TABLE    
+    //-------------------------------
     String stsNm        ;
     String jdbcNm       ;
     String owner        ;
@@ -30,6 +36,9 @@ public class TabInfo {
     String updDtm       ;
     String updUsrId     ;
 
+    //-------------------------------
+    // TABLE 조건    
+    //-------------------------------
     boolean chk;
     String orderBy;
     String ascDesc;
@@ -47,7 +56,8 @@ public class TabInfo {
     String whereInTabs  ;
 
     String qry          ;
-
+    
+    
     public String getStsNm() {
         return stsNm;
     }

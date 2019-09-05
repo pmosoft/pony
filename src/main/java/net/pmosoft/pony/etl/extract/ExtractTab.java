@@ -26,10 +26,10 @@ public class ExtractTab {
     
     public static void main(String[] args) {
         TabInfo tabInfo = new TabInfo();
-        tabInfo.jdbcInfo.setUrl("jdbc:oracle:thin:@localhost:9951/IAMLTE");
-        tabInfo.jdbcInfo.setUsrId("cellplan");
-        tabInfo.jdbcInfo.setUsrPw("cell_2012");
-        tabInfo.jdbcInfo.setDriver("Oracle");
+        tabInfo.getJdbcInfo().setUrl("jdbc:oracle:thin:@localhost:9951/IAMLTE");
+        tabInfo.getJdbcInfo().setUsrId("cellplan");
+        tabInfo.getJdbcInfo().setUsrPw("cell_2012");
+        tabInfo.getJdbcInfo().setDriver("Oracle");
         tabInfo.setJdbcNm("CELLPLAN");
         tabInfo.setOwner("CELLPLAN"); 
         tabInfo.setTabNm("SCENARIO");
@@ -41,8 +41,8 @@ public class ExtractTab {
     public void executeTab() {
 
         TabInfoSrv tabInfoSrv = new TabInfoSrv();
-        Map<String, Object> map = tabInfoSrv.selectColScript(tabInfo);
-        System.out.println(map.get("sqlScript"));
+        //Map<String, Object> map = tabInfoSrv.selectColScript(tabInfo);
+        //System.out.println(map.get("sqlScript"));
     }    
 
     public void executeTabComma() {

@@ -23,7 +23,8 @@ public class TabInfoTest  {
     private static Logger logger = LoggerFactory.getLogger(TabInfoTest.class);
 
     public static TabInfo tabInfo = new TabInfo();
-
+    public static TabInfoSrv tabInfoSrv = new TabInfoSrv();
+    
     TabInfoTest(){
         tabInfo.jdbcInfo.setUrl("jdbc:log4jdbc:mariadb://pmosoft.net:3306/sttl");
         tabInfo.jdbcInfo.setUsrId("sttl");
@@ -62,6 +63,32 @@ public class TabInfoTest  {
         selectSelColScriptTest();
     }
 
+    public void selectTabQryListTest() {
+        TabInfoSrv tabInfoSrv = new TabInfoSrv();
+        TabInfo tabInfo = new TabInfo();
+        tabInfo.jdbcInfo.setUrl("jdbc:log4jdbc:mariadb://pmosoft.net:3306/sttl");
+        tabInfo.jdbcInfo.setUsrId("sttl");
+        tabInfo.jdbcInfo.setUsrPw("s1234");
+        tabInfo.jdbcInfo.setDriver("Mariadb");
+        tabInfo.setOwner("sttl"); tabInfo.setTabNm("TSYUR00020");
+        tabInfo.setChkSelect(true);tabInfo.setTxtSelect("Select *");
+        Map<String, Object> map = tabInfoSrv.selectTabQryList(tabInfo);
+        //System.out.println(map.get("sqlScript"));
+    }
+
+    public void selectColScriptTest() {
+        TabInfoSrv tabInfoSrv = new TabInfoSrv();
+        TabInfo tabInfo = new TabInfo();
+        tabInfo.jdbcInfo.setUrl("jdbc:log4jdbc:mariadb://pmosoft.net:3306/sttl");
+        tabInfo.jdbcInfo.setUsrId("sttl");
+        tabInfo.jdbcInfo.setUsrPw("s1234");
+        tabInfo.jdbcInfo.setDriver("Mariadb");
+        tabInfo.setOwner("sttl"); tabInfo.setTabNm("TSYUR00010");
+        //Map<String, Object> map = tabInfoSrv.selectColScript(tabInfo);
+        //System.out.println(map.get("sqlScript"));
+    }
+    
+    
     public static void selectSelColScriptTest() {
         TabInfoSrv tabInfoSrv = new TabInfoSrv();
         TabInfo tabInfo = new TabInfo();
@@ -70,10 +97,9 @@ public class TabInfoTest  {
         tabInfo.jdbcInfo.setUsrPw("s1234");
         tabInfo.jdbcInfo.setDriver("Mariadb");
         tabInfo.setOwner("sttl"); tabInfo.setTabNm("TSYUR00010");
-        Map<String, Object> map = tabInfoSrv.selectColScript(tabInfo);
-        System.out.println(map.get("createScript"));
+        //Map<String, Object> map = tabInfoSrv.selectColScript(tabInfo);
+        //System.out.println(map.get("createScript"));
     }
-
 
     public static void selectCreateScriptTest() {
         TabInfoSrv tabInfoSrv = new TabInfoSrv();

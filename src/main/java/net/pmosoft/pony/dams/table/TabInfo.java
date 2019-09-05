@@ -3,6 +3,8 @@ package net.pmosoft.pony.dams.table;
 import net.pmosoft.pony.dams.jdbc.JdbcInfo;
 
 public class TabInfo {
+    
+    public JdbcInfo jdbcInfo = new JdbcInfo();
 
     String stsNm        ;
     String jdbcNm       ;
@@ -45,9 +47,6 @@ public class TabInfo {
     String whereInTabs  ;
 
     String qry          ;
-
-
-    JdbcInfo jdbcInfo = new JdbcInfo();
 
     public String getStsNm() {
         return stsNm;

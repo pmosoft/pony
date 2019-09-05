@@ -76,7 +76,6 @@ public class TabInfoSrv {
         JdbcInfo jdbcVo = new JdbcInfo();
         Properties props = new Properties();
         props.put("driver"      , "net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
-
         if(inVo.jdbcInfo.getUrl() != null){
             props.put("url"         , inVo.jdbcInfo.getUrl()  );
             props.put("username"    , inVo.jdbcInfo.getUsrId());
@@ -473,6 +472,7 @@ public class TabInfoSrv {
         String pkCol = "";
         boolean isPk = false;
         int maxColLen = 0;
+        System.out.println(inVo);
         try{
             List<TabInfo> tab = sqlSession(inVo).getMapper(TabInfoDao.class).selectMetaTabInfoList(inVo);
             str += "SELECT \n";

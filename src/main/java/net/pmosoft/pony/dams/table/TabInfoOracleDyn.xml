@@ -67,7 +67,7 @@
    AND    D.TABLE_TYPE  = 'TABLE'
    AND    E.OBJECT_TYPE = 'TABLE'
    AND    UPPER(A.OWNER) = UPPER(#{owner})
-   AND    UPPER(A.TABLE_NAME) LIKE UPPER(#{tabNm})||'%'
+   AND    UPPER(A.TABLE_NAME) LIKE UPPER(#{tabNm})
    ORDER BY A.TABLE_NAME,A.COLUMN_ID
 
 </select>

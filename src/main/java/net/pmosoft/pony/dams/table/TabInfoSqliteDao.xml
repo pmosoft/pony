@@ -280,7 +280,7 @@
     FROM   TDACM00080 A
     WHERE  UPPER(A.JDBC_NM) LIKE (UPPER(#{jdbcNm}  )||'%')
     AND    UPPER(A.OWNER  ) LIKE (UPPER(#{owner}   )||'%')
-    AND    UPPER(A.TAB_NM ) LIKE (UPPER(#{tabNm}   )||'%')
+    AND    UPPER(A.TAB_NM ) LIKE (UPPER(#{tabNm}))
     AND    UPPER(IFNULL(A.TAB_HNM,'')) LIKE (UPPER(IFNULL(#{tabHnm},'')  )||'%')
     AND   (
             (#{chkWhereTabs} = 1 AND UPPER(A.TAB_NM ) IN (${whereInTabs}))
@@ -326,7 +326,7 @@
     FROM   TDACM00080 A
     WHERE  UPPER(A.JDBC_NM) LIKE (UPPER(#{jdbcNm}  )||'%')
     AND    UPPER(A.OWNER  ) LIKE (UPPER(#{owner}   )||'%')
-    AND    UPPER(A.TAB_NM ) LIKE (UPPER(#{tabNm}   )||'%')
+    AND    UPPER(A.TAB_NM ) LIKE UPPER(#{tabNm})
     AND    UPPER(IFNULL(A.TAB_HNM,'')) LIKE (UPPER(#{tabHnm}  )||'%')
     AND    UPPER(A.JDBC_NM) IN (SELECT DISTINCT UPPER(JDBC_NM) FROM TDACM00010)
     AND    A.TAB_ROWS       = A.TAB_ROWS
@@ -338,8 +338,8 @@
            (LENGTH(#{colNm}) > 0 AND UPPER(A.TAB_NM ) IN (
                 SELECT DISTINCT UPPER(TAB_NM)
                 FROM   TDACM00080
-                WHERE  UPPER(COL_NM ) LIKE (UPPER(#{colNm}   )||'%')
-                AND    UPPER(COL_HNM) LIKE (UPPER(#{colHnm}  )||'%')
+                WHERE  UPPER(COL_NM ) LIKE (UPPER(#{colNm}   ))
+                AND    UPPER(COL_HNM) LIKE (UPPER(#{colHnm}  ))
                 )
             )
            )

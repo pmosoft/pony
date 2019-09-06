@@ -61,10 +61,33 @@ public class TabInfoTest  {
     public static void main(String[] args) {
         //testSelectMetaTabInfoList();
         //selectSelColScriptTest();
-        selectTabQryListTest();
+        //selectTabQryListTest();
         //selectCreateScriptTest();
+        selectTabRowsUpdateScriptTest();
     }
 
+    
+    public static void selectTabRowsUpdateScriptTest() {
+        TabInfoSrv tabInfoSrv = new TabInfoSrv();
+        
+        List<TabInfo> inVoList = new ArrayList<TabInfo>();
+        TabInfo tabInfo = new TabInfo();
+        tabInfo.setJdbcNm("eos_dev");
+        tabInfo.getJdbcInfo().setUrl("jdbc:log4jdbc:oracle:thin:@localhost:9951/IAMLTE");
+        tabInfo.getJdbcInfo().setUsrId("cellplan");
+        tabInfo.getJdbcInfo().setUsrPw("cell_2012");
+        tabInfo.getJdbcInfo().setDriver("Oracle");
+        tabInfo.setChk(true);        
+        tabInfo.setOwner("CELLPLAN"); tabInfo.setTabNm("ADMIN_NOTICE");
+        inVoList.add(tabInfo);
+        inVoList.add(tabInfo);
+        inVoList.add(tabInfo);
+        inVoList.add(tabInfo);
+        Map<String, Object> map = tabInfoSrv.selectTabRowsUpdateScript(inVoList);
+        System.out.println("selectTabQryListTest errUsrMsg="+map.get("errUsrMsg"));
+        System.out.println("selectTabQryListTest="+map.get("tabRowsUpdateScript"));
+    }    
+    
     public static void selectTabQryListTest() {
         TabInfoSrv tabInfoSrv = new TabInfoSrv();
         TabInfo tabInfo = new TabInfo();

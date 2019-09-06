@@ -294,12 +294,31 @@ public class TabInfoSrv {
         return result;
     }
 
+    /*
+     * 테이블 건수 갱신
+     */
+    public Map<String, Object> updateTabRows(TabInfo inVo){
+        logger.info("updateTabRows");
+        //System.out.println("inVo.size()="+inVo.size());
+        Map<String, Object> result = new HashMap<String, Object>();
+        try{
+            sqlSession(inVo).getMapper(TabInfoDao.class).updateCommon(inVo);
+            result.put("isSuccess", true);
+        } catch (Exception e){
+            result.put("isSuccess", false);
+            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
+            result.put("errSysMsg", e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+    
     /**********************************************************************************
     *
-    *                                       유틸
+    *                               SQL스크립트생성
     *
     **********************************************************************************/
-    public void _______________유틸_______________(){}
+    public void ____________SQL스크립트생성_____________(){}
     
     /*
      * SELECT 문장 생성
@@ -419,7 +438,16 @@ public class TabInfoSrv {
         }
         return result;
     }
+
+
+
     
+    /**********************************************************************************
+    *
+    *                               테이블데이터추출
+    *
+    **********************************************************************************/
+    public void ____________테이블데이터추출_____________(){}
     /*
      * 테이블 쿼리 데이터 생성
      */
@@ -450,8 +478,6 @@ public class TabInfoSrv {
         }
         return result;
     }
-
-
 
     /*
     * 다운로드 Insert 문장
@@ -576,6 +602,7 @@ public class TabInfoSrv {
         }
         return result;
     }
+    
     /*
     * 다운로드 수직바 Data 출력
     * */
@@ -616,4 +643,37 @@ public class TabInfoSrv {
         }
         return result;
     }
+    
+    /*
+    * 테이블 데이터 건수조회후 갱신SQL 출력
+    * */
+    public Map<String, Object> selectTabRowsUpdateScript(List<TabInfo> inVo){
+        logger.info("selectTabRowsUpdateScript");
+
+        Map<String, Object> result = new HashMap<String, Object>();
+        String qry = "";
+        try{
+            for (int i = 0; i < inVo.size(); i++) {
+                if(inVo.get(i).chk){
+                    inVo.get(i).setCntQry("SELECT COUNT(*) FROM "+inVo.get(i).getOwner()+"."+inVo.get(i).getTabNm());
+                    System.out.println(inVo.get(i).getCntQry());
+                    int rowCnt = sqlSession(inVo.get(i)).getMapper(TabInfoDao.class).selectDataCnt(inVo.get(i));
+                    qry += " UPDATE TDACM00080 SET TAB_ROWS="+rowCnt;
+                    qry += " WHERE JDBC_NM='"+inVo.get(i).getJdbcNm()+"'";
+                    qry += " AND OWNER='"+inVo.get(i).getOwner()+"'";
+                    qry += " AND TAB_NM='"+inVo.get(i).getTabNm()+"';";
+                    qry += "\n";
+                }
+            }
+            result.put("isSuccess", true);
+            result.put("tabRowsUpdateScript", qry);
+        } catch (Exception e){
+            result.put("isSuccess", false);
+            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
+            result.put("errSysMsg", e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+ 
 }

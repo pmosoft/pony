@@ -184,22 +184,22 @@ public class ExcelUtil {
         try {
             File xlsFile = new File(filePathNm);
 
-            System.out.println(filePathNm);
+            //System.out.println(filePathNm);
 
-            System.out.println("downListToExcel1");
+            //System.out.println("downListToExcel1");
 
             FileOutputStream fileOut = new FileOutputStream(xlsFile);
-            System.out.println("downListToExcel2");
+            //System.out.println("downListToExcel2");
 
             xlsWb.write(fileOut);
-            System.out.println("downListToExcel3");
+            //System.out.println("downListToExcel3");
 
             fileOut.close();
-            System.out.println("downListToExcel4");
+            //System.out.println("downListToExcel4");
 
 
         } catch (Exception e) {
-            System.out.println("downListToExcel5");
+            //System.out.println("downListToExcel5");
 
             e.printStackTrace();
         }

@@ -40,24 +40,32 @@ public class TabInfo {
     // TABLE 조건    
     //-------------------------------
     boolean chk;
-    String orderBy;
-    String ascDesc;
 
-    boolean chkWhere    ;
-    String txtWhere     ;
     boolean chkSelect   ;
     String txtSelect    ;
-
+    
+    boolean chkWhere    ;
+    String txtWhere     ;
     String whereColTab  ;
-
     // in 조건문의 params
     boolean chkWhereTabs;
     String whereTabs    ;
     String whereInTabs  ;
 
+    String orderBy;
+    String ascDesc;
+
+    int limitCnt = 0;   
+    
     String qry          ;
+    String cntQry       ;
     
-    
+    public JdbcInfo getJdbcInfo() {
+        return jdbcInfo;
+    }
+    public void setJdbcInfo(JdbcInfo jdbcInfo) {
+        this.jdbcInfo = jdbcInfo;
+    }
     public String getStsNm() {
         return stsNm;
     }
@@ -196,41 +204,11 @@ public class TabInfo {
     public void setUpdUsrId(String updUsrId) {
         this.updUsrId = updUsrId;
     }
-    public String getOrderBy() {
-        return orderBy;
-    }
-    public void setOrderBy(String orderBy) {
-        this.orderBy = orderBy;
-    }
-    public String getAscDesc() {
-        return ascDesc;
-    }
-    public void setAscDesc(String ascDesc) {
-        this.ascDesc = ascDesc;
-    }
     public boolean isChk() {
         return chk;
     }
     public void setChk(boolean chk) {
         this.chk = chk;
-    }
-    public JdbcInfo getJdbcInfo() {
-        return jdbcInfo;
-    }
-    public void setJdbcInfo(JdbcInfo jdbcInfo) {
-        this.jdbcInfo = jdbcInfo;
-    }
-    public boolean isChkWhere() {
-        return chkWhere;
-    }
-    public void setChkWhere(boolean chkWhere) {
-        this.chkWhere = chkWhere;
-    }
-    public String getTxtWhere() {
-        return txtWhere;
-    }
-    public void setTxtWhere(String txtWhere) {
-        this.txtWhere = txtWhere;
     }
     public boolean isChkSelect() {
         return chkSelect;
@@ -244,11 +222,17 @@ public class TabInfo {
     public void setTxtSelect(String txtSelect) {
         this.txtSelect = txtSelect;
     }
-    public String getQry() {
-        return qry;
+    public boolean isChkWhere() {
+        return chkWhere;
     }
-    public void setQry(String qry) {
-        this.qry = qry;
+    public void setChkWhere(boolean chkWhere) {
+        this.chkWhere = chkWhere;
+    }
+    public String getTxtWhere() {
+        return txtWhere;
+    }
+    public void setTxtWhere(String txtWhere) {
+        this.txtWhere = txtWhere;
     }
     public String getWhereColTab() {
         return whereColTab;
@@ -274,5 +258,34 @@ public class TabInfo {
     public void setWhereInTabs(String whereInTabs) {
         this.whereInTabs = whereInTabs;
     }
-
+    public String getOrderBy() {
+        return orderBy;
+    }
+    public void setOrderBy(String orderBy) {
+        this.orderBy = orderBy;
+    }
+    public String getAscDesc() {
+        return ascDesc;
+    }
+    public void setAscDesc(String ascDesc) {
+        this.ascDesc = ascDesc;
+    }
+    public int getLimitCnt() {
+        return limitCnt;
+    }
+    public void setLimitCnt(int limitCnt) {
+        this.limitCnt = limitCnt;
+    }
+    public String getQry() {
+        return qry;
+    }
+    public void setQry(String qry) {
+        this.qry = qry;
+    }
+    public String getCntQry() {
+        return cntQry;
+    }
+    public void setCntQry(String cntQry) {
+        this.cntQry = cntQry;
+    }
 }

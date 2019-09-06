@@ -58,27 +58,10 @@
 ]]>
 </select>
 
-<select id="selectTabQryList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="java.util.LinkedHashMap">
-
-    -- TableDao.selectTabQryList(MARIADB)
-    ${qry}
-    ORDER BY ${orderBy} ${ascDesc} 
-    limit 5000
-
-</select>
-
-<select id="selectInsStat" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="java.util.LinkedHashMap">
-<![CDATA[
-    -- TableDao.selectInsStat(MARIADB)
-    SELECT * FROM ${tabNm}
-    ${txtWhere}
-]]>
-</select>
-
 <select id="selectDataCnt" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="int">
 <![CDATA[
-    -- TableDao.selectInsStat(MARIADB)
-    SELECT COUNT(*) CNT FROM ${tabNm}
+    -- TableDao.selectDataCnt(MARIADB)
+    ${cntQry}
 ]]>
 </select>
 

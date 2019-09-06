@@ -62,6 +62,7 @@ public class TabInfoTest  {
         //testSelectMetaTabInfoList();
         //selectSelColScriptTest();
         selectTabQryListTest();
+        //selectCreateScriptTest();
     }
 
     public static void selectTabQryListTest() {
@@ -75,38 +76,20 @@ public class TabInfoTest  {
         tabInfo.setChkSelect(false);tabInfo.setTxtSelect("Select *");
         tabInfo.setOrderBy("1");
         Map<String, Object> map = tabInfoSrv.selectTabQryList(tabInfo);
-        System.out.println(map.get("tabQryOutVoList"));
-    }
-
-    public static void selectColScriptTest() {
-        TabInfoSrv tabInfoSrv = new TabInfoSrv();
-        TabInfo tabInfo = new TabInfo();
-        tabInfo.jdbcInfo.setUrl("jdbc:log4jdbc:mariadb://pmosoft.net:3306/sttl");
-        tabInfo.jdbcInfo.setUsrId("sttl");
-        tabInfo.jdbcInfo.setUsrPw("s1234");
-        tabInfo.jdbcInfo.setDriver("Mariadb");
-        tabInfo.setOwner("sttl"); tabInfo.setTabNm("TSYUR00010");
-        //Map<String, Object> map = tabInfoSrv.selectColScript(tabInfo);
-        //System.out.println(map.get("sqlScript"));
-    }
-    
-    
-    public static void selectSelColScriptTest() {
-        TabInfoSrv tabInfoSrv = new TabInfoSrv();
-        TabInfo tabInfo = new TabInfo();
-        tabInfo.jdbcInfo.setUrl("jdbc:log4jdbc:mariadb://pmosoft.net:3306/sttl");
-        tabInfo.jdbcInfo.setUsrId("sttl");
-        tabInfo.jdbcInfo.setUsrPw("s1234");
-        tabInfo.jdbcInfo.setDriver("Mariadb");
-        tabInfo.setOwner("sttl"); tabInfo.setTabNm("TSYUR00010");
-        //Map<String, Object> map = tabInfoSrv.selectColScript(tabInfo);
-        //System.out.println(map.get("createScript"));
+        System.out.println("selectTabQryListTest="+map.get("errUsrMsg"));
+        System.out.println("selectTabQryListTest="+map.get("tabQryOutVoList"));
     }
 
     public static void selectCreateScriptTest() {
         TabInfoSrv tabInfoSrv = new TabInfoSrv();
         List<TabInfo> inVo = new ArrayList<TabInfo>();
-        tabInfo.setTabNm("TSYUR00010"); tabInfo.setChk(true);
+        TabInfo tabInfo = new TabInfo();
+        tabInfo.getJdbcInfo().setUrl("jdbc:log4jdbc:mariadb://pmosoft.net:3306/sttl");
+        tabInfo.getJdbcInfo().setUsrId("sttl");
+        tabInfo.getJdbcInfo().setUsrPw("s1234");
+        tabInfo.getJdbcInfo().setDriver("Mariadb");
+        tabInfo.setChk(true);
+        tabInfo.setOwner("sttl"); tabInfo.setTabNm("TSYUR00020");
         inVo.add(tabInfo);
         Map<String, Object> map = tabInfoSrv.selectCreateScript(inVo);
         System.out.println(map.get("createScript"));

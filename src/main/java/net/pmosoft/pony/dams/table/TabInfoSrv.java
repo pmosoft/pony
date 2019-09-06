@@ -15,17 +15,13 @@
 
 package net.pmosoft.pony.dams.table;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -315,7 +311,8 @@ public class TabInfoSrv {
         
 
         Map<String, Object> result = new HashMap<String, Object>();
-        String str = "";
+        String qry = "";
+        String cntQry = "SELECT COUNT(*) ";
 
         String cols = "";
         int maxColLen = 0;
@@ -327,7 +324,7 @@ public class TabInfoSrv {
             List<TabInfo> tab = sqlSession(inVo).getMapper(TabInfoDao.class).selectMetaTabInfoList(inVo);
             
             //////////////////////////////////////////////////
-            str += "SELECT \n";
+            qry += "SELECT \n";
             //////////////////////////////////////////////////
 
             // SELECT 컬럼들중 길이가 가장 큰 컬럼의 길이를 산출한다            
@@ -351,20 +348,23 @@ public class TabInfoSrv {
             }
 
             ////////////////////////////////////////////////////////////////
-            str += inVo.isChkSelect() ? inVo.getTxtSelect() +"\n" : cols;
+            qry    += inVo.isChkSelect() ? inVo.getTxtSelect() +"\n" : cols;
             ////////////////////////////////////////////////////////////////
 
             ///////////////////////////////////////////////////////////////////////////
-            str += "FROM   "+inVo.getOwner().toUpperCase()+"."+inVo.getTabNm()+"\n";
+            qry    += "FROM   "+inVo.getOwner().toUpperCase()+"."+inVo.getTabNm()+"\n";
+            cntQry += "FROM   "+inVo.getOwner().toUpperCase()+"."+inVo.getTabNm()+"\n";
             ///////////////////////////////////////////////////////////////////////////
             
             ///////////////////////////////////////////////////////////////////////////
             where = "WHERE 1=1 "+"\n" + pkCol;
-            str += inVo.isChkWhere() ? inVo.getTxtWhere() +"\n" : where;
+            qry    += inVo.isChkWhere() ? inVo.getTxtWhere() +"\n" : where;
+            cntQry += inVo.isChkWhere() ? inVo.getTxtWhere() +"\n" : "";
             ///////////////////////////////////////////////////////////////////////////
 
             result.put("isSuccess", true);
-            result.put("sqlScript", str);
+            result.put("sqlScript", qry);
+            result.put("cntSqlScript", cntQry);
         } catch (Exception e){
             result.put("isSuccess", false);
             result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
@@ -382,7 +382,7 @@ public class TabInfoSrv {
         //System.out.println("inVo.size()="+inVo.size());
 
         Map<String, Object> result = new HashMap<String, Object>();
-        String str = "";
+        String qry = "";
         String pk = "";
         boolean isPk = false;
 
@@ -392,26 +392,26 @@ public class TabInfoSrv {
                     inVo.get(i).setOrderBy("1");
                     List<TabInfo> tab = sqlSession(inVo.get(i)).getMapper(TabInfoDao.class).selectMetaTabInfoList(inVo.get(i));
                     //System.out.println("outVo="+outVo.size());
-                    str += "--DROP TABLE "+inVo.get(i).getOwner()+"."+inVo.get(i).getTabNm()+";\n";
-                    str += "CREATE TABLE "+inVo.get(i).getOwner()+"."+inVo.get(i).getTabNm()+"\n";
-                    str += "(\n";
+                    qry += "--DROP TABLE "+inVo.get(i).getOwner()+"."+inVo.get(i).getTabNm()+";\n";
+                    qry += "CREATE TABLE "+inVo.get(i).getOwner()+"."+inVo.get(i).getTabNm()+"\n";
+                    qry += "(\n";
                     pk  += ",CONSTRAINT "+inVo.get(i).getTabNm()+"_PK PRIMARY KEY(";
 
                     for (int j = 0; j < tab.size(); j++) {
-                        str += (j>0) ? "," : " ";
-                        str += tab.get(j).colNm +" "+ tab.get(j).dataTypeDesc +" "+ tab.get(j).nullable+"\n";
+                        qry += (j>0) ? "," : " ";
+                        qry += tab.get(j).colNm +" "+ tab.get(j).dataTypeDesc +" "+ tab.get(j).nullable+"\n";
                         //System.out.println("tabNm="+tabNm);
                         if(tab.get(j).pk.equals("Y")) {pk += tab.get(j).colNm + ",";isPk=true;}
                     }
                     pk += ")";pk = pk.replace(",)", ")");
-                    System.out.println("isPk="+isPk);
-                    if(isPk) str += pk+"\n";
-                    str += ");\n";
+                    //System.out.println("isPk="+isPk);
+                    if(isPk) qry += pk+"\n";
+                    qry += ");\n";
                     pk = "";
                 }
             }
             result.put("isSuccess", true);
-            result.put("createScript", str);
+            result.put("createScript", qry);
         } catch (Exception e){
             result.put("isSuccess", false);
             result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
@@ -430,12 +430,19 @@ public class TabInfoSrv {
         try{
             
             inVo.setQry(selectSelectScript(inVo).get("sqlScript").toString());
-            List<Map<String,Object>> tabQryOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectTabQryList(inVo);
-            logger.info("tabQryOutVoList="+tabQryOutVoList.size());
-            //logger.info("tabQryOutVoList="+tabQryOutVoList.get(0).get(0));
+            inVo.setCntQry(selectSelectScript(inVo).get("cntSqlScript").toString());
+                        
+            int rowCnt = sqlSession(inVo).getMapper(TabInfoDao.class).selectDataCnt(inVo);
+            if(rowCnt <= App.maxQryCnt) {
+                List<Map<String,Object>> tabQryOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectCommonQryList(inVo);
+                logger.info("tabQryOutVoList="+tabQryOutVoList.size());
+                result.put("isSuccess", true);
+                result.put("tabQryOutVoList", tabQryOutVoList);
+            } else {
+                result.put("isSuccess", false);
+                result.put("errUsrMsg", "최대 처리 허용 데이터 건수는 "+App.maxQryCnt+"건 이지만 "+rowCnt+"건이 조회되었습니다");
+            }
 
-            result.put("isSuccess", true);
-            result.put("tabQryOutVoList", tabQryOutVoList);
         } catch (Exception e){
             result.put("isSuccess", false);
             result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
@@ -457,14 +464,14 @@ public class TabInfoSrv {
         try{
             int rowCnt = sqlSession(inVo).getMapper(TabInfoDao.class).selectDataCnt(inVo);
             if(rowCnt <= 10000) {
-                String str = "";
+                String qry = "";
                 String s01 = "INSERT INTO "+inVo.getOwner()+"."+inVo.getTabNm()+" VALUES (";
                 String s02 = "";
                 PrintWriter writer = null;
                 writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(App.excelPath+fileNm)));
                 List<TabInfo> tabInfoOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectMetaTabInfoList(inVo);
                 inVo.setQry(selectSelectScript(inVo).get("sqlScript").toString());
-                List<Map<String,Object>> insStatOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectTabQryList(inVo);
+                List<Map<String,Object>> insStatOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectCommonQryList(inVo);
                 logger.info("tabInfoOutVoList="+insStatOutVoList.size());
                 for (int i = 0; i < insStatOutVoList.size(); i++) {
                     for (int j = 0; j < tabInfoOutVoList.size(); j++) {
@@ -475,10 +482,10 @@ public class TabInfoSrv {
                         else
                           s02 += "'"+insStatOutVoList.get(i).get(tabInfoOutVoList.get(j).getColNm()) + "',";
                     }
-                    str = s01 + s02 + ");"; str = str.replace(",);",");");
-                    writer.println(str);
+                    qry = s01 + s02 + ");"; qry = qry.replace(",);",");");
+                    writer.println(qry);
                     
-                    str = "";s02 = "";
+                    qry = "";s02 = "";
                 }
                 writer.close();
                 Runtime run = Runtime.getRuntime ();
@@ -507,7 +514,7 @@ public class TabInfoSrv {
         try{
             int rowCnt = sqlSession(inVo).getMapper(TabInfoDao.class).selectDataCnt(inVo);
             if(rowCnt <= 65000) {
-                List<Map<String,Object>> insStatOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectInsStat(inVo);
+                List<Map<String,Object>> insStatOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectCommonQryList(inVo);
                 logger.info("tabInfoOutVoList="+insStatOutVoList.size());
                 ExcelUtil excelDown = new ExcelUtil();
                 excelDown.downListToExcel2(insStatOutVoList,App.excelPath+fileNm);
@@ -538,19 +545,19 @@ public class TabInfoSrv {
         try{
             int rowCnt = sqlSession(inVo).getMapper(TabInfoDao.class).selectDataCnt(inVo);
             if(rowCnt <= 1000000) {
-                String str = "";
+                String qry = "";
                 PrintWriter writer = null;
                 writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(App.excelPath+fileNm)));
                 List<TabInfo> tabInfoOutVoList = tabInfoDao.selectTabInfoList(inVo);
-                List<Map<String,Object>> insStatOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectInsStat(inVo);
+                List<Map<String,Object>> insStatOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectCommonQryList(inVo);
                 logger.info("tabInfoOutVoList="+insStatOutVoList.size());
                 for (int i = 0; i < insStatOutVoList.size(); i++) {
                     for (int j = 0; j < insStatOutVoList.get(i).size(); j++) {
-                        str += insStatOutVoList.get(i).get(tabInfoOutVoList.get(j).getColNm())+ ",";
+                        qry += insStatOutVoList.get(i).get(tabInfoOutVoList.get(j).getColNm())+ ",";
                     }
-                    str = str.replaceAll(",$","");
-                    writer.println(str);
-                    str = "";
+                    qry = qry.replaceAll(",$","");
+                    writer.println(qry);
+                    qry = "";
                     if(i%1000==0) logger.info("처리건수="+i);
                 }
                 writer.close();
@@ -580,19 +587,19 @@ public class TabInfoSrv {
         try{
             int rowCnt = sqlSession(inVo).getMapper(TabInfoDao.class).selectDataCnt(inVo);
             if(rowCnt <= 1000000) {
-                String str = "";
+                String qry = "";
                 PrintWriter writer = null;
                 writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(App.excelPath+fileNm)));
                 List<TabInfo> tabInfoOutVoList = tabInfoDao.selectTabInfoList(inVo);
-                List<Map<String,Object>> insStatOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectInsStat(inVo);
+                List<Map<String,Object>> insStatOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectCommonQryList(inVo);
                 logger.info("tabInfoOutVoList="+insStatOutVoList.size());
                 for (int i = 0; i < insStatOutVoList.size(); i++) {
                     for (int j = 0; j < insStatOutVoList.get(i).size(); j++) {
-                        str += insStatOutVoList.get(i).get(tabInfoOutVoList.get(j).getColNm())+ "|";
+                        qry += insStatOutVoList.get(i).get(tabInfoOutVoList.get(j).getColNm())+ "|";
                     }
-                    str = str.replaceAll("\\|$","");
-                    writer.println(str);
-                    str = "";
+                    qry = qry.replaceAll("\\|$","");
+                    writer.println(qry);
+                    qry = "";
                 }
                 writer.close();
                 Runtime run = Runtime.getRuntime ();

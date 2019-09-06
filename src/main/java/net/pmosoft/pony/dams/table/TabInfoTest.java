@@ -73,10 +73,9 @@ public class TabInfoTest  {
         tabInfo.getJdbcInfo().setUsrPw("s1234");
         tabInfo.getJdbcInfo().setDriver("Mariadb");
         tabInfo.setOwner("sttl"); tabInfo.setTabNm("TSYUR00020");
-        tabInfo.setChkSelect(false);tabInfo.setTxtSelect("Select *");
-        tabInfo.setOrderBy("1");
+        tabInfo.setLimitCnt(100);
         Map<String, Object> map = tabInfoSrv.selectTabQryList(tabInfo);
-        System.out.println("selectTabQryListTest="+map.get("errUsrMsg"));
+        System.out.println("selectTabQryListTest errUsrMsg="+map.get("errUsrMsg"));
         System.out.println("selectTabQryListTest="+map.get("tabQryOutVoList"));
     }
 

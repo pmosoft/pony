@@ -55,6 +55,7 @@
 <![CDATA[
     -- TableDao.selectCommonQryList(MARIADB)
     ${qry}
+    limit ${limitCnt} 
 ]]>
 </select>
 

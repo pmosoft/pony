@@ -214,7 +214,6 @@ public class TabInfoSrv {
 
         Map<String, Object> result = new HashMap<String, Object>();
 
-        System.out.println("inVo2====="+inVo.chkWhereTabs);
         System.out.println("inVo3====="+inVo.whereTabs);
         System.out.println(StringUtil.inParams(inVo.whereTabs));
         inVo.setWhereInTabs(StringUtil.inParams(inVo.whereTabs));
@@ -430,18 +429,18 @@ public class TabInfoSrv {
         try{
             
             inVo.setQry(selectSelectScript(inVo).get("sqlScript").toString());
-            inVo.setCntQry(selectSelectScript(inVo).get("cntSqlScript").toString());
+            //inVo.setCntQry(selectSelectScript(inVo).get("cntSqlScript").toString());
                         
-            int rowCnt = sqlSession(inVo).getMapper(TabInfoDao.class).selectDataCnt(inVo);
-            if(rowCnt <= App.maxQryCnt) {
+            //int rowCnt = sqlSession(inVo).getMapper(TabInfoDao.class).selectDataCnt(inVo);
+            //if(rowCnt <= inVo.getLimitCnt()) {
                 List<Map<String,Object>> tabQryOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectCommonQryList(inVo);
                 logger.info("tabQryOutVoList="+tabQryOutVoList.size());
                 result.put("isSuccess", true);
                 result.put("tabQryOutVoList", tabQryOutVoList);
-            } else {
-                result.put("isSuccess", false);
-                result.put("errUsrMsg", "최대 처리 허용 데이터 건수는 "+App.maxQryCnt+"건 이지만 "+rowCnt+"건이 조회되었습니다");
-            }
+            //} else {
+            //    result.put("isSuccess", false);
+            //    result.put("errUsrMsg", "최대 처리 허용 데이터 건수는 "+inVo.getLimitCnt()+"건 이지만 "+rowCnt+"건이 조회되었습니다");
+            //}
 
         } catch (Exception e){
             result.put("isSuccess", false);

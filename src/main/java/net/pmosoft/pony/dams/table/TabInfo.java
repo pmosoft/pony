@@ -41,21 +41,21 @@ public class TabInfo {
     //-------------------------------
     boolean chk;
 
-    boolean chkSelect   ;
+    boolean chkSelect = false;
     String txtSelect    ;
     
-    boolean chkWhere    ;
+    boolean chkWhere = false;
     String txtWhere     ;
     String whereColTab  ;
     // in 조건문의 params
-    boolean chkWhereTabs;
+    boolean chkWhereTabs = false;
     String whereTabs    ;
     String whereInTabs  ;
 
     String orderBy;
     String ascDesc;
 
-    int limitCnt = 0;   
+    int limitCnt = 50000;   
     
     String qry          ;
     String cntQry       ;

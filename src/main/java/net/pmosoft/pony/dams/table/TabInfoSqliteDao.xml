@@ -278,6 +278,12 @@
          , A.UPD_DTM
          , A.UPD_USR_ID
     FROM   TDACM00080 A
+    <include refid="whereTDACM00080"/>
+    ORDER BY ${orderBy} ${ascDesc},A.JDBC_NM,A.OWNER,A.TAB_NM,A.COL_ID
+    LIMIT 5000
+</select>
+
+<sql id="whereTDACM00080">
     WHERE (#{jdbcNm} = '' OR UPPER(A.JDBC_NM  ) LIKE (UPPER(#{jdbcNm})))
     AND   (#{owner} = '' OR UPPER(A.OWNER  ) LIKE (UPPER(#{owner})))
     AND   (#{tabNm} = '' OR UPPER(A.TAB_NM ) LIKE (UPPER(#{tabNm})))
@@ -302,13 +308,21 @@
              )
            )
     AND    UPPER(A.JDBC_NM) IN (SELECT DISTINCT UPPER(JDBC_NM) FROM TDACM00010)
-    AND    A.TAB_ROWS       >= #{tabRows}
-    AND    A.TAB_REG_DT     >= (CASE WHEN IFNULL(#{tabRegDt},'') = '' THEN '19010101' ELSE IFNULL(#{tabRegDt},'') END)
-    AND    A.TAB_UPD_DT     >= (CASE WHEN IFNULL(#{tabUpdDt},'') = '' THEN '19010101' ELSE IFNULL(#{tabRegDt},'') END)
-    ORDER BY ${orderBy} ${ascDesc},A.JDBC_NM,A.OWNER,A.TAB_NM,A.COL_ID
-    LIMIT 5000
-</select>
-
+    AND    A.TAB_ROWS       = A.TAB_ROWS
+    AND    A.TAB_REG_DT     >= (CASE WHEN #{tabRegDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
+    AND    A.TAB_UPD_DT     >= (CASE WHEN #{tabUpdDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
+    AND   (
+           (LENGTH(#{colNm}) = 0)
+            OR
+           (LENGTH(#{colNm}) > 0 AND UPPER(A.TAB_NM ) IN (
+                SELECT DISTINCT UPPER(TAB_NM)
+                FROM   TDACM00080
+                WHERE  UPPER(COL_NM ) LIKE (UPPER(#{colNm}   ))
+                AND    UPPER(COL_HNM) LIKE (UPPER(#{colHnm}  ))
+                )
+            )
+           )
+</sql>
 
 <select id="selectTabList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="net.pmosoft.pony.dams.table.TabInfo">
 
@@ -324,26 +338,7 @@
          , A.TAB_UPD_DT
          , A.TAB_UPD_DT2
     FROM   TDACM00080 A
-    WHERE (#{jdbcNm} = '' OR UPPER(A.JDBC_NM  ) LIKE (UPPER(#{jdbcNm})))
-    AND   (#{owner} = '' OR UPPER(A.OWNER  ) LIKE (UPPER(#{owner})))
-    AND   (#{tabNm} = '' OR UPPER(A.TAB_NM ) LIKE (UPPER(#{tabNm})))
-    AND   (#{tabHnm} = '' OR UPPER(A.TAB_HNM ) LIKE (UPPER(#{tabHnm})))
-    AND    UPPER(A.JDBC_NM) IN (SELECT DISTINCT UPPER(JDBC_NM) FROM TDACM00010)
-    AND    A.TAB_ROWS       = A.TAB_ROWS
-    AND    A.TAB_REG_DT     >= (CASE WHEN #{tabRegDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
-    AND    A.TAB_UPD_DT     >= (CASE WHEN #{tabUpdDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
-    AND   (
-           (LENGTH(#{colNm}) = 0)
-            OR
-           (LENGTH(#{colNm}) > 0 AND UPPER(A.TAB_NM ) IN (
-                SELECT DISTINCT UPPER(TAB_NM)
-                FROM   TDACM00080
-                WHERE  UPPER(COL_NM ) LIKE (UPPER(#{colNm}   ))
-                AND    UPPER(COL_HNM) LIKE (UPPER(#{colHnm}  ))
-                )
-            )
-           )
-    ORDER BY ${orderBy} ${ascDesc},A.JDBC_NM,A.OWNER,A.TAB_NM
+    <include refid="whereTDACM00080"/>
 </select>
 
 <select id="selectColList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="net.pmosoft.pony.dams.table.TabInfo">
@@ -364,16 +359,7 @@
                 , MAX(A.TAB_NM)   AS TAB_NM
                 , COUNT(*)        AS TAB_ROWS
            FROM   TDACM00080 A
-           WHERE (#{jdbcNm} = '' OR UPPER(A.JDBC_NM  ) LIKE (UPPER(#{jdbcNm})))
-           AND   (#{owner} = '' OR UPPER(A.OWNER  ) LIKE (UPPER(#{owner})))
-           AND   (#{tabNm} = '' OR UPPER(A.TAB_NM ) LIKE (UPPER(#{tabNm})))
-           AND   (#{tabHnm} = '' OR UPPER(A.TAB_HNM ) LIKE (UPPER(#{tabHnm})))
-           AND   (#{colNm} = '' OR UPPER(A.COL_NM ) LIKE (UPPER(#{colNm})))
-           AND   (#{colHnm} = '' OR UPPER(A.COL_HNM ) LIKE (UPPER(#{colHnm})))
-           AND    UPPER(A.JDBC_NM) IN (SELECT DISTINCT UPPER(JDBC_NM) FROM TDACM00010)
-           AND    A.TAB_ROWS       = A.TAB_ROWS
-           AND    A.TAB_REG_DT     >= (CASE WHEN #{tabRegDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
-           AND    A.TAB_UPD_DT     >= (CASE WHEN #{tabUpdDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
+           <include refid="whereTDACM00080"/>
            GROUP BY A.COL_NM, A.COL_HNM,A.DATA_TYPE_DESC
            )
     ORDER BY ${orderBy} ${ascDesc},COL_NM, COL_HNM, DATA_TYPE_DESC
@@ -392,7 +378,7 @@
 
 <select id="selectTabColList" parameterType="java.util.LinkedHashMap" resultType="java.util.LinkedHashMap">
 
-    -- TabInfoDao.selectTabColList
+    -- TabInfoDao.selectTabColList(미사용)
     SELECT   A.JDBC_NM
             ,A.OWNER
             ,A.TAB_NM

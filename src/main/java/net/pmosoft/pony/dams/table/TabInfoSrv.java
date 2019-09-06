@@ -241,7 +241,7 @@ public class TabInfoSrv {
     public Map<String, Object> selectTabList(TabInfo inVo){
 
         Map<String, Object> result = new HashMap<String, Object>();
-
+        inVo.setWhereInTabs(StringUtil.inParams(inVo.whereTabs));
         try{
             List<TabInfo> tabInfoOutVoList = tabInfoDao.selectTabList(inVo);
             //System.out.println(tabInfoOutVoList.size());
@@ -306,30 +306,6 @@ public class TabInfoSrv {
     **********************************************************************************/
     public void _______________유틸_______________(){}
     
-//    /*
-//     * 동적 쿼리문
-//     * (if isChkSelect or isChkWhere)
-//     */
-//    public String getCommonQry(TabInfo inVo){
-//        String qry = "";
-//        if(inVo.isChkSelect() && !inVo.isChkWhere()) {
-//            qry += inVo.txtSelect;
-//            qry += " FROM " + inVo.getOwner()+"."+inVo.getTabNm()+"\n";
-//        } else if(inVo.isChkSelect() && inVo.isChkWhere()) {
-//            qry += inVo.txtSelect;
-//            qry += " FROM " + inVo.getOwner()+"."+inVo.getTabNm()+"\n";
-//            qry += inVo.getTxtWhere();
-//        } else if(!inVo.isChkSelect() && inVo.isChkWhere()) {
-//            qry += "SELECT * FROM " + inVo.getOwner()+"."+inVo.getTabNm()+"\n";
-//            qry += inVo.getTxtWhere();
-//        } else {
-//            qry += "SELECT * FROM " + inVo.getOwner()+"."+inVo.getTabNm();
-//        }
-//        inVo.setQry(qry);
-//
-//        return qry;
-//    }
-
     /*
      * SELECT 문장 생성
      */
@@ -398,31 +374,6 @@ public class TabInfoSrv {
         return result;
     }
     
-    
-    /*
-     * 테이블 쿼리 데이터 생성
-     */
-    public Map<String, Object> selectTabQryList(TabInfo inVo){
-
-        Map<String, Object> result = new HashMap<String, Object>();
-        try{
-            
-            inVo.setQry(selectSelectScript(inVo).get("sqlScript").toString());
-            List<Map<String,Object>> tabQryOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectTabQryList(inVo);
-            logger.info("tabQryOutVoList="+tabQryOutVoList.size());
-            //logger.info("tabQryOutVoList="+tabQryOutVoList.get(0).get(0));
-
-            result.put("isSuccess", true);
-            result.put("tabQryOutVoList", tabQryOutVoList);
-        } catch (Exception e){
-            result.put("isSuccess", false);
-            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
-            result.put("errSysMsg", e.getMessage());
-            e.printStackTrace();
-        }
-        return result;
-    }
-
     /*
      * 테이블 생성 스크립드
      */
@@ -434,7 +385,6 @@ public class TabInfoSrv {
         String str = "";
         String pk = "";
         boolean isPk = false;
-
 
         try{
             for (int i = 0; i < inVo.size(); i++) {
@@ -470,8 +420,30 @@ public class TabInfoSrv {
         }
         return result;
     }
+    
+    /*
+     * 테이블 쿼리 데이터 생성
+     */
+    public Map<String, Object> selectTabQryList(TabInfo inVo){
 
+        Map<String, Object> result = new HashMap<String, Object>();
+        try{
+            
+            inVo.setQry(selectSelectScript(inVo).get("sqlScript").toString());
+            List<Map<String,Object>> tabQryOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectTabQryList(inVo);
+            logger.info("tabQryOutVoList="+tabQryOutVoList.size());
+            //logger.info("tabQryOutVoList="+tabQryOutVoList.get(0).get(0));
 
+            result.put("isSuccess", true);
+            result.put("tabQryOutVoList", tabQryOutVoList);
+        } catch (Exception e){
+            result.put("isSuccess", false);
+            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
+            result.put("errSysMsg", e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
 
 
 
@@ -505,6 +477,7 @@ public class TabInfoSrv {
                     }
                     str = s01 + s02 + ");"; str = str.replace(",);",");");
                     writer.println(str);
+                    
                     str = "";s02 = "";
                 }
                 writer.close();

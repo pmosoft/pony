@@ -60,23 +60,25 @@ public class TabInfoTest  {
 */
     public static void main(String[] args) {
         //testSelectMetaTabInfoList();
-        selectSelColScriptTest();
+        //selectSelColScriptTest();
+        selectTabQryListTest();
     }
 
-    public void selectTabQryListTest() {
+    public static void selectTabQryListTest() {
         TabInfoSrv tabInfoSrv = new TabInfoSrv();
         TabInfo tabInfo = new TabInfo();
-        tabInfo.jdbcInfo.setUrl("jdbc:log4jdbc:mariadb://pmosoft.net:3306/sttl");
-        tabInfo.jdbcInfo.setUsrId("sttl");
-        tabInfo.jdbcInfo.setUsrPw("s1234");
-        tabInfo.jdbcInfo.setDriver("Mariadb");
+        tabInfo.getJdbcInfo().setUrl("jdbc:log4jdbc:mariadb://pmosoft.net:3306/sttl");
+        tabInfo.getJdbcInfo().setUsrId("sttl");
+        tabInfo.getJdbcInfo().setUsrPw("s1234");
+        tabInfo.getJdbcInfo().setDriver("Mariadb");
         tabInfo.setOwner("sttl"); tabInfo.setTabNm("TSYUR00020");
-        tabInfo.setChkSelect(true);tabInfo.setTxtSelect("Select *");
+        tabInfo.setChkSelect(false);tabInfo.setTxtSelect("Select *");
+        tabInfo.setOrderBy("1");
         Map<String, Object> map = tabInfoSrv.selectTabQryList(tabInfo);
-        //System.out.println(map.get("sqlScript"));
+        System.out.println(map.get("tabQryOutVoList"));
     }
 
-    public void selectColScriptTest() {
+    public static void selectColScriptTest() {
         TabInfoSrv tabInfoSrv = new TabInfoSrv();
         TabInfo tabInfo = new TabInfo();
         tabInfo.jdbcInfo.setUrl("jdbc:log4jdbc:mariadb://pmosoft.net:3306/sttl");

@@ -26,7 +26,7 @@ public class TabInfoCtrl {
 
     /**********************************************************************************
     *
-    *                               테이블정보 추출 및 저장
+    *                               Pony테이블모듈_로컬DB
     *
     **********************************************************************************/
     /*
@@ -102,11 +102,11 @@ public class TabInfoCtrl {
     *
     **********************************************************************************/
     /*
-     * 테이블 쿼리 데이터 리턴
-     */
-    @RequestMapping(value = "/dams/table/selectTabQryList")
-    public Map<String, Object> selectTabQryList(@RequestBody TabInfo inVo){
-        return tabInfoSrv.selectTabQryList(inVo);
+    * Select Script 생성 (SELECT)
+    */
+    @RequestMapping(value = "/dams/table/selectSelectScript")
+    public Map<String, Object> selectSelectScript(@RequestBody TabInfo inVo){
+    return tabInfoSrv.selectSelectScript(inVo);
     }
 
     /*
@@ -116,34 +116,17 @@ public class TabInfoCtrl {
     public Map<String, Object> selectCreateScript(@RequestBody List<TabInfo> inVo){
         return tabInfoSrv.selectCreateScript(inVo);
     }
-
-//////////    /*
-//////////     * Select Script 생성 (SELECT)
-//////////     */
-//////////    @RequestMapping(value = "/dams/table/selectColScript")
-//////////    public Map<String, Object> selectColScript(@RequestBody TabInfo inVo){
-//////////        return tabInfoSrv.selectColScript(inVo);
-//////////    }
-//////////
     
-    
-//////////    /*
-//////////     * Select Script 생성 (SELECT + FROM)
-//////////     */
-//////////    @RequestMapping(value = "/dams/table/selectColFromScript")
-//////////    public Map<String, Object> selectColFromScript(@RequestBody TabInfo inVo){
-//////////        return tabInfoSrv.selectColFromScript(inVo);
-//////////    }
-//////////
-//////////    /*
-//////////     * Select Script 생성 (SELECT + FROM + WHERE)
-//////////     */
-//////////    @RequestMapping(value = "/dams/table/selectColFromWhereScript")
-//////////    public Map<String, Object> selectColFromWhereScript(@RequestBody TabInfo inVo){
-//////////        return tabInfoSrv.selectColFromWhereScript(inVo);
-//////////    }
-//////////
+    /*
+     * 테이블 쿼리 데이터 리턴
+     */
+    @RequestMapping(value = "/dams/table/selectTabQryList")
+    public Map<String, Object> selectTabQryList(@RequestBody TabInfo inVo){
+        return tabInfoSrv.selectTabQryList(inVo);
+    }
 
+
+    
     /*
      * 다운로드 Insert 문장
      */

@@ -1,0 +1,2 @@
+    SELECT * FROM TSYUR00020
+    ORDER BY   limit 5000

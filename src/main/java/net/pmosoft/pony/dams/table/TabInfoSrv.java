@@ -306,64 +306,86 @@ public class TabInfoSrv {
     **********************************************************************************/
     public void _______________유틸_______________(){}
     
-    /*
-     * 동적 쿼리문
-     * (if isChkSelect or isChkWhere)
-     */
-    public String getCommonQry(TabInfo inVo){
-        String qry = "";
-        if(inVo.isChkSelect() && !inVo.isChkWhere()) {
-            qry += inVo.txtSelect;
-            qry += " FROM " + inVo.getOwner()+"."+inVo.getTabNm()+"\n";
-        } else if(inVo.isChkSelect() && inVo.isChkWhere()) {
-            qry += inVo.txtSelect;
-            qry += " FROM " + inVo.getOwner()+"."+inVo.getTabNm()+"\n";
-            qry += inVo.getTxtWhere();
-        } else if(!inVo.isChkSelect() && inVo.isChkWhere()) {
-            qry += "SELECT * FROM " + inVo.getOwner()+"."+inVo.getTabNm()+"\n";
-            qry += inVo.getTxtWhere();
-        } else {
-            qry += "SELECT * FROM " + inVo.getOwner()+"."+inVo.getTabNm();
-        }
-        inVo.setQry(qry);
-
-        return qry;
-    }
+//    /*
+//     * 동적 쿼리문
+//     * (if isChkSelect or isChkWhere)
+//     */
+//    public String getCommonQry(TabInfo inVo){
+//        String qry = "";
+//        if(inVo.isChkSelect() && !inVo.isChkWhere()) {
+//            qry += inVo.txtSelect;
+//            qry += " FROM " + inVo.getOwner()+"."+inVo.getTabNm()+"\n";
+//        } else if(inVo.isChkSelect() && inVo.isChkWhere()) {
+//            qry += inVo.txtSelect;
+//            qry += " FROM " + inVo.getOwner()+"."+inVo.getTabNm()+"\n";
+//            qry += inVo.getTxtWhere();
+//        } else if(!inVo.isChkSelect() && inVo.isChkWhere()) {
+//            qry += "SELECT * FROM " + inVo.getOwner()+"."+inVo.getTabNm()+"\n";
+//            qry += inVo.getTxtWhere();
+//        } else {
+//            qry += "SELECT * FROM " + inVo.getOwner()+"."+inVo.getTabNm();
+//        }
+//        inVo.setQry(qry);
+//
+//        return qry;
+//    }
 
     /*
      * SELECT 문장 생성
-     * (if isChkSelect or isChkWhere)
      */
     public Map<String, Object> selectSelectScript(TabInfo inVo){
+        
+        logger.info("selectSelectScript");
+        
 
         Map<String, Object> result = new HashMap<String, Object>();
         String str = "";
-        String pkCol = "";
+
+        String cols = "";
         int maxColLen = 0;
+        String pkCol = "";
+
+        String where = "";
+        
         try{
             List<TabInfo> tab = sqlSession(inVo).getMapper(TabInfoDao.class).selectMetaTabInfoList(inVo);
+            
+            //////////////////////////////////////////////////
             str += "SELECT \n";
+            //////////////////////////////////////////////////
 
+            // SELECT 컬럼들중 길이가 가장 큰 컬럼의 길이를 산출한다            
             for (int i = 0; i < tab.size(); i++) {
-                if(maxColLen <= tab.get(i).colNm.length()) maxColLen = tab.get(i).colNm.length();
+                if(maxColLen <= tab.get(i).getColNm().length()) maxColLen = tab.get(i).getColNm().length();
             }
 
-            System.out.println(maxColLen);
+            // SELECT 컬럼들의 폭을 균등하게 맞추고 주석을 생성한다.
+            logger.debug("maxColLen="+maxColLen);
             for (int i = 0; i < tab.size(); i++) {
-                str += (i>0) ? "     , " : "       ";
-                System.out.println(tab.get(i).colNm+"="+tab.get(i).colNm.length() );
+                
+                // 컬럼 정보 생성
+                cols += (i>0) ? "     , " : "       ";
+                logger.debug(tab.get(i).getColNm()+"="+tab.get(i).getColNm().length() );
                 //System.out.println(StringUtil.padRight("a",maxColLen-tab.get(i).colNm.length()));
-                str += tab.get(i).colNm + StringUtil.padRight(" ",maxColLen-tab.get(i).colNm.length()) + "    -- "+ tab.get(i).colHnm+"\n";
+                cols += tab.get(i).getColNm() + StringUtil.padRight(" ",maxColLen-tab.get(i).getColNm().length()) + "    -- "+ tab.get(i).getColHnm()+"\n";
                 //System.out.println("tabNm="+tabNm);
-                if(tab.get(i).pk.equals("Y")) { pkCol += "AND "+tab.get(i).colNm + " = ''\n"; }
+                
+                // PK컬럼 조건 정보 생성
+                if(tab.get(i).getPk().equals("Y")) { pkCol += "AND "+tab.get(i).getColNm() + " LIKE '%'\n"; }
             }
-            if(inVo.isChkSelect()) {
-                str += "FROM   "+inVo.owner.toUpperCase()+"."+inVo.tabNm+"\n";
-            }
-            if(inVo.isChkWhere()) {
-                str += "WHERE 1=1 "+"\n";
-                str += pkCol+"\n";
-            }
+
+            ////////////////////////////////////////////////////////////////
+            str += inVo.isChkSelect() ? inVo.getTxtSelect() +"\n" : cols;
+            ////////////////////////////////////////////////////////////////
+
+            ///////////////////////////////////////////////////////////////////////////
+            str += "FROM   "+inVo.getOwner().toUpperCase()+"."+inVo.getTabNm()+"\n";
+            ///////////////////////////////////////////////////////////////////////////
+            
+            ///////////////////////////////////////////////////////////////////////////
+            where = "WHERE 1=1 "+"\n" + pkCol;
+            str += inVo.isChkWhere() ? inVo.getTxtWhere() +"\n" : where;
+            ///////////////////////////////////////////////////////////////////////////
 
             result.put("isSuccess", true);
             result.put("sqlScript", str);
@@ -384,10 +406,11 @@ public class TabInfoSrv {
 
         Map<String, Object> result = new HashMap<String, Object>();
         try{
-            inVo.setQry(getCommonQry(inVo));
+            
+            inVo.setQry(selectSelectScript(inVo).get("sqlScript").toString());
             List<Map<String,Object>> tabQryOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectTabQryList(inVo);
-            logger.info("tabInfoOutVoList="+tabQryOutVoList.size());
-            //logger.info("tabInfoOutVoList="+tabQryOutVoList.get(0).get(0));
+            logger.info("tabQryOutVoList="+tabQryOutVoList.size());
+            //logger.info("tabQryOutVoList="+tabQryOutVoList.get(0).get(0));
 
             result.put("isSuccess", true);
             result.put("tabQryOutVoList", tabQryOutVoList);
@@ -404,8 +427,8 @@ public class TabInfoSrv {
      * 테이블 생성 스크립드
      */
     public Map<String, Object> selectCreateScript(List<TabInfo> inVo){
-        System.out.println("selectCreateScript");
-        System.out.println("inVo.size()="+inVo.size());
+        logger.info("selectCreateScript");
+        //System.out.println("inVo.size()="+inVo.size());
 
         Map<String, Object> result = new HashMap<String, Object>();
         String str = "";
@@ -468,7 +491,7 @@ public class TabInfoSrv {
                 PrintWriter writer = null;
                 writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(App.excelPath+fileNm)));
                 List<TabInfo> tabInfoOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectMetaTabInfoList(inVo);
-                inVo.setQry(getCommonQry(inVo));
+                inVo.setQry(selectSelectScript(inVo).get("sqlScript").toString());
                 List<Map<String,Object>> insStatOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectTabQryList(inVo);
                 logger.info("tabInfoOutVoList="+insStatOutVoList.size());
                 for (int i = 0; i < insStatOutVoList.size(); i++) {

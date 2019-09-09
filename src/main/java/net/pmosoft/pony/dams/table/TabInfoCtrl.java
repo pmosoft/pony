@@ -159,6 +159,15 @@ public class TabInfoCtrl {
         return tabInfoSrv.downloadBarFile(inVo);
     }
 
+    /*
+     * 테이블 데이터 건수조회후 갱신SQL 출력 및 로컬메테이블 테이블건수 갱신
+     */
+    @RequestMapping(value = "/dams/table/updateTabRowsUpdateScript")
+    public Map<String, Object> updateTabRowsUpdateScript(@RequestBody List<TabInfo> inVo){
+        return tabInfoSrv.updateTabRowsUpdateScript(inVo);
+    }
+    
+    
 //    /**********************************************************************************
 //    *
 //    *                              (범용) 테이블 CRUD

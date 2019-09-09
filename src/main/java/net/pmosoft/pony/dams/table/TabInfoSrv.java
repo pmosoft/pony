@@ -297,12 +297,13 @@ public class TabInfoSrv {
     /*
      * 테이블 건수 갱신
      */
-    public Map<String, Object> updateTabRows(TabInfo inVo){
+    public Map<String, Object> updateTabRows(List<TabInfo> inVo){
+        
         logger.info("updateTabRows");
         //System.out.println("inVo.size()="+inVo.size());
         Map<String, Object> result = new HashMap<String, Object>();
         try{
-            sqlSession(inVo).getMapper(TabInfoDao.class).updateCommon(inVo);
+            tabInfoDao.updateTabRows(inVo);
             result.put("isSuccess", true);
         } catch (Exception e){
             result.put("isSuccess", false);
@@ -645,12 +646,15 @@ public class TabInfoSrv {
     }
     
     /*
-    * 테이블 데이터 건수조회후 갱신SQL 출력
+    * 테이블 데이터 건수조회후 갱신SQL 출력 및 로컬메테이블 테이블건수 갱신
     * */
-    public Map<String, Object> selectTabRowsUpdateScript(List<TabInfo> inVo){
-        logger.info("selectTabRowsUpdateScript");
+    public Map<String, Object> updateTabRowsUpdateScript(List<TabInfo> inVo){
+        logger.info("updateTabRowsUpdateScript");
 
         Map<String, Object> result = new HashMap<String, Object>();
+        List<TabInfo> updateVoList = new ArrayList<TabInfo>();
+        
+        
         String qry = "";
         try{
             for (int i = 0; i < inVo.size(); i++) {
@@ -658,13 +662,28 @@ public class TabInfoSrv {
                     inVo.get(i).setCntQry("SELECT COUNT(*) FROM "+inVo.get(i).getOwner()+"."+inVo.get(i).getTabNm());
                     System.out.println(inVo.get(i).getCntQry());
                     int rowCnt = sqlSession(inVo.get(i)).getMapper(TabInfoDao.class).selectDataCnt(inVo.get(i));
-                    qry += " UPDATE TDACM00080 SET TAB_ROWS="+rowCnt;
-                    qry += " WHERE JDBC_NM='"+inVo.get(i).getJdbcNm()+"'";
-                    qry += " AND OWNER='"+inVo.get(i).getOwner()+"'";
-                    qry += " AND TAB_NM='"+inVo.get(i).getTabNm()+"';";
-                    qry += "\n";
+                    if(inVo.get(i).getTabRows()!=rowCnt) {
+                        TabInfo updateVo = new TabInfo();
+                        updateVo.setOwner(inVo.get(i).getOwner());
+                        updateVo.setTabNm(inVo.get(i).getTabNm());
+                        updateVo.setJdbcNm(inVo.get(i).getJdbcNm());
+                        updateVo.setTabRows(rowCnt);
+                        updateVoList.add(updateVo);
+                        
+                        qry += " UPDATE TDACM00080 SET TAB_ROWS="+rowCnt;
+                        qry += " WHERE JDBC_NM='"+inVo.get(i).getJdbcNm()+"'";
+                        qry += " AND OWNER='"+inVo.get(i).getOwner()+"'";
+                        qry += " AND TAB_NM='"+inVo.get(i).getTabNm()+"';";
+                        qry += "\n";
+                    }    
                 }
             }
+            
+            if(updateVoList.size()>0) {
+                logger.info("updateVoList.size()=="+updateVoList.size());
+                updateTabRows(updateVoList);
+            }    
+            
             result.put("isSuccess", true);
             result.put("tabRowsUpdateScript", qry);
         } catch (Exception e){

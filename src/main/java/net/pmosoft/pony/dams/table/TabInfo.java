@@ -12,53 +12,53 @@ public class TabInfo {
     //-------------------------------
     // TABLE    
     //-------------------------------
-    String stsNm        ;
-    String jdbcNm       ;
-    String owner        ;
-    String tabNm        ;
-    String tabHnm       ;
-    int    colId        ;
-    String colNm        ;
-    String colHnm       ;
-    String dataTypeDesc ;
-    String nullable     ;
-    String pk           ;
-    String dataTypeNm   ;
-    int    len          ;
-    int    decimalCnt   ;
-    long   tabRows      ;
-    String tabRegDt     ;
-    String tabRegDt2    ;
-    String tabUpdDt     ;
-    String tabUpdDt2    ;
-    String regDtm       ;
-    String regUsrId     ;
-    String updDtm       ;
-    String updUsrId     ;
+    String stsNm        = "";
+    String jdbcNm       = "";
+    String owner        = "";
+    String tabNm        = "";
+    String tabHnm       = "";
+    int    colId        =  0;
+    String colNm        = "";
+    String colHnm       = "";
+    String dataTypeDesc = "";
+    String nullable     = "";
+    String pk           = "";
+    String dataTypeNm   = "";
+    int    len          =  0;
+    int    decimalCnt   =  0;
+    long   tabRows      =  0;
+    String tabRegDt     = "";
+    String tabRegDt2    = "";
+    String tabUpdDt     = "";
+    String tabUpdDt2    = "";
+    String regDtm       = "";
+    String regUsrId     = "";
+    String updDtm       = "";
+    String updUsrId     = "";
 
     //-------------------------------
     // TABLE 조건    
     //-------------------------------
-    boolean chk;
-
-    boolean chkSelect = false;
-    String txtSelect    ;
+    boolean chk          = false;
+                         
+    boolean chkSelect    = false;
+    String txtSelect     = "";
     
-    boolean chkWhere = false;
-    String txtWhere     ;
-    String whereColTab  ;
+    boolean chkWhere     = false;
+    String txtWhere      = "";
+    String whereColTab   = "";
     // in 조건문의 params
     boolean chkWhereTabs = false;
-    String whereTabs    ;
-    String whereInTabs  ;
+    String whereTabs     = "";
+    String whereInTabs   = "";
 
-    String orderBy;
-    String ascDesc;
+    String orderBy       = "";
+    String ascDesc       = "";
 
     int limitCnt = 50000;   
     
-    String qry          ;
-    String cntQry       ;
+    String qry           = "";
+    String cntQry        = "";
     
     public JdbcInfo getJdbcInfo() {
         return jdbcInfo;

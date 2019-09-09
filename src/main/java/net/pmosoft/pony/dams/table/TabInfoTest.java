@@ -63,11 +63,11 @@ public class TabInfoTest  {
         //selectSelColScriptTest();
         //selectTabQryListTest();
         //selectCreateScriptTest();
-        selectTabRowsUpdateScriptTest();
+        updateTabRowsUpdateScriptTest();
     }
 
     
-    public static void selectTabRowsUpdateScriptTest() {
+    public static void updateTabRowsUpdateScriptTest() {
         TabInfoSrv tabInfoSrv = new TabInfoSrv();
         
         List<TabInfo> inVoList = new ArrayList<TabInfo>();
@@ -83,7 +83,7 @@ public class TabInfoTest  {
         inVoList.add(tabInfo);
         inVoList.add(tabInfo);
         inVoList.add(tabInfo);
-        Map<String, Object> map = tabInfoSrv.selectTabRowsUpdateScript(inVoList);
+        Map<String, Object> map = tabInfoSrv.updateTabRowsUpdateScript(inVoList);
         System.out.println("selectTabQryListTest errUsrMsg="+map.get("errUsrMsg"));
         System.out.println("selectTabQryListTest="+map.get("tabRowsUpdateScript"));
     }    

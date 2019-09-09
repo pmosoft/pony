@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+
 @Mapper
 public interface TabInfoDao {
 
@@ -29,7 +30,7 @@ public interface TabInfoDao {
     /**********************************************************************************
     *                                       수정
     **********************************************************************************/
-    void updateCommon(TabInfo inVo);
+    void updateTabRows(List<TabInfo> inVo);
         
     /**********************************************************************************
     *                                       삭제

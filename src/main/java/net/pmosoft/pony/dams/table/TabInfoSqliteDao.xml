@@ -369,8 +369,15 @@
 <!--*******************************************************************************************************************
 **                                             (수정)
 ********************************************************************************************************************-->
-<update id="updateCommon" parameterType="net.pmosoft.pony.dams.table.TabInfo">
-    ${qry}
+<update id="updateTabRows" parameterType="java.util.List">
+	<foreach item="TabInfo" index="index" collection="list" open="" separator=";">
+		UPDATE TDACM00080 
+		SET    TAB_ROWS = ${TabInfo.tabRows}
+		WHERE  JDBC_NM  = #{TabInfo.jdbcNm} 
+		AND    OWNER    = #{TabInfo.owner}
+		AND    TAB_NM   = #{TabInfo.tabNm}
+		;
+	</foreach>
 </update>
 
 <!--*******************************************************************************************************************

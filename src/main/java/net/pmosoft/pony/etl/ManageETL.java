@@ -26,6 +26,13 @@ public class ManageETL {
 
         //new ExtractTab(asTabNm).execute();
         //new InsertFileToDb(toTabNm).execute();
+        /*
+         * 
+         * 1. src 커넥션
+         * 2. tar 커넥션
+         * 
+         * 
+         * */
     }
     
 

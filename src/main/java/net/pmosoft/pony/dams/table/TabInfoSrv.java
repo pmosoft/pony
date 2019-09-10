@@ -298,12 +298,15 @@ public class TabInfoSrv {
      * 테이블 건수 갱신
      */
     public Map<String, Object> updateTabRows(List<TabInfo> inVo){
-        
+        // mybatis에서 foreach사용시 sqlite의 jdbctype 처리를 못해주므로 단건으로 갱신한다
+
         logger.info("updateTabRows");
         //System.out.println("inVo.size()="+inVo.size());
         Map<String, Object> result = new HashMap<String, Object>();
         try{
-            tabInfoDao.updateTabRows(inVo);
+            for (int i = 0; i < inVo.size(); i++) {
+                tabInfoDao.updateTabRows(inVo.get(i));
+            }
             result.put("isSuccess", true);
         } catch (Exception e){
             result.put("isSuccess", false);

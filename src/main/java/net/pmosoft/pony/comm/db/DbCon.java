@@ -4,10 +4,24 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Map;
 
+import net.pmosoft.pony.dams.jdbc.JdbcInfo;
+
 
 public class DbCon {
 
     public Connection conn = null;
+
+    public Connection getConnection(JdbcInfo jdbcInfo) {
+        try {
+            Class.forName(jdbcInfo.getDriver());
+            conn = DriverManager.getConnection(jdbcInfo.getUrl(),jdbcInfo.getUsrId(),jdbcInfo.getUsrPw());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {            
+        }
+ 
+        return conn;
+    }    
     
     public Connection getConnection(DbmsInfo dbmsInfo) {
         try {

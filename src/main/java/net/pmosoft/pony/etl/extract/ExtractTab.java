@@ -6,10 +6,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Map;
 
-import net.pmosoft.pony.dams.jdbc.JdbcInfo;
+import net.pmosoft.pony.comm.db.DbCon;
 import net.pmosoft.pony.dams.table.TabInfo;
 import net.pmosoft.pony.dams.table.TabInfoSrv;
 
@@ -20,16 +19,26 @@ import net.pmosoft.pony.dams.table.TabInfoSrv;
 public class ExtractTab {
     
     TabInfo  tabInfo = new TabInfo();    
+
+    Connection conn = null;
+    Statement stmt = null;
+    ResultSet rs = null;
+    
+    String qry = "";
     
     public ExtractTab(){}
-    public ExtractTab(TabInfo tabInfo){this.tabInfo = tabInfo;}
+    public ExtractTab(TabInfo tabInfo){
+        this.tabInfo = tabInfo;
+        this.conn = new DbCon().getConnection(tabInfo.getJdbcInfo());
+    }
     
     public static void main(String[] args) {
         TabInfo tabInfo = new TabInfo();
-        tabInfo.getJdbcInfo().setUrl("jdbc:oracle:thin:@localhost:9951/IAMLTE");
+        tabInfo.getJdbcInfo().setUrl("jdbc:log4jdbc:oracle:thin:@localhost:9951/IAMLTE");
         tabInfo.getJdbcInfo().setUsrId("cellplan");
         tabInfo.getJdbcInfo().setUsrPw("cell_2012");
-        tabInfo.getJdbcInfo().setDriver("Oracle");
+        tabInfo.getJdbcInfo().setDb("Oracle");
+        tabInfo.getJdbcInfo().setDriver("net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
         tabInfo.setJdbcNm("CELLPLAN");
         tabInfo.setOwner("CELLPLAN"); 
         tabInfo.setTabNm("SCENARIO");
@@ -39,12 +48,31 @@ public class ExtractTab {
     }
 
     public void executeTab() {
-
         TabInfoSrv tabInfoSrv = new TabInfoSrv();
-        //Map<String, Object> map = tabInfoSrv.selectColScript(tabInfo);
-        //System.out.println(map.get("sqlScript"));
+        Map<String, Object> map = tabInfoSrv.selectSelectScript(tabInfo);
+        System.out.println(map.get("sqlScript"));
+        qry = map.get("sqlScript").toString();
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(qry);
+            while (rs.next()) {
+                String SCENARIO_ID = rs.getString("SCENARIO_ID");
+                String SCENARIO_NM = rs.getString("SCENARIO_NM");
+                System.out.println(SCENARIO_NM + " : " + SCENARIO_NM);
+            }
+        } catch ( Exception e ) { e.printStackTrace(); } finally { DBClose(); }
     }    
 
+    void DBClose(){ try { rs.close();stmt.close(); conn.close();} catch (SQLException e) { e.printStackTrace(); } }    
+
+    public void selectTabCnt() {}    
+    public void selectInsStatData() {}    
+    public void selectCommaData() {}    
+    public void selectBarData() {}    
+    public void selectSharpBarData() {}    
+    public void insDataToFile() {}    
+    
+    
     public void executeTabComma() {
         
     }    

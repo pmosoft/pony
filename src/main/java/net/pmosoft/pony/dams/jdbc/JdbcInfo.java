@@ -3,6 +3,7 @@ package net.pmosoft.pony.dams.jdbc;
 public class JdbcInfo {
 
     String jdbcNm  ;
+    String db      ;
     String driver  ;
     String url     ;
     String usrId   ;
@@ -11,13 +12,19 @@ public class JdbcInfo {
     String regUsrId;
     String updDtm  ;
     String updUsrId;
-
-
+    
+    
     public String getJdbcNm() {
         return jdbcNm;
     }
     public void setJdbcNm(String jdbcNm) {
         this.jdbcNm = jdbcNm;
+    }
+    public String getDb() {
+        return db;
+    }
+    public void setDb(String db) {
+        this.db = db;
     }
     public String getDriver() {
         return driver;

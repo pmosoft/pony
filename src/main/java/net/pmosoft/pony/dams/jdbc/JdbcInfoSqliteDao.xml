@@ -10,6 +10,7 @@
     INSERT INTO TDACM00010
     (
          JDBC_NM
+        ,DB
         ,DRIVER
         ,URL
         ,USR_ID
@@ -20,6 +21,7 @@
         ,UPD_USR_ID
     ) VALUES (
          #{jdbcNm}
+        ,#{db}
         ,#{driver}
         ,#{url}
         ,#{usrId}
@@ -34,6 +36,7 @@
 <select id="selectJdbcInfoList" parameterType="net.pmosoft.pony.dams.jdbc.JdbcInfo" resultType="net.pmosoft.pony.dams.jdbc.JdbcInfo">
     -- JdbcInfoDao.selectJdbcInfoList
     SELECT JDBC_NM
+         , DB
          , DRIVER
          , URL
          , USR_ID
@@ -49,6 +52,7 @@
 <select id="selectJdbcInfo" parameterType="net.pmosoft.pony.dams.jdbc.JdbcInfo" resultType="net.pmosoft.pony.dams.jdbc.JdbcInfo">
     -- JdbcInfoDao.selectJdbcInfo
     SELECT JDBC_NM
+         , DB
          , DRIVER
          , URL
          , USR_ID
@@ -66,6 +70,7 @@
 <select id="selectComboJdbcList" parameterType="net.pmosoft.pony.dams.jdbc.JdbcInfo" resultType="net.pmosoft.pony.dams.jdbc.JdbcInfo">
     -- JdbcInfoDao.selectJdbcInfoList
     SELECT '선택(jdbc)' AS JDBC_NM
+         , ''          AS DB
          , ''          AS DRIVER
          , ''          AS URL
          , ''          AS USR_ID
@@ -89,7 +94,8 @@
 <update id="updateJdbcInfo" parameterType="net.pmosoft.pony.dams.jdbc.JdbcInfo">
     -- JdbcInfoDao.updateJdbcInfo
     UPDATE TDACM00010
-    SET    DRIVER     = #{driver}
+    SET    DB         = #{db}
+         , DRIVER     = #{driver}
          , URL        = #{url}
          , USR_ID     = #{usrId}
          , USR_PW     = #{usrPw}

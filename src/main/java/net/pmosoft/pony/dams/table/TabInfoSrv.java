@@ -68,7 +68,7 @@ public class TabInfoSrv {
             props.put("url"         , inVo.jdbcInfo.getUrl()  );
             props.put("username"    , inVo.jdbcInfo.getUsrId());
             props.put("password"    , inVo.jdbcInfo.getUsrPw());
-            props.put("mapper"      , "net/pmosoft/pony/dams/table/TabInfo"+StringUtil.replaceFirstCharUpperCase(inVo.jdbcInfo.getDriver())+"Dyn.xml");
+            props.put("mapper"      , "net/pmosoft/pony/dams/table/TabInfo"+StringUtil.replaceFirstCharUpperCase(inVo.jdbcInfo.getDb())+"Dyn.xml");
         } else {
             JdbcInfo jdbcInfo = new JdbcInfo();;
             jdbcInfo.setJdbcNm(inVo.getJdbcNm());
@@ -77,7 +77,7 @@ public class TabInfoSrv {
             props.put("url"         , jdbcVo.getUrl()  );
             props.put("username"    , jdbcVo.getUsrId());
             props.put("password"    , jdbcVo.getUsrPw());
-            props.put("mapper"      , "net/pmosoft/pony/dams/table/TabInfo"+StringUtil.replaceFirstCharUpperCase(jdbcVo.getDriver())+"Dyn.xml");
+            props.put("mapper"      , "net/pmosoft/pony/dams/table/TabInfo"+StringUtil.replaceFirstCharUpperCase(jdbcVo.getDb())+"Dyn.xml");
         }
 
         SqlSession session = null;

@@ -68,7 +68,7 @@ public class TabInfoTest  {
 
     
     public static void updateTabRowsUpdateScriptTest() {
-        TabInfoSrv tabInfoSrv = new TabInfoSrv();
+        TabInfoDynSrv tabInfoDynSrv = new TabInfoDynSrv();
         
         List<TabInfo> inVoList = new ArrayList<TabInfo>();
         TabInfo tabInfo = new TabInfo();
@@ -83,13 +83,13 @@ public class TabInfoTest  {
         inVoList.add(tabInfo);
         inVoList.add(tabInfo);
         inVoList.add(tabInfo);
-        Map<String, Object> map = tabInfoSrv.updateTabRowsUpdateScript(inVoList);
+        Map<String, Object> map = tabInfoDynSrv.updateTabRowsUpdateScript(inVoList);
         System.out.println("selectTabQryListTest errUsrMsg="+map.get("errUsrMsg"));
         System.out.println("selectTabQryListTest="+map.get("tabRowsUpdateScript"));
     }    
     
     public static void selectTabQryListTest() {
-        TabInfoSrv tabInfoSrv = new TabInfoSrv();
+        TabInfoDynSrv tabInfoDynSrv = new TabInfoDynSrv();
         TabInfo tabInfo = new TabInfo();
         tabInfo.getJdbcInfo().setUrl("jdbc:log4jdbc:mariadb://pmosoft.net:3306/sttl");
         tabInfo.getJdbcInfo().setUsrId("sttl");
@@ -97,13 +97,13 @@ public class TabInfoTest  {
         tabInfo.getJdbcInfo().setDriver("Mariadb");
         tabInfo.setOwner("sttl"); tabInfo.setTabNm("TSYUR00020");
         tabInfo.setLimitCnt(100);
-        Map<String, Object> map = tabInfoSrv.selectTabQryList(tabInfo);
+        Map<String, Object> map = tabInfoDynSrv.selectTabQryList(tabInfo);
         System.out.println("selectTabQryListTest errUsrMsg="+map.get("errUsrMsg"));
         System.out.println("selectTabQryListTest="+map.get("tabQryOutVoList"));
     }
 
     public static void selectCreateScriptTest() {
-        TabInfoSrv tabInfoSrv = new TabInfoSrv();
+        TabInfoDynSrv tabInfoDynSrv = new TabInfoDynSrv();
         List<TabInfo> inVo = new ArrayList<TabInfo>();
         TabInfo tabInfo = new TabInfo();
         tabInfo.getJdbcInfo().setUrl("jdbc:log4jdbc:mariadb://pmosoft.net:3306/sttl");
@@ -113,7 +113,7 @@ public class TabInfoTest  {
         tabInfo.setChk(true);
         tabInfo.setOwner("sttl"); tabInfo.setTabNm("TSYUR00020");
         inVo.add(tabInfo);
-        Map<String, Object> map = tabInfoSrv.selectCreateScript(inVo);
+        Map<String, Object> map = tabInfoDynSrv.selectCreateScript(inVo);
         System.out.println(map.get("createScript"));
     }
 

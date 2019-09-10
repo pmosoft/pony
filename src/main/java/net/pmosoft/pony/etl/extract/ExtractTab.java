@@ -9,12 +9,9 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.jayway.jsonpath.ParseContext;
-
 import net.pmosoft.pony.comm.db.DbCon;
 import net.pmosoft.pony.dams.table.TabInfo;
-import net.pmosoft.pony.dams.table.TabInfoDao;
-import net.pmosoft.pony.dams.table.TabInfoSrv;
+import net.pmosoft.pony.dams.table.TabInfoDynSrv;
 
 /*
  * DB의 테이블 데이터를 추출하여 샘파일로 만든다
@@ -23,7 +20,7 @@ import net.pmosoft.pony.dams.table.TabInfoSrv;
 public class ExtractTab {
     
     TabInfo  tabInfo = new TabInfo();    
-    TabInfoSrv tabInfoSrv = new TabInfoSrv();
+    TabInfoDynSrv tabInfoDynSrv = new TabInfoDynSrv();
     Map<String, Object> map = new HashMap<String, Object>();
 
     String sqlScript = "";    
@@ -78,7 +75,7 @@ public class ExtractTab {
     void DBClose(){ try { rs.close();stmt.close(); conn.close();} catch (SQLException e) { e.printStackTrace(); } }    
 
     public void selectSelectScript() {
-        map = tabInfoSrv.selectSelectScript(tabInfo);
+        map = tabInfoDynSrv.selectSelectScript(tabInfo);
         sqlScript = map.get("sqlScript").toString();
         cntSqlScript = map.get("cntSqlScript").toString();
         tabInfo.setQry(sqlScript);
@@ -86,7 +83,7 @@ public class ExtractTab {
     }
     
     public void selectDataCnt() {
-        rowCnt = Integer.parseInt(tabInfoSrv.selectDataCnt(tabInfo).get("rowCnt").toString());
+        rowCnt = Integer.parseInt(tabInfoDynSrv.selectDataCnt(tabInfo).get("rowCnt").toString());
     }
     
     public void selectInsStatData() {}    

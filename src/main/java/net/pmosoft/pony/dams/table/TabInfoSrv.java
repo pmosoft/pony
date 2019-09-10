@@ -50,48 +50,7 @@ public class TabInfoSrv {
     private TabInfoDao tabInfoDao;
 
     @Autowired
-    private JdbcInfoDao jdbcInfoDao;
-
-
-    /**********************************************************************************
-    *
-    *                               JDBC_Mybatis_SqlSession
-    *
-    **********************************************************************************/
-    public void ________JDBC_Mybatis_SqlSession________(){}
-
-    private SqlSession sqlSession(TabInfo inVo){
-        JdbcInfo jdbcVo = new JdbcInfo();
-        Properties props = new Properties();
-        props.put("driver"      , "net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
-        if(inVo.jdbcInfo.getUrl() != null){
-            props.put("url"         , inVo.jdbcInfo.getUrl()  );
-            props.put("username"    , inVo.jdbcInfo.getUsrId());
-            props.put("password"    , inVo.jdbcInfo.getUsrPw());
-            props.put("mapper"      , "net/pmosoft/pony/dams/table/TabInfo"+StringUtil.replaceFirstCharUpperCase(inVo.jdbcInfo.getDb())+"Dyn.xml");
-        } else {
-            JdbcInfo jdbcInfo = new JdbcInfo();;
-            jdbcInfo.setJdbcNm(inVo.getJdbcNm());
-            jdbcVo = jdbcInfoDao.selectJdbcInfo(jdbcInfo);
-            //daoClassPath = (String) codeList.get(0).get("CD_PARAM1");
-            props.put("url"         , jdbcVo.getUrl()  );
-            props.put("username"    , jdbcVo.getUsrId());
-            props.put("password"    , jdbcVo.getUsrPw());
-            props.put("mapper"      , "net/pmosoft/pony/dams/table/TabInfo"+StringUtil.replaceFirstCharUpperCase(jdbcVo.getDb())+"Dyn.xml");
-        }
-
-        SqlSession session = null;
-
-        try {
-            InputStream inputStream = Resources.getResourceAsStream("jdbcinfo-mybatis-config.xml");
-            SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream, props);
-            session = sqlSessionFactory.openSession(false);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return session;
-    }
+    private TabInfoDynSrv tabInfoDynSrv;
 
     /**********************************************************************************
     *
@@ -108,10 +67,12 @@ public class TabInfoSrv {
         Map<String, Object> result = new HashMap<String, Object>();
         int rowCnt = 0;
         int commitCnt = 500;
+        
+        inVo.setTabNm("%");
 
         try{
             // 1단계 : DB 메타 테이블컬럼정보 조회
-            List<TabInfo> tabInfoOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectMetaTabInfoList(inVo);
+            List<TabInfo> tabInfoOutVoList = (List<TabInfo>) tabInfoDynSrv.selectMetaTabInfoList(inVo).get("tabInfoList");
             logger.info("tabInfoOutVoList="+tabInfoOutVoList.size());
 
             // 2단계 : 메타테이블컬럼정보 삭제

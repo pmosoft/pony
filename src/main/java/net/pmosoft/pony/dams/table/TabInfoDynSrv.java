@@ -115,6 +115,32 @@ public class TabInfoDynSrv {
     
     /**********************************************************************************
     *
+    *                               해당DB메타데이터추출
+    *
+    **********************************************************************************/
+    public void ____________해당DB메타데이터추출_____________(){}
+    
+    /*
+     * 해당DB의 테이블메타정보 조회
+     * */
+    public Map<String, Object> selectMetaTabInfoList(TabInfo inVo){
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        try{
+            List<TabInfo> tabInfoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectMetaTabInfoList(inVo);
+            result.put("isSuccess", true);
+            result.put("tabInfoList", tabInfoList);
+        } catch (Exception e){
+            result.put("isSuccess", false);
+            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
+            result.put("errSysMsg", e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+    
+    /**********************************************************************************
+    *
     *                               SQL스크립트생성
     *
     **********************************************************************************/
@@ -181,6 +207,8 @@ public class TabInfoDynSrv {
             ///////////////////////////////////////////////////////////////////////////
 
             result.put("isSuccess", true);
+                        
+            result.put("tabInfoList", tab);
             result.put("sqlScript", qry);
             result.put("cntSqlScript", cntQry);
         } catch (Exception e){
@@ -315,17 +343,14 @@ public class TabInfoDynSrv {
             // 테이블 조회 스크립트 생성
             inVo.setQry(selectSelectScript(inVo).get("sqlScript").toString());
 
-            // 테이블 조회 스크립트 생성
+            //
             List<Map<String,Object>> insStatOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectCommonQryList(inVo);
             logger.info("tabInfoOutVoList="+insStatOutVoList.size());
-            
             
             String qry = "";
             String s01 = "INSERT INTO "+inVo.getOwner()+"."+inVo.getTabNm()+" VALUES (";
             String s02 = "";
             writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(inVo.getPathFileNm())));
-            
-            
             
             for (int i = 0; i < insStatOutVoList.size(); i++) {
                 for (int j = 0; j < tabInfoOutVoList.size(); j++) {
@@ -341,6 +366,9 @@ public class TabInfoDynSrv {
                 
                 qry = "";s02 = "";
             }
+            
+            
+            
             writer.close();
             result.put("isSuccess", true);
         } catch (Exception e){

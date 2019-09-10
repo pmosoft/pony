@@ -6,10 +6,14 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.Map;
+
+import com.jayway.jsonpath.ParseContext;
 
 import net.pmosoft.pony.comm.db.DbCon;
 import net.pmosoft.pony.dams.table.TabInfo;
+import net.pmosoft.pony.dams.table.TabInfoDao;
 import net.pmosoft.pony.dams.table.TabInfoSrv;
 
 /*
@@ -19,7 +23,13 @@ import net.pmosoft.pony.dams.table.TabInfoSrv;
 public class ExtractTab {
     
     TabInfo  tabInfo = new TabInfo();    
+    TabInfoSrv tabInfoSrv = new TabInfoSrv();
+    Map<String, Object> map = new HashMap<String, Object>();
 
+    String sqlScript = "";    
+    String cntSqlScript = "";    
+    int rowCnt= 0;    
+    
     Connection conn = null;
     Statement stmt = null;
     ResultSet rs = null;
@@ -48,24 +58,37 @@ public class ExtractTab {
     }
 
     public void executeTab() {
-        TabInfoSrv tabInfoSrv = new TabInfoSrv();
-        Map<String, Object> map = tabInfoSrv.selectSelectScript(tabInfo);
-        System.out.println(map.get("sqlScript"));
-        qry = map.get("sqlScript").toString();
-        try {
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery(qry);
-            while (rs.next()) {
-                String SCENARIO_ID = rs.getString("SCENARIO_ID");
-                String SCENARIO_NM = rs.getString("SCENARIO_NM");
-                System.out.println(SCENARIO_NM + " : " + SCENARIO_NM);
-            }
-        } catch ( Exception e ) { e.printStackTrace(); } finally { DBClose(); }
+        
+        selectSelectScript();
+        selectDataCnt();
+        //map = tabInfoSrv.selectSelectScript(tabInfo);
+        //System.out.println(map.get("sqlScript"));
+        //qry = map.get("sqlScript").toString();
+        //try {
+        //    stmt = conn.createStatement();
+        //    rs = stmt.executeQuery(qry);
+        //    while (rs.next()) {
+        //        String SCENARIO_ID = rs.getString("SCENARIO_ID");
+        //        String SCENARIO_NM = rs.getString("SCENARIO_NM");
+        //        System.out.println(SCENARIO_NM + " : " + SCENARIO_NM);
+        //    }
+        //} catch ( Exception e ) { e.printStackTrace(); } finally { DBClose(); }
     }    
 
     void DBClose(){ try { rs.close();stmt.close(); conn.close();} catch (SQLException e) { e.printStackTrace(); } }    
 
-    public void selectTabCnt() {}    
+    public void selectSelectScript() {
+        map = tabInfoSrv.selectSelectScript(tabInfo);
+        sqlScript = map.get("sqlScript").toString();
+        cntSqlScript = map.get("cntSqlScript").toString();
+        tabInfo.setQry(sqlScript);
+        tabInfo.setCntQry(cntSqlScript);
+    }
+    
+    public void selectDataCnt() {
+        rowCnt = Integer.parseInt(tabInfoSrv.selectDataCnt(tabInfo).get("rowCnt").toString());
+    }
+    
     public void selectInsStatData() {}    
     public void selectCommaData() {}    
     public void selectBarData() {}    

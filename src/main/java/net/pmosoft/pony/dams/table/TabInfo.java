@@ -37,7 +37,7 @@ public class TabInfo {
     String updUsrId     = "";
 
     //-------------------------------
-    // TABLE 조건    
+    // TABLE 조회 조건    
     //-------------------------------
     boolean chk          = false;
                          
@@ -55,10 +55,17 @@ public class TabInfo {
     String orderBy       = "";
     String ascDesc       = "";
 
-    int limitCnt = 50000;   
-    
+    //-------------------------------
+    // 동적쿼리 조건    
+    //-------------------------------
     String qry           = "";
     String cntQry        = "";
+
+    //-------------------------------
+    // 데이터 추출 조건    
+    //-------------------------------
+    String pathFileNm    = "";
+    int limitCnt = 50000;
     
     public JdbcInfo getJdbcInfo() {
         return jdbcInfo;
@@ -270,12 +277,6 @@ public class TabInfo {
     public void setAscDesc(String ascDesc) {
         this.ascDesc = ascDesc;
     }
-    public int getLimitCnt() {
-        return limitCnt;
-    }
-    public void setLimitCnt(int limitCnt) {
-        this.limitCnt = limitCnt;
-    }
     public String getQry() {
         return qry;
     }
@@ -288,4 +289,17 @@ public class TabInfo {
     public void setCntQry(String cntQry) {
         this.cntQry = cntQry;
     }
+    public String getPathFileNm() {
+        return pathFileNm;
+    }
+    public void setPathFileNm(String pathFileNm) {
+        this.pathFileNm = pathFileNm;
+    }
+    public int getLimitCnt() {
+        return limitCnt;
+    }
+    public void setLimitCnt(int limitCnt) {
+        this.limitCnt = limitCnt;
+    }   
+    
 }

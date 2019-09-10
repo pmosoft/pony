@@ -452,6 +452,26 @@ public class TabInfoSrv {
     *
     **********************************************************************************/
     public void ____________테이블데이터추출_____________(){}
+
+    /*
+     * 테이블 쿼리 건수
+     */
+    public Map<String, Object> selectDataCnt(TabInfo inVo){
+
+        Map<String, Object> result = new HashMap<String, Object>();
+        try{
+            int rowCnt = sqlSession(inVo).getMapper(TabInfoDao.class).selectDataCnt(inVo);            
+            result.put("isSuccess", true);
+            result.put("rowCnt", rowCnt);
+        } catch (Exception e){
+            result.put("isSuccess", false);
+            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
+            result.put("errSysMsg", e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+    
     /*
      * 테이블 쿼리 데이터 생성
      */
@@ -483,6 +503,60 @@ public class TabInfoSrv {
         return result;
     }
 
+    /*
+    * INSERT문장을 생성하고 파일로 저장
+    * */
+    public Map<String, Object> makeInsStatToFile(TabInfo inVo){
+
+        Map<String, Object> result = new HashMap<String, Object>();
+        inVo.setPathFileNm(App.excelPath+inVo.getTabNm()+".sql");
+        PrintWriter writer = null;
+
+        try {
+            // 테이블 메타 정보 조회
+            List<TabInfo> tabInfoOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectMetaTabInfoList(inVo);
+
+            // 테이블 조회 스크립트 생성
+            inVo.setQry(selectSelectScript(inVo).get("sqlScript").toString());
+
+            // 테이블 조회 스크립트 생성
+            List<Map<String,Object>> insStatOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectCommonQryList(inVo);
+            logger.info("tabInfoOutVoList="+insStatOutVoList.size());
+            
+            
+            String qry = "";
+            String s01 = "INSERT INTO "+inVo.getOwner()+"."+inVo.getTabNm()+" VALUES (";
+            String s02 = "";
+            writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(inVo.getPathFileNm())));
+            
+            
+            
+            for (int i = 0; i < insStatOutVoList.size(); i++) {
+                for (int j = 0; j < tabInfoOutVoList.size(); j++) {
+                    if(tabInfoOutVoList.get(j).getDataTypeNm().trim().toUpperCase().matches("NUMBER|INT|NUMERIC")||
+                       insStatOutVoList.get(i).get(tabInfoOutVoList.get(j).getColNm())==null
+                      )
+                      s02 += insStatOutVoList.get(i).get(tabInfoOutVoList.get(j).getColNm()) + ",";
+                    else
+                      s02 += "'"+insStatOutVoList.get(i).get(tabInfoOutVoList.get(j).getColNm()) + "',";
+                }
+                qry = s01 + s02 + ");"; qry = qry.replace(",);",");");
+                writer.println(qry);
+                
+                qry = "";s02 = "";
+            }
+            writer.close();
+            result.put("isSuccess", true);
+        } catch (Exception e){
+            result.put("isSuccess", false);
+            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
+            result.put("errSysMsg", e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+    
+    
     /*
     * 다운로드 Insert 문장
     * */

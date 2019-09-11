@@ -158,6 +158,8 @@ public class TabInfoDynSrv {
         String qry = "";
         String cntQry = "SELECT COUNT(*) ";
 
+        String db = "";
+        String colNm = "";
         String cols = "";
         int maxColLen = 0;
         String pkCol = "";
@@ -171,6 +173,7 @@ public class TabInfoDynSrv {
             qry += "SELECT \n";
             //////////////////////////////////////////////////
 
+            /// Columns Start /////////////////////////////////////////////////////////
             // SELECT 컬럼들중 길이가 가장 큰 컬럼의 길이를 산출한다            
             for (int i = 0; i < tab.size(); i++) {
                 if(maxColLen <= tab.get(i).getColNm().length()) maxColLen = tab.get(i).getColNm().length();
@@ -179,21 +182,28 @@ public class TabInfoDynSrv {
             // SELECT 컬럼들의 폭을 균등하게 맞추고 주석을 생성한다.
             logger.debug("maxColLen="+maxColLen);
             for (int i = 0; i < tab.size(); i++) {
+                colNm = tab.get(i).getColNm();
+                db = inVo.getJdbcInfo().getDb();
+                
+                // 데이트 타입 변형조건일 경우 DBMS의 SQL규칙에 맞게 형변환 처리
+                if (tab.get(i).isChgDate()||tab.get(i).getDataTypeNm().trim().toUpperCase().matches("DATE|TIMESTAMP")) {
+                    if     (db.equals("Oracle")) {colNm = "TO_CHAR("+colNm+",'YYYY-MM-DD HH24:MI:SS') AS "+colNm;}
+                    else if(db.equals("Oracle")) {colNm = "TO_CHAR("+colNm+",'YYYY-MM-DD HH24:MI:SS') AS "+colNm;}
+                }
                 
                 // 컬럼 정보 생성
                 cols += (i>0) ? "     , " : "       ";
-                logger.debug(tab.get(i).getColNm()+"="+tab.get(i).getColNm().length() );
+                logger.debug(colNm+"="+colNm.length() );
                 //System.out.println(StringUtil.padRight("a",maxColLen-tab.get(i).colNm.length()));
-                cols += tab.get(i).getColNm() + StringUtil.padRight(" ",maxColLen-tab.get(i).getColNm().length()) + "    -- "+ tab.get(i).getColHnm()+"\n";
+                cols += colNm + StringUtil.padRight(" ",maxColLen-colNm.length()) + "    -- "+ tab.get(i).getColHnm()+"\n";
                 //System.out.println("tabNm="+tabNm);
                 
                 // PK컬럼 조건 정보 생성
                 if(tab.get(i).getPk().equals("Y")) { pkCol += "AND "+tab.get(i).getColNm() + " LIKE '%'\n"; }
             }
 
-            ////////////////////////////////////////////////////////////////
             qry    += inVo.isChkSelect() ? inVo.getTxtSelect() +"\n" : cols;
-            ////////////////////////////////////////////////////////////////
+            /// Columns End ///////////////////////////////////////////////////////////
 
             ///////////////////////////////////////////////////////////////////////////
             qry    += "FROM   "+inVo.getOwner().toUpperCase()+"."+inVo.getTabNm()+"\n";

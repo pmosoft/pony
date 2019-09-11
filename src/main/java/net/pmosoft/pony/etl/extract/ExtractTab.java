@@ -64,7 +64,7 @@ public class ExtractTab {
         tabInfo.getJdbcInfo().setDriver("net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
         tabInfo.setJdbcNm("CELLPLAN");
         tabInfo.setOwner("CELLPLAN"); 
-        tabInfo.setTabNm("SCENARIO");
+        tabInfo.setTabNm("ANALYSIS_RESULT");
         //tabInfo.setTabNm("DU");
         
         ExtractTab extractTab = new ExtractTab(tabInfo);
@@ -105,6 +105,7 @@ public class ExtractTab {
         PrintWriter writer = null;
 
         // 쿼리 변수
+        String db = "";
         String qry = "";
         String ColumnValue = "";
         String s01 = "";
@@ -142,9 +143,14 @@ public class ExtractTab {
                         s02 += ColumnValue + ",";
                         //System.out.println("insertData1="+insertData);
                     } else if (tabInfoList.get(i).getDataTypeNm().trim().toUpperCase().matches("DATE|TIMESTAMP")) {
+                        db = tabInfo.getJdbcInfo().getDb();
                         /********************************************************************************
                          * [DATE] DBMS 및 site에 따라 date 형식을 처리하는 것이 상이하므로 별도로 처리요 
                          ********************************************************************************/
+                        // 데이트 타입 변형조건일 경우 DBMS의 SQL규칙에 맞게 형변환 처리
+                        if     (db.equals("Oracle")) {ColumnValue = "TO_DATE('"+ColumnValue+"','YYYY-MM-DD HH24:MI:SS')";}
+                        else if(db.equals("Oracle")) {ColumnValue = "TO_DATE('"+ColumnValue+"','YYYY-MM-DD HH24:MI:SS')";}
+                       
                         s02 += ColumnValue + ",";
                     } else {          
                         s02 += "'"+ColumnValue + "',";

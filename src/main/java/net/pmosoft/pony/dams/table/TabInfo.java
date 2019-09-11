@@ -60,6 +60,7 @@ public class TabInfo {
     //-------------------------------
     String qry           = "";
     String cntQry        = "";
+    boolean isChgDate    = false;
 
     //-------------------------------
     // 데이터 추출 조건    
@@ -300,6 +301,12 @@ public class TabInfo {
     }
     public void setLimitCnt(int limitCnt) {
         this.limitCnt = limitCnt;
+    }
+    public boolean isChgDate() {
+        return isChgDate;
+    }
+    public void setChgDate(boolean isChgDate) {
+        this.isChgDate = isChgDate;
     }   
     
 }

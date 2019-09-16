@@ -62,13 +62,21 @@ public class TabInfoDynSrv {
 
     private SqlSession sqlSession(TabInfo inVo){
         JdbcInfo jdbcVo = new JdbcInfo();
-        Properties props = new Properties();
+        Properties props = new Properties();        
         props.put("driver"      , "net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
+        System.out.println("inVo======"+inVo);
+        System.out.println("inVo.getJdbcNm()======"+inVo.getJdbcNm());
+        System.out.println("inVo.jdbcInfo.getUrl()======"+inVo.jdbcInfo.getUrl());
+        
+        
+        
         if(inVo.jdbcInfo.getUrl() != null){
             props.put("url"         , inVo.jdbcInfo.getUrl()  );
             props.put("username"    , inVo.jdbcInfo.getUsrId());
             props.put("password"    , inVo.jdbcInfo.getUsrPw());
             props.put("mapper"      , "net/pmosoft/pony/dams/table/TabInfo"+StringUtil.replaceFirstCharUpperCase(inVo.jdbcInfo.getDb())+"Dyn.xml");
+            System.out.println("inVo.jdbcInfo.getDb()1======"+inVo.jdbcInfo.getDb());
+            
         } else {
             JdbcInfo jdbcInfo = new JdbcInfo();;
             jdbcInfo.setJdbcNm(inVo.getJdbcNm());
@@ -78,6 +86,7 @@ public class TabInfoDynSrv {
             props.put("username"    , jdbcVo.getUsrId());
             props.put("password"    , jdbcVo.getUsrPw());
             props.put("mapper"      , "net/pmosoft/pony/dams/table/TabInfo"+StringUtil.replaceFirstCharUpperCase(jdbcVo.getDb())+"Dyn.xml");
+            System.out.println("inVo.jdbcInfo.getDb()2======"+jdbcVo.getDb());
         }
 
         SqlSession session = null;
@@ -242,21 +251,27 @@ public class TabInfoDynSrv {
         String pk = "";
         boolean isPk = false;
 
+        
         try{
             for (int i = 0; i < inVo.size(); i++) {
                 if(inVo.get(i).chk){
                     inVo.get(i).setOrderBy("1");
                     List<TabInfo> tab = sqlSession(inVo.get(i)).getMapper(TabInfoDao.class).selectMetaTabInfoList(inVo.get(i));
                     //System.out.println("outVo="+outVo.size());
-                    qry += "--DROP TABLE "+inVo.get(i).getOwner()+"."+inVo.get(i).getTabNm()+";\n";
-                    qry += "CREATE TABLE "+inVo.get(i).getOwner()+"."+inVo.get(i).getTabNm()+"\n";
+                    //qry += "--DROP TABLE "+inVo.get(i).getOwner()+"."+inVo.get(i).getTabNm()+";\n";
+                    qry += "--DROP TABLE "+inVo.get(i).getTabNm()+";\n";
+                    //qry += "CREATE TABLE "+inVo.get(i).getOwner()+"."+inVo.get(i).getTabNm()+"\n";
+                    qry += "CREATE TABLE "+inVo.get(i).getTabNm()+"\n";
                     qry += "(\n";
                     pk  += ",CONSTRAINT "+inVo.get(i).getTabNm()+"_PK PRIMARY KEY(";
 
+                    // 컬럼 정보 생성
                     for (int j = 0; j < tab.size(); j++) {
-                        qry += (j>0) ? "," : " ";
-                        qry += tab.get(j).colNm +" "+ tab.get(j).dataTypeDesc +" "+ tab.get(j).nullable+"\n";
+                        qry += (j>0) ? "," : " ";                        
+                        qry += setColOnDBMS(tab.get(j),inVo.get(i).getJdbcInfo().getDb(),inVo.get(i).getTarDb());
                         //System.out.println("tabNm="+tabNm);
+                        
+                        // PK정보 생성
                         if(tab.get(j).pk.equals("Y")) {pk += tab.get(j).colNm + ",";isPk=true;}
                     }
                     pk += ")";pk = pk.replace(",)", ")");
@@ -277,7 +292,23 @@ public class TabInfoDynSrv {
         return result;
     }
 
-
+    /*
+     * DBMS별 컬럼정보 변형 생성
+     */
+    public String setColOnDBMS(TabInfo tabInfo,String srcDb,String tarDb){
+        String retCol = ""; 
+        String colNm = tabInfo.getColNm().toString(); 
+        String dataTypeDesc = tabInfo.getDataTypeDesc().toString(); 
+        String nullable = tabInfo.getNullable().toString(); 
+        
+        if(srcDb.equals("oracle") && tarDb.equals("postgre")){
+            dataTypeDesc = dataTypeDesc.replace("NUMBER"  , "NUMERIC");
+            dataTypeDesc = dataTypeDesc.replace("VARCHAR2", "VARCHAR");
+        } 
+        retCol = colNm +" "+ dataTypeDesc +" "+ nullable+"\n";
+            
+        return retCol;
+    }
 
     
     /**********************************************************************************

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.pmosoft.pony.dams.table.TabInfoDao">
+
+<!--*******************************************************************************************************************
+**                                             (추출) 테이블정보 추출 및 저장
+********************************************************************************************************************-->
+
+<select id="selectMetaTabInfoList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="net.pmosoft.pony.dams.table.TabInfo">
+
+    -- TableDao.selectMetaTabInfoList(Postgre)
+    SELECT
+           '추출'                                                                              AS stsNm
+         , UPPER(#{jdbcNm})                                                                   AS jdbcNm
+         , UPPER(A.TABLE_SCHEMA)                                                              AS owner
+         , UPPER(A.TABLE_NAME)                                                                AS tabNm
+         , ''                                                                                 AS tabHnm
+         , A.ORDINAL_POSITION                                                                 AS colId
+         , UPPER(A.COLUMN_NAME)                                                               AS colNm
+         , ''                                                                                 AS colHnm
+         , CASE WHEN UPPER(A.DATA_TYPE) = 'CHARACTER VARYING' THEN 'VARCHAR'
+                ELSE UPPER(A.DATA_TYPE)
+           END                                                                                AS dataTypeDesc
+           
+         , CASE WHEN UPPER(A.DATA_TYPE) IN ('CHARACTER') THEN A.DATA_TYPE||'('||A.CHARACTER_MAXIMUM_LENGTH||')'
+                WHEN UPPER(A.DATA_TYPE) IN ('CHARACTER VARYING') THEN 'VARCHAR('||A.CHARACTER_MAXIMUM_LENGTH||')'
+                WHEN UPPER(A.DATA_TYPE) IN ('INTEGER') THEN 'INT'
+                WHEN UPPER(A.DATA_TYPE) IN ('NUMERIC') AND A.NUMERIC_PRECISION IS NULL THEN A.DATA_TYPE
+                WHEN UPPER(A.DATA_TYPE) IN ('NUMERIC') THEN A.DATA_TYPE||'('||A.NUMERIC_PRECISION||','||A.NUMERIC_SCALE||')'
+                ELSE UPPER(A.DATA_TYPE)
+           END                                                                                                 as dataTypeDesc
+         , CASE WHEN IS_NULLABLE = 'NO' THEN 'NOT NULL' ELSE ' ' END                          AS nullable
+         , ' '                                                                                AS pk
+         , UPPER(A.DATA_TYPE)                                                                 AS dataTypeNm
+         , CASE WHEN UPPER(A.DATA_TYPE) IN ('CHARACTER','CHARACTER VARYING') THEN A.CHARACTER_MAXIMUM_LENGTH
+                WHEN UPPER(A.DATA_TYPE) IN ('INTEGER','NUMERIC') THEN A.NUMERIC_PRECISION_RADIX
+           END                                                                                AS len
+         , A.NUMERIC_SCALE                                                                    AS decimalCnt
+         , 0                                                                                  AS tabRows
+         , ''                                                                                 AS tabRegDt
+         , ''                                                                                 AS tabRegDt2
+         , ''                                                                                 AS tabUpdDt
+         , ''                                                                                 AS tabUpdDt2
+         , TO_CHAR(NOW(),'YYYYMMDDHH24MISS')                                                  AS regDtm
+         , ''                                                                                 AS regUsrId
+         , TO_CHAR(NOW(),'YYYYMMDDHH24MISS')                                                  AS updDtm
+         , ''                                                                                 AS updUsrId
+    FROM   CELLPLAN.COLUMNS A
+         , CELLPLAN.TABLES B
+    WHERE  A.TABLE_SCHEMA = B.TABLE_SCHEMA
+    AND    A.TABLE_NAME   = B.TABLE_NAME
+    AND    UPPER(A.TABLE_SCHEMA) NOT IN ('PUBLIC','INFORMATION_SCHEMA','PG_CATALOG')
+    AND    UPPER(A.TABLE_NAME)   LIKE UPPER(#{tabNm})
+    ORDER BY A.TABLE_NAME,A.ORDINAL_POSITION
+
+</select>
+
+
+<select id="selectCommonQryList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="java.util.LinkedHashMap">
+<![CDATA[
+    -- TableDao.selectCommonQryList(MARIADB)
+    ${qry}
+    limit ${limitCnt} 
+]]>
+</select>
+
+<select id="selectDataCnt" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="int">
+<![CDATA[
+    -- TableDao.selectDataCnt(MARIADB)
+    ${cntQry}
+]]>
+</select>
+
+
+</mapper>

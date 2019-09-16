@@ -62,8 +62,8 @@ public class TabInfoTest  {
         //testSelectMetaTabInfoList();
         //selectSelColScriptTest();
         //selectTabQryListTest();
-        //selectCreateScriptTest();
-        updateTabRowsUpdateScriptTest();
+        selectCreateScriptTest();
+        //updateTabRowsUpdateScriptTest();
     }
 
     
@@ -76,7 +76,7 @@ public class TabInfoTest  {
         tabInfo.getJdbcInfo().setUrl("jdbc:log4jdbc:oracle:thin:@localhost:9951/IAMLTE");
         tabInfo.getJdbcInfo().setUsrId("cellplan");
         tabInfo.getJdbcInfo().setUsrPw("cell_2012");
-        tabInfo.getJdbcInfo().setDriver("Oracle");
+        tabInfo.getJdbcInfo().setDriver("oracle");
         tabInfo.setChk(true);        
         tabInfo.setOwner("CELLPLAN"); tabInfo.setTabNm("ADMIN_NOTICE");
         inVoList.add(tabInfo);
@@ -94,7 +94,7 @@ public class TabInfoTest  {
         tabInfo.getJdbcInfo().setUrl("jdbc:log4jdbc:mariadb://pmosoft.net:3306/sttl");
         tabInfo.getJdbcInfo().setUsrId("sttl");
         tabInfo.getJdbcInfo().setUsrPw("s1234");
-        tabInfo.getJdbcInfo().setDriver("Mariadb");
+        tabInfo.getJdbcInfo().setDriver("mariadb");
         tabInfo.setOwner("sttl"); tabInfo.setTabNm("TSYUR00020");
         tabInfo.setLimitCnt(100);
         Map<String, Object> map = tabInfoDynSrv.selectTabQryList(tabInfo);
@@ -106,12 +106,34 @@ public class TabInfoTest  {
         TabInfoDynSrv tabInfoDynSrv = new TabInfoDynSrv();
         List<TabInfo> inVo = new ArrayList<TabInfo>();
         TabInfo tabInfo = new TabInfo();
-        tabInfo.getJdbcInfo().setUrl("jdbc:log4jdbc:mariadb://pmosoft.net:3306/sttl");
-        tabInfo.getJdbcInfo().setUsrId("sttl");
-        tabInfo.getJdbcInfo().setUsrPw("s1234");
-        tabInfo.getJdbcInfo().setDriver("Mariadb");
         tabInfo.setChk(true);
-        tabInfo.setOwner("sttl"); tabInfo.setTabNm("TSYUR00020");
+        //tabInfo.getJdbcInfo().setUrl("jdbc:log4jdbc:mariadb://pmosoft.net:3306/sttl");
+        //tabInfo.getJdbcInfo().setUsrId("sttl");
+        //tabInfo.getJdbcInfo().setUsrPw("s1234");
+        //tabInfo.getJdbcInfo().setDriver("Mariadb");
+        //tabInfo.setOwner("sttl"); tabInfo.setTabNm("TSYUR00020");
+
+        //tabInfo.getJdbcInfo().setUrl("jdbc:log4jdbc:oracle:thin:@localhost:9951/IAMLTE");        
+        //tabInfo.getJdbcInfo().setUsrId("cellplan");        
+        //tabInfo.getJdbcInfo().setUsrPw("cell_2012");        
+        //tabInfo.getJdbcInfo().setDb("oracle");
+        
+        
+            
+        tabInfo.getJdbcInfo().setUrl("jdbc:log4jdbc:postgresql://localhost:5432/cellplan");        
+        tabInfo.getJdbcInfo().setUsrId("cellplan");        
+        tabInfo.getJdbcInfo().setUsrPw("cell_2012");        
+        //tabInfo.getJdbcInfo().setUrl("jdbc:log4jdbc:postgresql://localhost:5432/postgres");        
+        //tabInfo.getJdbcInfo().setUsrId("postgres");        
+        //tabInfo.getJdbcInfo().setUsrPw("1");        
+        tabInfo.getJdbcInfo().setDb("postgre");
+        
+        tabInfo.getJdbcInfo().setDriver("net.sf.log4jdbc.sql.jdbcapi.DriverSpy");        
+        tabInfo.setJdbcNm("CELLPLAN");        
+        tabInfo.setOwner("CELLPLAN");         
+        tabInfo.setTabNm("TEST02");        
+        
+        tabInfo.setTarDb("postgre");
         inVo.add(tabInfo);
         Map<String, Object> map = tabInfoDynSrv.selectCreateScript(inVo);
         System.out.println(map.get("createScript"));

@@ -67,6 +67,11 @@ public class TabInfo {
     //-------------------------------
     String pathFileNm    = "";
     int limitCnt = 50000;
+
+    //-------------------------------
+    // 테이블생성쿼리    
+    //-------------------------------
+    String tarDb         = "";
     
     public JdbcInfo getJdbcInfo() {
         return jdbcInfo;
@@ -307,6 +312,12 @@ public class TabInfo {
     }
     public void setChgDate(boolean isChgDate) {
         this.isChgDate = isChgDate;
+    }
+    public String getTarDb() {
+        return tarDb;
+    }
+    public void setTarDb(String tarDb) {
+        this.tarDb = tarDb;
     }   
     
 }

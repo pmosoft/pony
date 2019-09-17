@@ -65,7 +65,7 @@ public class TabInfoDynSrv {
         Properties props = new Properties();        
         props.put("driver"      , "net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
         
-        if(inVo.jdbcInfo.getUrl() != null){
+        if(inVo.jdbcInfo.getUrl().length() > 0){
             props.put("url"         , inVo.jdbcInfo.getUrl()  );
             props.put("username"    , inVo.jdbcInfo.getUsrId());
             props.put("password"    , inVo.jdbcInfo.getUsrPw());
@@ -268,7 +268,7 @@ public class TabInfoDynSrv {
                     // 컬럼 정보 생성
                     for (int j = 0; j < tab.size(); j++) {
                         qry += (j>0) ? "," : " ";                        
-                        qry += setColOnDBMS(tab.get(j),inVo.get(i).getJdbcInfo().getDb(),inVo.get(i).getTarDb());
+                        qry += setColOnDBMS(tab.get(j),inVo.get(i).getJdbcNm(),inVo.get(i).getTarJdbcNm());
                         //System.out.println("tabNm="+tabNm);
                         
                         // PK정보 생성
@@ -295,11 +295,17 @@ public class TabInfoDynSrv {
     /*
      * DBMS별 컬럼정보 변형 생성
      */
-    public String setColOnDBMS(TabInfo tabInfo,String srcDb,String tarDb){
-        String retCol = ""; 
+    public String setColOnDBMS(TabInfo tabInfo,String srcJdbcNm,String tarJdbcNm){
+        String retCol = "";
+
+        String srcDb = getJdbcInfo(srcJdbcNm).getDb();
+        String tarDb = getJdbcInfo(tarJdbcNm).getDb();
+        
         String colNm = tabInfo.getColNm().toString(); 
         String dataTypeDesc = tabInfo.getDataTypeDesc().toString(); 
         String nullable = tabInfo.getNullable().toString();
+
+        
         
         System.out.println("srcDb=="+srcDb);
         System.out.println("tarDb=="+tarDb);

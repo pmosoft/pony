@@ -72,6 +72,7 @@ public class TabInfo {
     // 테이블생성쿼리    
     //-------------------------------
     String tarDb         = "";
+    String tarJdbcNm     = "";
     
     public JdbcInfo getJdbcInfo() {
         return jdbcInfo;
@@ -318,6 +319,12 @@ public class TabInfo {
     }
     public void setTarDb(String tarDb) {
         this.tarDb = tarDb;
+    }
+    public String getTarJdbcNm() {
+        return tarJdbcNm;
+    }
+    public void setTarJdbcNm(String tarJdbcNm) {
+        this.tarJdbcNm = tarJdbcNm;
     }   
     
 }

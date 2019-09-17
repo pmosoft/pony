@@ -64,29 +64,19 @@ public class TabInfoDynSrv {
         JdbcInfo jdbcVo = new JdbcInfo();
         Properties props = new Properties();        
         props.put("driver"      , "net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
-        System.out.println("inVo======"+inVo);
-        System.out.println("inVo.getJdbcNm()======"+inVo.getJdbcNm());
-        System.out.println("inVo.jdbcInfo.getUrl()======"+inVo.jdbcInfo.getUrl());
-        
-        
         
         if(inVo.jdbcInfo.getUrl() != null){
             props.put("url"         , inVo.jdbcInfo.getUrl()  );
             props.put("username"    , inVo.jdbcInfo.getUsrId());
             props.put("password"    , inVo.jdbcInfo.getUsrPw());
             props.put("mapper"      , "net/pmosoft/pony/dams/table/TabInfo"+StringUtil.replaceFirstCharUpperCase(inVo.jdbcInfo.getDb())+"Dyn.xml");
-            System.out.println("inVo.jdbcInfo.getDb()1======"+inVo.jdbcInfo.getDb());
             
         } else {
-            JdbcInfo jdbcInfo = new JdbcInfo();;
-            jdbcInfo.setJdbcNm(inVo.getJdbcNm());
-            jdbcVo = jdbcInfoDao.selectJdbcInfo(jdbcInfo);
-            //daoClassPath = (String) codeList.get(0).get("CD_PARAM1");
+            jdbcVo = getJdbcInfo(inVo.getJdbcNm());
             props.put("url"         , jdbcVo.getUrl()  );
             props.put("username"    , jdbcVo.getUsrId());
             props.put("password"    , jdbcVo.getUsrPw());
             props.put("mapper"      , "net/pmosoft/pony/dams/table/TabInfo"+StringUtil.replaceFirstCharUpperCase(jdbcVo.getDb())+"Dyn.xml");
-            System.out.println("inVo.jdbcInfo.getDb()2======"+jdbcVo.getDb());
         }
 
         SqlSession session = null;
@@ -120,6 +110,15 @@ public class TabInfoDynSrv {
             e.printStackTrace();
         }
         return result;
+    }
+
+    /*
+     * jdbcNm으로 JdbcInfo 리턴
+     * */
+    public JdbcInfo getJdbcInfo(String jdbcNm){
+        JdbcInfo jdbcInfo = new JdbcInfo();
+        jdbcInfo.setJdbcNm(jdbcNm);
+        return jdbcInfoDao.selectJdbcInfo(jdbcInfo);
     }
     
     /**********************************************************************************
@@ -256,6 +255,7 @@ public class TabInfoDynSrv {
             for (int i = 0; i < inVo.size(); i++) {
                 if(inVo.get(i).chk){
                     inVo.get(i).setOrderBy("1");
+                    inVo.get(i).setJdbcInfo(getJdbcInfo(inVo.get(i).getJdbcNm()));
                     List<TabInfo> tab = sqlSession(inVo.get(i)).getMapper(TabInfoDao.class).selectMetaTabInfoList(inVo.get(i));
                     //System.out.println("outVo="+outVo.size());
                     //qry += "--DROP TABLE "+inVo.get(i).getOwner()+"."+inVo.get(i).getTabNm()+";\n";
@@ -299,9 +299,11 @@ public class TabInfoDynSrv {
         String retCol = ""; 
         String colNm = tabInfo.getColNm().toString(); 
         String dataTypeDesc = tabInfo.getDataTypeDesc().toString(); 
-        String nullable = tabInfo.getNullable().toString(); 
+        String nullable = tabInfo.getNullable().toString();
         
-        if(srcDb.equals("oracle") && tarDb.equals("postgre")){
+        System.out.println("srcDb=="+srcDb);
+        System.out.println("tarDb=="+tarDb);
+        if(srcDb.contains("oracle") && tarDb.contains("postgre")){
             dataTypeDesc = dataTypeDesc.replace("NUMBER"  , "NUMERIC");
             dataTypeDesc = dataTypeDesc.replace("VARCHAR2", "VARCHAR");
         } 

@@ -2,16 +2,16 @@ package net.pmosoft.pony.dams.jdbc;
 
 public class JdbcInfo {
 
-    String jdbcNm  ;
-    String db      ;
-    String driver  ;
-    String url     ;
-    String usrId   ;
-    String usrPw   ;
-    String regDtm  ;
-    String regUsrId;
-    String updDtm  ;
-    String updUsrId;
+    String jdbcNm   = "";
+    String db       = "";
+    String driver   = "";
+    String url      = "";
+    String usrId    = "";
+    String usrPw    = "";
+    String regDtm   = "";
+    String regUsrId = "";
+    String updDtm   = "";
+    String updUsrId = "";
     
     
     public String getJdbcNm() {

@@ -48,8 +48,8 @@
          , ''                                                                                 AS regUsrId
          , TO_CHAR(NOW(),'YYYYMMDDHH24MISS')                                                  AS updDtm
          , ''                                                                                 AS updUsrId
-    FROM   CELLPLAN.COLUMNS A
-         , CELLPLAN.TABLES B
+    FROM   INFORMATION_SCHEMA.COLUMNS A 
+         , INFORMATION_SCHEMA.TABLES B
     WHERE  A.TABLE_SCHEMA = B.TABLE_SCHEMA
     AND    A.TABLE_NAME   = B.TABLE_NAME
     AND    UPPER(A.TABLE_SCHEMA) NOT IN ('PUBLIC','INFORMATION_SCHEMA','PG_CATALOG')

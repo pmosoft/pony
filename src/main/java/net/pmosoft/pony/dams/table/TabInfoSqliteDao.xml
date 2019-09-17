@@ -309,8 +309,8 @@
            )
     AND    UPPER(A.JDBC_NM) IN (SELECT DISTINCT UPPER(JDBC_NM) FROM TDACM00010)
     AND    A.TAB_ROWS       = A.TAB_ROWS
-    AND    A.TAB_REG_DT     >= (CASE WHEN #{tabRegDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
-    AND    A.TAB_UPD_DT     >= (CASE WHEN #{tabUpdDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
+    AND    A.TAB_REG_DT     >= (CASE WHEN A.TAB_REG_DT = '' THEN '' WHEN #{tabRegDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
+    AND    A.TAB_UPD_DT     >= (CASE WHEN A.TAB_UPD_DT = '' THEN '' WHEN #{tabUpdDt} = '' THEN '19010101' ELSE #{tabRegDt} END)
     AND   (
            (LENGTH(#{colNm}) = 0)
             OR
@@ -376,7 +376,6 @@
 	WHERE  JDBC_NM  = #{jdbcNm} 
 	AND    OWNER    = #{owner}
 	AND    TAB_NM   = #{tabNm}
-	;
 </update>
 
 <!--*******************************************************************************************************************

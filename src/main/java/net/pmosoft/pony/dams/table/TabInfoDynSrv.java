@@ -37,6 +37,7 @@ import org.springframework.stereotype.Service;
 
 import net.pmosoft.pony.comm.App;
 import net.pmosoft.pony.comm.util.ExcelUtil;
+import net.pmosoft.pony.comm.util.FileUtil;
 import net.pmosoft.pony.comm.util.StringUtil;
 import net.pmosoft.pony.dams.jdbc.JdbcInfo;
 import net.pmosoft.pony.dams.jdbc.JdbcInfoDao;
@@ -52,7 +53,10 @@ public class TabInfoDynSrv {
     @Autowired
     private JdbcInfoDao jdbcInfoDao;
 
-
+    @Autowired
+    private TabInfoSrv tabInfoSrv;
+    
+    
     /**********************************************************************************
     *
     *                               JDBC_Mybatis_SqlSession
@@ -250,6 +254,7 @@ public class TabInfoDynSrv {
         String pk = "";
         boolean isPk = false;
 
+        int maxColLen = 0;        
         
         try{
             for (int i = 0; i < inVo.size(); i++) {
@@ -257,20 +262,27 @@ public class TabInfoDynSrv {
                     inVo.get(i).setOrderBy("1");
                     inVo.get(i).setJdbcInfo(getJdbcInfo(inVo.get(i).getJdbcNm()));
                     List<TabInfo> tab = sqlSession(inVo.get(i)).getMapper(TabInfoDao.class).selectMetaTabInfoList(inVo.get(i));
+                    
+                    /// Columns Start /////////////////////////////////////////////////////////
+                    // SELECT 컬럼들중 길이가 가장 큰 컬럼의 길이를 산출한다            
+                    for (int j = 0; j < tab.size(); j++) {
+                        if(maxColLen <= tab.get(j).getColNm().length()) maxColLen = tab.get(j).getColNm().length();
+                    }                    
+
                     //System.out.println("outVo="+outVo.size());
-                    //qry += "--DROP TABLE "+inVo.get(i).getOwner()+"."+inVo.get(i).getTabNm()+";\n";
-                    qry += "--DROP TABLE "+inVo.get(i).getTabNm()+";\n";
-                    //qry += "CREATE TABLE "+inVo.get(i).getOwner()+"."+inVo.get(i).getTabNm()+"\n";
-                    qry += "CREATE TABLE "+inVo.get(i).getTabNm()+"\n";
+                    qry += "--DROP TABLE "+inVo.get(i).getOwner()+"."+inVo.get(i).getTabNm()+";\n";
+                    //qry += "--DROP TABLE "+inVo.get(i).getTabNm()+";\n";
+                    qry += "CREATE TABLE "+inVo.get(i).getOwner()+"."+inVo.get(i).getTabNm()+"\n";
+                    //qry += "CREATE TABLE "+inVo.get(i).getTabNm()+"\n";
                     qry += "(\n";
                     pk  += ",CONSTRAINT "+inVo.get(i).getTabNm()+"_PK PRIMARY KEY(";
 
                     // 컬럼 정보 생성
                     for (int j = 0; j < tab.size(); j++) {
                         qry += (j>0) ? "," : " ";                        
-                        qry += setColOnDBMS(tab.get(j),inVo.get(i).getJdbcNm(),inVo.get(i).getTarJdbcNm());
+                        qry += setColOnDBMS(tab.get(j),inVo.get(i).getJdbcNm(),inVo.get(i).getTarJdbcNm(), maxColLen);
                         //System.out.println("tabNm="+tabNm);
-                        
+
                         // PK정보 생성
                         if(tab.get(j).pk.equals("Y")) {pk += tab.get(j).colNm + ",";isPk=true;}
                     }
@@ -278,9 +290,16 @@ public class TabInfoDynSrv {
                     //System.out.println("isPk="+isPk);
                     if(isPk) qry += pk+"\n";
                     qry += ");\n";
-                    pk = "";
+                    pk = ""; isPk=false;
                 }
             }
+
+            // 메모패드로 출력
+            FileUtil.stringToFile(qry, App.excelPath+"createTableScript.sql");
+            Runtime run = Runtime.getRuntime ();
+            run.exec ("cmd /c start notepad++.exe "+App.excelPath+"createTableScript.sql");
+
+            
             result.put("isSuccess", true);
             result.put("createScript", qry);
         } catch (Exception e){
@@ -295,7 +314,7 @@ public class TabInfoDynSrv {
     /*
      * DBMS별 컬럼정보 변형 생성
      */
-    public String setColOnDBMS(TabInfo tabInfo,String srcJdbcNm,String tarJdbcNm){
+    public String setColOnDBMS(TabInfo tabInfo,String srcJdbcNm,String tarJdbcNm, int maxColLen){
         String retCol = "";
 
         String srcDb = getJdbcInfo(srcJdbcNm).getDb();
@@ -313,8 +332,8 @@ public class TabInfoDynSrv {
             dataTypeDesc = dataTypeDesc.replace("NUMBER"  , "NUMERIC");
             dataTypeDesc = dataTypeDesc.replace("VARCHAR2", "VARCHAR");
         } 
-        retCol = colNm +" "+ dataTypeDesc +" "+ nullable+"\n";
-            
+        retCol = colNm +StringUtil.padRight(" ",maxColLen-colNm.length())+ dataTypeDesc +" "+ nullable+"\n";
+        
         return retCol;
     }
 
@@ -603,7 +622,6 @@ public class TabInfoDynSrv {
 
         Map<String, Object> result = new HashMap<String, Object>();
         List<TabInfo> updateVoList = new ArrayList<TabInfo>();
-        TabInfoSrv tabInfoSrv = new TabInfoSrv();
         
         String qry = "";
         try{
@@ -618,13 +636,15 @@ public class TabInfoDynSrv {
                         updateVo.setTabNm(inVo.get(i).getTabNm());
                         updateVo.setJdbcNm(inVo.get(i).getJdbcNm());
                         updateVo.setTabRows(rowCnt);
-                        updateVoList.add(updateVo);
                         
                         qry += " UPDATE TDACM00080 SET TAB_ROWS="+rowCnt;
                         qry += " WHERE JDBC_NM='"+inVo.get(i).getJdbcNm()+"'";
                         qry += " AND OWNER='"+inVo.get(i).getOwner()+"'";
                         qry += " AND TAB_NM='"+inVo.get(i).getTabNm()+"';";
                         qry += "\n";
+
+                        //updateVo.setQry(qry);
+                        updateVoList.add(updateVo);
                     }    
                 }
             }

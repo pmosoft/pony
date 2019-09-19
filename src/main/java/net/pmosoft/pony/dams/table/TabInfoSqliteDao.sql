@@ -49,3 +49,10 @@ SELECT DISTINCT
             )
            )
 
+           
+                AND (
+                     (UPPER(A.COL_NM ) LIKE (UPPER(IFNULL(#{colNm},'')   )||'%')) 
+                      OR
+                     (UPPER(IFNULL(A.COL_HNM,'')) LIKE (UPPER(IFNULL(#{colHnm},'')  )||'%'))
+                    )
+           

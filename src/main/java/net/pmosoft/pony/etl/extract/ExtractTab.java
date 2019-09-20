@@ -132,24 +132,28 @@ public class ExtractTab {
             //System.out.println("colCnt="+colCnt);
             
             while(rs.next()){
+            //if(rs.next()){
                 extractCnt++;
                 if(extractCnt%logCnt == 0) {
                     logger.info("extractCnt=========="+extractCnt);
                 }
                 
+                //for (int i = 0; i < tabInfoList.size(); i++) {
                 for (int i = 0; i < tabInfoList.size(); i++) {
+                    //System.out.println("tabInfoList.get(i).getDataTypeNm()=="+tabInfoList.get(i).getDataTypeNm()+"   "+rs.getString(i+1));
+                    //System.out.println(tabInfo.getJdbcInfo().getDb());
                     ColumnValue = rs.getString(i+1);
                     if (tabInfoList.get(i).getDataTypeNm().trim().toUpperCase().matches("NUMBER|INT|NUMERIC") || ColumnValue==null) {
                         s02 += ColumnValue + ",";
                         //System.out.println("insertData1="+insertData);
                     } else if (tabInfoList.get(i).getDataTypeNm().trim().toUpperCase().matches("DATE|TIMESTAMP")) {
-                        db = tabInfo.getJdbcInfo().getDb();
+                        db = tabInfo.getJdbcInfo().getDb().toUpperCase();
                         /********************************************************************************
                          * [DATE] DBMS 및 site에 따라 date 형식을 처리하는 것이 상이하므로 별도로 처리요 
                          ********************************************************************************/
                         // 데이트 타입 변형조건일 경우 DBMS의 SQL규칙에 맞게 형변환 처리
-                        if     (db.equals("Oracle")) {ColumnValue = "TO_DATE('"+ColumnValue+"','YYYY-MM-DD HH24:MI:SS')";}
-                        else if(db.equals("Oracle")) {ColumnValue = "TO_DATE('"+ColumnValue+"','YYYY-MM-DD HH24:MI:SS')";}
+                        if     (db.equals("ORACLE")) {ColumnValue = "TO_DATE('"+ColumnValue+"','YYYY-MM-DD HH24:MI:SS')";}
+                        else if(db.equals("ORACLE")) {ColumnValue = "TO_DATE('"+ColumnValue+"','YYYY-MM-DD HH24:MI:SS')";}
                        
                         s02 += ColumnValue + ",";
                     } else {          

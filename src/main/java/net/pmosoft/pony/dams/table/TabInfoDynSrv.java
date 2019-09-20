@@ -195,12 +195,12 @@ public class TabInfoDynSrv {
             logger.debug("maxColLen="+maxColLen);
             for (int i = 0; i < tab.size(); i++) {
                 colNm = tab.get(i).getColNm();
-                db = inVo.getJdbcInfo().getDb();
+                db = inVo.getJdbcInfo().getDb().toUpperCase();
                 
                 // 데이트 타입 변형조건일 경우 DBMS의 SQL규칙에 맞게 형변환 처리
                 if (tab.get(i).isChgDate()||tab.get(i).getDataTypeNm().trim().toUpperCase().matches("DATE|TIMESTAMP")) {
-                    if     (db.equals("Oracle")) {colNm = "TO_CHAR("+colNm+",'YYYY-MM-DD HH24:MI:SS') AS "+colNm;}
-                    else if(db.equals("Oracle")) {colNm = "TO_CHAR("+colNm+",'YYYY-MM-DD HH24:MI:SS') AS "+colNm;}
+                    if     (db.equals("ORACLE")) {colNm = "TO_CHAR("+colNm+",'YYYY-MM-DD HH24:MI:SS') AS "+colNm;}
+                    else if(db.equals("ORACLE")) {colNm = "TO_CHAR("+colNm+",'YYYY-MM-DD HH24:MI:SS') AS "+colNm;}
                 }
                 
                 // 컬럼 정보 생성

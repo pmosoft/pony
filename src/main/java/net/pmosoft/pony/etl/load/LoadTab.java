@@ -29,7 +29,7 @@ public class LoadTab {
     int loadCnt = 0;
 
     int commitCnt = 0;
-    int commitMaxCnt = 1000;
+    int commitMaxCnt = 10000;
     
     int logCnt = 10000;
     
@@ -127,7 +127,7 @@ public class LoadTab {
     public String setDbmsSql(String qry) {
         String retQry = "";
 
-        if(tabInfo.getJdbcInfo().getDb().equals("Oracle")){
+        if(tabInfo.getJdbcInfo().getDb().toUpperCase().equals("ORACLE")){
             retQry += "BEGIN\n";
             retQry += qry;
             retQry += "END;\n";

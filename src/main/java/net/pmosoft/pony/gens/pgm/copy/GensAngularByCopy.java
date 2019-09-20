@@ -42,14 +42,14 @@ public class GensAngularByCopy extends GensCommByCopy {
             /******************************************
              * path의 끝문자 / 제거
              *****************************************/
-            if(gens.getSrcPathNm().endsWith("/")) gens.setSrcPathNm(gens.getSrcPathNm().substring(0,gens.getSrcPathNm().length()-1));
-            if(gens.getTarPathNm().endsWith("/")) gens.setTarPathNm(gens.getTarPathNm().substring(0,gens.getTarPathNm().length()-1));
+            if(gens.getSrcPathNm().endsWith("/")) gens.setSrcPathNm(gens.getSrcPathNm().trim().substring(0,gens.getSrcPathNm().length()-1));
+            if(gens.getTarPathNm().endsWith("/")) gens.setTarPathNm(gens.getTarPathNm().trim().substring(0,gens.getTarPathNm().length()-1));
 
             /******************************************
              * Class 형태의 첫대문자 Camel 문자로 변경
              *****************************************/
-            gens.setSrcClassNm (StringUtil.tokenToUCamel(gens.getSrcBarNm(),"-"));
-            gens.setTarClassNm (StringUtil.tokenToUCamel(gens.getTarBarNm(),"-"));
+            gens.setSrcClassNm (StringUtil.tokenToUCamel(gens.getSrcBarNm().trim(),"-"));
+            gens.setTarClassNm (StringUtil.tokenToUCamel(gens.getTarBarNm().trim(),"-"));
 
             /******************************************
              * Method 형태의 첫소문자 Camel 문자로 변경

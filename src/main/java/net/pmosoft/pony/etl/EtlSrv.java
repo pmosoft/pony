@@ -15,6 +15,7 @@
 
 package net.pmosoft.pony.etl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import net.pmosoft.pony.dams.jdbc.JdbcInfo;
 import net.pmosoft.pony.dams.table.TabInfo;
 import net.pmosoft.pony.dams.table.TabInfoDynSrv;
 import net.pmosoft.pony.etl.extract.ExtractTab;
@@ -35,9 +35,7 @@ public class EtlSrv {
 
     private static Logger logger = LoggerFactory.getLogger(EtlSrv.class);
 
-    @Autowired
-    private EtlDao etlDao;
-
+   
     @Autowired
     private TabInfoDynSrv tabInfoDynSrv;
     
@@ -50,6 +48,7 @@ public class EtlSrv {
         
         TabInfo srcTabInfo = new TabInfo();
         TabInfo tarTabInfo = new TabInfo();
+        List<TabInfo> tarTabInfoList = new ArrayList<TabInfo>();
         
         try{
             for (int i = 0; i < inVo.size(); i++) {
@@ -62,12 +61,13 @@ public class EtlSrv {
                     tarTabInfo.setJdbcInfo(tabInfoDynSrv.getJdbcInfo(inVo.get(i).getTarJdbcNm()));
                     tarTabInfo.setJdbcNm(srcTabInfo.getTarJdbcNm());
                     tarTabInfo.setOwner(srcTabInfo.getOwner());
-                    tarTabInfo.setTabNm(srcTabInfo.getTabNm());        
-                    
-                    new ExtractTab(srcTabInfo).executeTab();
-                    new LoadTab(tarTabInfo).executeInsertFileToDb();        
-                    
-                }            
+                    tarTabInfo.setTabNm(srcTabInfo.getTabNm());
+                    tarTabInfo.setChk(true);tarTabInfoList.add(tarTabInfo);
+                    if(srcTabInfo.isExtract()) new ExtractTab(srcTabInfo).executeTab();
+                    if(srcTabInfo.isLoad()) new LoadTab(tarTabInfo).executeInsertFileToDb();
+                } 
+                
+                tabInfoDynSrv.updateTabRowsUpdateScript(tarTabInfoList);
             }    
             result.put("isSuccess", true);
         } catch (Exception e){

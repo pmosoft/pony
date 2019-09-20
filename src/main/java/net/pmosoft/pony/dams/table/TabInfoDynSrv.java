@@ -207,7 +207,7 @@ public class TabInfoDynSrv {
                 cols += (i>0) ? "     , " : "       ";
                 logger.debug(colNm+"="+colNm.length() );
                 //System.out.println(StringUtil.padRight("a",maxColLen-tab.get(i).colNm.length()));
-                cols += colNm + StringUtil.padRight(" ",maxColLen-colNm.length()) + "    -- "+ tab.get(i).getColHnm()+"\n";
+                cols += colNm + StringUtil.padRight(" ",maxColLen-colNm.length()) + "    -- "+ StringUtil.delCR(tab.get(i).getColHnm())+"\n";
                 //System.out.println("tabNm="+tabNm);
                 
                 // PK컬럼 조건 정보 생성

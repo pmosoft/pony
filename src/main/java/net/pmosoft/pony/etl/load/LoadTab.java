@@ -42,6 +42,7 @@ public class LoadTab {
     public LoadTab(){}
     public LoadTab(TabInfo tabInfo){
         this.tabInfo = tabInfo;
+        tabInfo.getJdbcInfo().setUrl(tabInfo.getJdbcInfo().getUrl().replace("log4jdbc:", ""));
         this.conn = new DbCon().getConnection(tabInfo.getJdbcInfo());
     }
     

@@ -67,12 +67,16 @@ public class TabInfo {
     //-------------------------------
     String pathFileNm    = "";
     int limitCnt = 50000;
-
+    
     //-------------------------------
     // 테이블생성쿼리    
     //-------------------------------
     String tarDb         = "";
     String tarJdbcNm     = "";
+
+    boolean isExtract = true;
+    boolean isLoad = true;
+    
     
     public JdbcInfo getJdbcInfo() {
         return jdbcInfo;
@@ -325,6 +329,18 @@ public class TabInfo {
     }
     public void setTarJdbcNm(String tarJdbcNm) {
         this.tarJdbcNm = tarJdbcNm;
+    }
+    public boolean isExtract() {
+        return isExtract;
+    }
+    public void setExtract(boolean isExtract) {
+        this.isExtract = isExtract;
+    }
+    public boolean isLoad() {
+        return isLoad;
+    }
+    public void setLoad(boolean isLoad) {
+        this.isLoad = isLoad;
     }   
     
 }

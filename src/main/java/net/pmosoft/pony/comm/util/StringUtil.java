@@ -13,7 +13,11 @@ public class StringUtil {
     public static void testSqlTabScript(){
         System.out.println(inParams("aaa\nbbb"));
     }
-
+    /**
+     * 개행문자 제거
+     */
+    public static String delCR(String s) { return s.replaceAll("(\r\n|\r|\n|\n\r)", " "); }
+    
     /**
      * "aaa\nbbb"를 'aaa','bbb'로 변형. in 조건문에서 사용
      */
@@ -34,17 +38,17 @@ public class StringUtil {
     }
 
 
-   public static String padRight(String s, int n) {
-       String result = s;
-       if(n > 0) result = String.format("%1$-" + n + "s", s) + s;
-       return result;
-   }
-
-   public static String padLeft(String s, int n) {
-       String result = s;
-       if(n > 0) result = String.format("%1$" + n + "s", s) + s;
-       return result;
-   }
+    public static String padRight(String s, int n) {
+        String result = s;
+        if(n > 0) result = String.format("%1$-" + n + "s", s) + s;
+        return result;
+    }
+    
+    public static String padLeft(String s, int n) {
+        String result = s;
+        if(n > 0) result = String.format("%1$" + n + "s", s) + s;
+        return result;
+    }
 
     /*
      *  토큰을 첫문자대문자 Camel로 변환

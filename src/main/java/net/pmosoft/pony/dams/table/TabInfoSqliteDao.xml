@@ -362,9 +362,10 @@
 	--	updateTabRows (mybatis에서 foreach사용시 sqlite의 jdbctype 처리를 못해주므로 단건으로 갱신한다 )
 	UPDATE TDACM00080 
 	SET    TAB_ROWS = ${tabRows}
-	WHERE  JDBC_NM  = #{jdbcNm} 
-	AND    OWNER    = #{owner}
-	AND    TAB_NM   = #{tabNm}
+	WHERE  UPPER(JDBC_NM) = UPPER(#{jdbcNm}) 
+	AND    UPPER(OWNER)   = UPPER(#{owner})
+	AND    UPPER(TAB_NM)  = UPPER(#{tabNm})
+	
 </update>
 
 <!--*******************************************************************************************************************

@@ -231,8 +231,8 @@ public class TabInfoDynSrv {
             result.put("isSuccess", true);
                         
             result.put("tabInfoList", tab);
-            result.put("sqlScript", qry);
-            result.put("cntSqlScript", cntQry);
+            result.put("selQry", qry);
+            result.put("cntSelQry", cntQry);
         } catch (Exception e){
             result.put("isSuccess", false);
             result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
@@ -372,8 +372,8 @@ public class TabInfoDynSrv {
         Map<String, Object> result = new HashMap<String, Object>();
         try{
             
-            inVo.setQry(selectSelectScript(inVo).get("sqlScript").toString());
-            //inVo.setCntQry(selectSelectScript(inVo).get("cntSqlScript").toString());
+            inVo.setQry(selectSelectScript(inVo).get("selQry").toString());
+            //inVo.setCntQry(selectSelectScript(inVo).get("cntSelQry").toString());
                         
             //int rowCnt = sqlSession(inVo).getMapper(TabInfoDao.class).selectDataCnt(inVo);
             //if(rowCnt <= inVo.getLimitCnt()) {
@@ -409,7 +409,7 @@ public class TabInfoDynSrv {
             List<TabInfo> tabInfoOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectMetaTabInfoList(inVo);
 
             // 테이블 조회 스크립트 생성
-            inVo.setQry(selectSelectScript(inVo).get("sqlScript").toString());
+            inVo.setQry(selectSelectScript(inVo).get("selQry").toString());
 
             //
             List<Map<String,Object>> insStatOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectCommonQryList(inVo);
@@ -465,7 +465,7 @@ public class TabInfoDynSrv {
                 PrintWriter writer = null;
                 writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(App.excelPath+fileNm)));
                 List<TabInfo> tabInfoOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectMetaTabInfoList(inVo);
-                inVo.setQry(selectSelectScript(inVo).get("sqlScript").toString());
+                inVo.setQry(selectSelectScript(inVo).get("selQry").toString());
                 List<Map<String,Object>> insStatOutVoList = sqlSession(inVo).getMapper(TabInfoDao.class).selectCommonQryList(inVo);
                 logger.info("tabInfoOutVoList="+insStatOutVoList.size());
                 for (int i = 0; i < insStatOutVoList.size(); i++) {

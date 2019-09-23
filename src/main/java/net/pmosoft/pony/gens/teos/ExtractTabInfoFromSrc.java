@@ -37,15 +37,19 @@ public class ExtractTabInfoFromSrc {
 
     public static void main(String[] args) {
         ExtractTabInfoFromSrc extract = new ExtractTabInfoFromSrc();
-        //extract.executeFile();
-        extract.executeDir();
+        extract.executeFile();
+        //extract.executeDir();
     }
 
     /*
      * 단일파일 처리
      * */
     void executeFile() {
+        /*
         pathNm = "D:/fframe/workspace/asis/src/CellPlanCommon/Analysis/"; fileNm = "CDBAnalysisResult.cpp";
+        */
+        pathNm = "D:/fframe/workspace/asis/src/ScheduleDaemon/src/service/"; fileNm = "ServiceMain.pc";
+        
         pathFileNm = pathNm + fileNm;
         qryTabNm();
         fileToString(pathFileNm);

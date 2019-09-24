@@ -30,7 +30,7 @@ import net.pmosoft.pony.dams.table.TabInfoDynSrv;
  * */
 public class ExtractTab {
 
-    //private static Logger logger = LoggerFactory.getLogger(ExtractTab.class);
+    private static Logger logger = LoggerFactory.getLogger(ExtractTab.class);
 
     JdbcInfo jdbcInfo = new JdbcInfo(); 
     
@@ -112,7 +112,7 @@ public class ExtractTab {
         String selQry     = this.selQry;
         boolean isFile    = true; 
         String pathFileNm = App.excelPath + tabInfo.getTabNm()+".sql";
-        selectInsStat(owner, tabNm, selQry, isFile, pathFileNm);
+        selectInsStat(tabNm, selQry, isFile, pathFileNm);
     }
 
     public void selectInsStatToString()
@@ -123,19 +123,17 @@ public class ExtractTab {
         boolean isFile    = false;
         String pathFileNm = "";
         
-        String retSql = selectInsStat(owner, tabNm, selQry, isFile, pathFileNm);
+        String retSql = selectInsStat(tabNm, selQry, isFile, pathFileNm);
         System.out.println(retSql);
     }
         
-    public String selectInsStatToString(String owner, String tabNm, String selQry) {
-        return selectInsStat(owner, tabNm, selQry, false, "");
+    public String selectInsStatToString(String tabNm, String selQry) {
+        return selectInsStat(tabNm, selQry, false, "");
     }
     
     
-    public String selectInsStat(String owner, String tabNm, String selQry, boolean isFile, String pathFileNm) {
-
+    public String selectInsStat(String tabNm, String selQry, boolean isFile, String pathFileNm) {
         //logger.info("selectInsStatToFile start");
-        System.out.println("selectInsStatToFile start");
         Map<String, Object> result = new HashMap<String, Object>();
 
         // DB접속 변수
@@ -167,7 +165,7 @@ public class ExtractTab {
              **********************************************************************************/
             stmt = conn.createStatement();
             rs = stmt.executeQuery(selQry);
-            s01 = "INSERT INTO "+owner+"."+tabNm+" VALUES (";
+            s01 = "INSERT INTO "+tabNm+" VALUES (";
             
             /****************************
              * 메타정보 수보
@@ -184,8 +182,7 @@ public class ExtractTab {
             //if(rs.next()){
                 extractCnt++;
                 if(extractCnt%logCnt == 0) {
-                    //logger.info("extractCnt=========="+extractCnt);
-                    System.out.println("extractCnt=========="+extractCnt);
+                    logger.info("extractCnt="+extractCnt);
                 }
 
                 //for (int i = 0; i < tabInfoList.size(); i++) {
@@ -206,7 +203,7 @@ public class ExtractTab {
                          ********************************************************************************/
                         // 데이트 타입 변형조건일 경우 DBMS의 SQL규칙에 맞게 형변환 처리
                         if     (db.equals("ORACLE")) {colData = "TO_DATE('"+colData+"','YYYY-MM-DD HH24:MI:SS')";}
-                        else if(db.equals("ORACLE")) {colData = "TO_DATE('"+colData+"','YYYY-MM-DD HH24:MI:SS')";}
+                        else if(db.equals("POSTGRE")) {colData = "TO_DATE('"+colData+"','YYYY-MM-DD HH24:MI:SS')";}
                        
                         s02 += colData + ",";
                     } else {          
@@ -219,9 +216,8 @@ public class ExtractTab {
             }            
             if(isFile) writer.close();
             result.put("isSuccess", true);
-            if(!isFile) { System.out.println(retQry);}
-            //logger.info("selectInsStatToFile rowCnt="+rowCnt+" extractCnt="+extractCnt+" end");
-            System.out.println("selectInsStatToFile rowCnt="+rowCnt+" extractCnt="+extractCnt+" end");
+            if(!isFile) { /* logger.info(retQry); */ }
+            logger.info("extractCnt="+extractCnt);
             
             return retQry;
             

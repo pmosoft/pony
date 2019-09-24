@@ -44,7 +44,6 @@ public class LoadTab {
     public LoadTab(){}
     
     public LoadTab(JdbcInfo jdbcInfo){
-        System.out.println("LoadTab(JdbcInfo jdbcInfo)");
         this.jdbcInfo = jdbcInfo;
         this.conn = new DbCon().getConnection(jdbcInfo);
     }
@@ -71,9 +70,7 @@ public class LoadTab {
         loadTab.executeInsertFileToDb();
     }
 
-    public void executeInsertStringToDb(String owner, String tabNm, String insQry) {
-        
-        logger.info("executeInsertFileToDb "+tabInfo.getOwner()+"."+tabInfo.getTabNm()+" start");
+    public void executeInsertStringToDb(String tabNm, String whereDel, String insQry) {
         Map<String, Object> result = new HashMap<String, Object>();
         
         // 쿼리 변수
@@ -86,18 +83,18 @@ public class LoadTab {
              * DELETE 테이블
              ***************************************************************/
             //qry = "DELETE FROM "+owner+"."+tabNm; 
-            qry = "DELETE FROM "+tabNm; 
-            //logger.info(qry);
-            System.out.println(qry);
+            qry = "DELETE FROM "+tabNm + " " + whereDel; 
+            logger.info(qry);
             stmt.execute(qry);
             
             /***************************************************************
              * INSERT 테이블
              ***************************************************************/
-            stmt.execute(setDbmsSql(insQry));
+            qry = setDbmsSql(insQry);
+            logger.info(qry);
+            stmt.execute(qry);
             
             result.put("isSuccess", true);
-            logger.info("executeInsertFileToDb "+tabInfo.getOwner()+"."+tabInfo.getTabNm()+" loadCnt="+loadCnt+" end");
             
         } catch ( Exception e ) { 
             logger.info("\n"+qry);

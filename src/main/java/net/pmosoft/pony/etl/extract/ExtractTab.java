@@ -6,7 +6,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -21,7 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import net.pmosoft.pony.comm.App;
 import net.pmosoft.pony.comm.db.DbCon;
-import net.pmosoft.pony.comm.db.LoggableStatement;
+import net.pmosoft.pony.dams.jdbc.JdbcInfo;
 import net.pmosoft.pony.dams.table.TabInfo;
 import net.pmosoft.pony.dams.table.TabInfoDynSrv;
 
@@ -52,6 +51,11 @@ public class ExtractTab {
     String qry = "";
     
     public ExtractTab(){}
+
+    public ExtractTab(JdbcInfo jdbcInfo){
+        this.conn = new DbCon().getConnection(jdbcInfo);
+    }
+    
     public ExtractTab(TabInfo tabInfo){
         this.tabInfo = tabInfo;
         this.conn = new DbCon().getConnection(tabInfo.getJdbcInfo());
@@ -104,7 +108,7 @@ public class ExtractTab {
         String selQry     = this.selQry;
         boolean isFile    = true; 
         String pathFileNm = App.excelPath + tabInfo.getTabNm()+".sql";
-        selectInsStat(conn, db, owner, tabNm, selQry, pathFileNm, isFile);
+        selectInsStat(db, owner, tabNm, selQry, pathFileNm, isFile);
     }
 
     public void selectInsStatToString()
@@ -116,13 +120,13 @@ public class ExtractTab {
         boolean isFile    = false;
         String pathFileNm = "";
         
-        String retSql = selectInsStat(conn, db, owner, tabNm, selQry, pathFileNm, isFile);
+        String retSql = selectInsStat(db, owner, tabNm, selQry, pathFileNm, isFile);
         System.out.println(retSql);
     }
         
     
     
-    public String selectInsStat(Connection extConn, String db, String owner, String tabNm, String selQry, String pathFileNm, boolean isFile) {
+    public String selectInsStat(String db, String owner, String tabNm, String selQry, String pathFileNm, boolean isFile) {
 
         logger.info("selectInsStatToFile start");
         
@@ -153,7 +157,7 @@ public class ExtractTab {
             /***********************************************************************************
              *                              insert 문장 생성
              **********************************************************************************/
-            stmt = extConn.createStatement();
+            stmt = conn.createStatement();
             rs = stmt.executeQuery(selQry);
             s01 = "INSERT INTO "+owner+"."+tabNm+" VALUES (";
             
@@ -204,7 +208,7 @@ public class ExtractTab {
                 if(isFile) { writer.println(insQry); } else {retQry += insQry +"\n";}
                 insQry = ""; s02 = "";                
             }            
-            writer.close();
+            if(isFile) writer.close();
             result.put("isSuccess", true);
             //if(!isFile) { System.out.println(retQry);}
             logger.info("selectInsStatToFile rowCnt="+rowCnt+" extractCnt="+extractCnt+" end");
@@ -216,7 +220,7 @@ public class ExtractTab {
             result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
             result.put("errSysMsg", e.getMessage());
             e.printStackTrace();
-        } finally { try { rs.close();stmt.close(); } catch (SQLException e) { e.printStackTrace(); }; writer.close();}
+        } finally { try { rs.close();stmt.close();conn.close(); } catch (SQLException e) { e.printStackTrace(); }; if(isFile) writer.close();}
         
         return retQry;
     }

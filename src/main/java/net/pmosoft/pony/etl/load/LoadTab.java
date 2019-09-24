@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import net.pmosoft.pony.comm.App;
 import net.pmosoft.pony.comm.db.DbCon;
+import net.pmosoft.pony.dams.jdbc.JdbcInfo;
 import net.pmosoft.pony.dams.table.TabInfo;
 import net.pmosoft.pony.etl.extract.ExtractTab;
 
@@ -23,7 +24,8 @@ public class LoadTab {
     
     private static Logger logger = LoggerFactory.getLogger(ExtractTab.class);
     
-    TabInfo  tabInfo = new TabInfo();
+    TabInfo tabInfo = new TabInfo();
+    JdbcInfo jdbcInfo = new JdbcInfo();
     
     int rowCnt = 0;    
     int loadCnt = 0;
@@ -40,6 +42,13 @@ public class LoadTab {
     String qry = "";
     
     public LoadTab(){}
+    
+    public LoadTab(JdbcInfo jdbcInfo){
+        System.out.println("LoadTab(JdbcInfo jdbcInfo)");
+        this.jdbcInfo = jdbcInfo;
+        this.conn = new DbCon().getConnection(jdbcInfo);
+    }
+    
     public LoadTab(TabInfo tabInfo){
         this.tabInfo = tabInfo;
         tabInfo.getJdbcInfo().setUrl(tabInfo.getJdbcInfo().getUrl().replace("log4jdbc:", ""));
@@ -61,6 +70,44 @@ public class LoadTab {
         LoadTab loadTab = new LoadTab(tabInfo);
         loadTab.executeInsertFileToDb();
     }
+
+    public void executeInsertStringToDb(String owner, String tabNm, String insQry) {
+        
+        logger.info("executeInsertFileToDb "+tabInfo.getOwner()+"."+tabInfo.getTabNm()+" start");
+        Map<String, Object> result = new HashMap<String, Object>();
+        
+        // 쿼리 변수
+        String qry = "";
+        
+        try {
+            stmt = conn.createStatement();
+            
+            /***************************************************************
+             * DELETE 테이블
+             ***************************************************************/
+            //qry = "DELETE FROM "+owner+"."+tabNm; 
+            qry = "DELETE FROM "+tabNm; 
+            //logger.info(qry);
+            System.out.println(qry);
+            stmt.execute(qry);
+            
+            /***************************************************************
+             * INSERT 테이블
+             ***************************************************************/
+            stmt.execute(setDbmsSql(insQry));
+            
+            result.put("isSuccess", true);
+            logger.info("executeInsertFileToDb "+tabInfo.getOwner()+"."+tabInfo.getTabNm()+" loadCnt="+loadCnt+" end");
+            
+        } catch ( Exception e ) { 
+            logger.info("\n"+qry);
+            result.put("isSuccess", false);
+            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
+            result.put("errSysMsg", e.getMessage());
+            e.printStackTrace();
+        } finally { DBClose(); }        
+    }
+    
     
     public void executeInsertFileToDb() {
         
@@ -73,7 +120,6 @@ public class LoadTab {
 
         // 쿼리 변수
         String qry = "";
-
         
         File f = new File(pathFileNm);
         if(!f.exists()) logger.info("No exists File");
@@ -122,7 +168,6 @@ public class LoadTab {
             result.put("errSysMsg", e.getMessage());
             e.printStackTrace();
         } finally { DBClose(); }        
-        
     }
     
     public String setDbmsSql(String qry) {

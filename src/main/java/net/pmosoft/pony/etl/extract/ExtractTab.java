@@ -30,7 +30,10 @@ import net.pmosoft.pony.dams.table.TabInfoDynSrv;
  * */
 public class ExtractTab {
 
-    private static Logger logger = LoggerFactory.getLogger(ExtractTab.class);
+    //private static Logger logger = LoggerFactory.getLogger(ExtractTab.class);
+
+    JdbcInfo jdbcInfo = new JdbcInfo(); 
+    
     
     TabInfo  tabInfo = new TabInfo();    
     TabInfoDynSrv tabInfoDynSrv = new TabInfoDynSrv();
@@ -53,11 +56,13 @@ public class ExtractTab {
     public ExtractTab(){}
 
     public ExtractTab(JdbcInfo jdbcInfo){
+        this.jdbcInfo = jdbcInfo;
         this.conn = new DbCon().getConnection(jdbcInfo);
     }
     
     public ExtractTab(TabInfo tabInfo){
         this.tabInfo = tabInfo;
+        this.jdbcInfo = tabInfo.getJdbcInfo();
         this.conn = new DbCon().getConnection(tabInfo.getJdbcInfo());
     }
     
@@ -102,37 +107,40 @@ public class ExtractTab {
     
     public void selectInsStatToFile()
     {
-        String db         = tabInfo.getJdbcInfo().getDb().toUpperCase();
         String owner      = tabInfo.getOwner();
         String tabNm      = tabInfo.getTabNm();
         String selQry     = this.selQry;
         boolean isFile    = true; 
         String pathFileNm = App.excelPath + tabInfo.getTabNm()+".sql";
-        selectInsStat(db, owner, tabNm, selQry, pathFileNm, isFile);
+        selectInsStat(owner, tabNm, selQry, isFile, pathFileNm);
     }
 
     public void selectInsStatToString()
     {
-        String db         = tabInfo.getJdbcInfo().getDb().toUpperCase();
         String owner      = tabInfo.getOwner();
         String tabNm      = tabInfo.getTabNm();
         String selQry     = this.selQry;
         boolean isFile    = false;
         String pathFileNm = "";
         
-        String retSql = selectInsStat(db, owner, tabNm, selQry, pathFileNm, isFile);
+        String retSql = selectInsStat(owner, tabNm, selQry, isFile, pathFileNm);
         System.out.println(retSql);
     }
         
+    public String selectInsStatToString(String owner, String tabNm, String selQry) {
+        return selectInsStat(owner, tabNm, selQry, false, "");
+    }
     
     
-    public String selectInsStat(String db, String owner, String tabNm, String selQry, String pathFileNm, boolean isFile) {
+    public String selectInsStat(String owner, String tabNm, String selQry, boolean isFile, String pathFileNm) {
 
-        logger.info("selectInsStatToFile start");
-        
+        //logger.info("selectInsStatToFile start");
+        System.out.println("selectInsStatToFile start");
         Map<String, Object> result = new HashMap<String, Object>();
 
         // DB접속 변수
+        String db = jdbcInfo.getDb().toUpperCase();
+        
         Statement stmt = null;
         ResultSet rs = null;
         
@@ -176,7 +184,8 @@ public class ExtractTab {
             //if(rs.next()){
                 extractCnt++;
                 if(extractCnt%logCnt == 0) {
-                    logger.info("extractCnt=========="+extractCnt);
+                    //logger.info("extractCnt=========="+extractCnt);
+                    System.out.println("extractCnt=========="+extractCnt);
                 }
 
                 //for (int i = 0; i < tabInfoList.size(); i++) {
@@ -210,8 +219,9 @@ public class ExtractTab {
             }            
             if(isFile) writer.close();
             result.put("isSuccess", true);
-            //if(!isFile) { System.out.println(retQry);}
-            logger.info("selectInsStatToFile rowCnt="+rowCnt+" extractCnt="+extractCnt+" end");
+            if(!isFile) { System.out.println(retQry);}
+            //logger.info("selectInsStatToFile rowCnt="+rowCnt+" extractCnt="+extractCnt+" end");
+            System.out.println("selectInsStatToFile rowCnt="+rowCnt+" extractCnt="+extractCnt+" end");
             
             return retQry;
             

@@ -11,6 +11,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import net.pmosoft.pony.comm.App;
 import net.pmosoft.pony.comm.db.DbCon;
+import net.pmosoft.pony.comm.util.StringUtil;
 import net.pmosoft.pony.dams.jdbc.JdbcInfo;
 import net.pmosoft.pony.dams.table.TabInfo;
 import net.pmosoft.pony.dams.table.TabInfoDynSrv;
@@ -33,7 +35,6 @@ public class ExtractTab {
     private static Logger logger = LoggerFactory.getLogger(ExtractTab.class);
 
     JdbcInfo jdbcInfo = new JdbcInfo(); 
-    
     
     TabInfo  tabInfo = new TabInfo();    
     TabInfoDynSrv tabInfoDynSrv = new TabInfoDynSrv();
@@ -52,6 +53,14 @@ public class ExtractTab {
     ResultSet rs = null;
     
     String qry = "";
+
+    /**********************************************************************************
+    *
+    *                                   생성자
+    *
+    **********************************************************************************/
+    public void __________생성자__________(){}
+    
     
     public ExtractTab(){}
 
@@ -82,16 +91,34 @@ public class ExtractTab {
         extractTab.executeTab();
     }
 
+    /**********************************************************************************
+    *
+    *                                   추출수행
+    *
+    **********************************************************************************/
+    public void __________추출수행__________(){}
+    
+    
+    /*
+     * 테이블명으로 메타정보를 조회하여 쿼리를 생성후 INSERT문장을 생성하여 파일로 저장
+     **/
     public void executeTab() {        
-        selectSelectScript();
+        selectSelStat();
         selectDataCnt();
-        selectInsStatToFile();
-    }    
+        selectTabToInsStatToFile();
+    }
+    
+    /**********************************************************************************
+    *
+    *                                  쿼리문장생성
+    *
+    **********************************************************************************/
+    public void _____쿼리문장생성_____(){}
 
-    void DBClose(){ try { rs.close();stmt.close(); conn.close();} catch (SQLException e) { e.printStackTrace(); } }    
-
-    // 테이블의 조회쿼리 및 조회건수쿼리 생성
-    public void selectSelectScript() {
+    /*
+     * 테이블명으로 메타정보를 조회하여 쿼리를 생성
+     **/
+    public void selectSelStat() {
         map = tabInfoDynSrv.selectSelectScript(tabInfo);
         selQry = map.get("selQry").toString();
         cntSelQry = map.get("cntSelQry").toString();
@@ -100,39 +127,78 @@ public class ExtractTab {
         tabInfo.setCntQry(cntSelQry);
     }
     
-    // 조회건수를 조회
-    public void selectDataCnt() {
-        rowCnt = Integer.parseInt(tabInfoDynSrv.selectDataCnt(tabInfo).get("rowCnt").toString());
-    }
+    /*
+     * 쿼리문장의 컬럼에서 데이터타입 추출
+     **/
+    public List<TabInfo> getColMeta(String qry) {
+
+        // 쿼리 문자열을 리스트로 변경
+        ArrayList<String> qryList = new ArrayList<String>(Arrays.asList(qry.split("\n")));
+        
+        List<TabInfo> tabInfoList = new ArrayList<TabInfo>();
+        String asCol = ""; String dataTypeNm = ""; String colNm = "";
+        for (int i = 0; i < qryList.size(); i++) {
+            if(qryList.get(i).matches(".* AS [I|S|D]_.*")){
+                
+                // 파싱
+                asCol = StringUtil.patternMatch(qryList.get(i)," AS [I|S|D]_[a-zA-Z0-9]*[ ]?.*").trim();
+                colNm = asCol.substring(5,asCol.length());
+                dataTypeNm = asCol.substring(3,4).replace("I", "INT").replace("S", "CHAR").replace("D", "DATE");
+
+                // 리스트에 ADD
+                TabInfo tabInfo = new TabInfo();
+                tabInfo.setColNm(colNm);
+                tabInfo.setDataTypeNm(dataTypeNm);
+                tabInfoList.add(tabInfo);
+                System.out.println(asCol + "  " + colNm + "  " +dataTypeNm);
+            }
+        }       
+        
+        return tabInfoList;
+    }    
     
-    public void selectInsStatToFile()
+   
+    
+    /**********************************************************************************
+    *
+    *                                  INSERT문장생성
+    *
+    **********************************************************************************/
+    public void _____INSERT문장생성_________(){}
+   
+
+    /*
+     * 테이블명 쿼리 결과를 INSERT문장으로 생성하여 파일로 저장
+     **/
+    public void selectTabToInsStatToFile()
     {
-        String owner      = tabInfo.getOwner();
-        String tabNm      = tabInfo.getTabNm();
         String selQry     = this.selQry;
+        String tarOwner   = tabInfo.getOwner();
+        String tarTabNm   = tabInfo.getTabNm();
         boolean isFile    = true; 
         String pathFileNm = App.excelPath + tabInfo.getTabNm()+".sql";
-        selectInsStat(tabNm, selQry, isFile, pathFileNm);
+        selectInsStat(selQry, tarTabNm, isFile, pathFileNm, false, null);
     }
 
-    public void selectInsStatToString()
-    {
-        String owner      = tabInfo.getOwner();
-        String tabNm      = tabInfo.getTabNm();
-        String selQry     = this.selQry;
-        boolean isFile    = false;
-        String pathFileNm = "";
-        
-        String retSql = selectInsStat(tabNm, selQry, isFile, pathFileNm);
-        System.out.println(retSql);
+    /*
+     * 테이블명 쿼리 결과를 INSERT문장으로 생성하여 문자열로 반환
+     **/
+    public String selectTabToInsStatToString(String tarTabNm, String selQry) {
+        return selectInsStat(selQry, tarTabNm, false, "", false, null);
     }
-        
-    public String selectInsStatToString(String tabNm, String selQry) {
-        return selectInsStat(tabNm, selQry, false, "");
+
+    /*
+     * 사용자정의 쿼리 조회 결과를 INSERT문장으로 생성하여 문자열로 반환
+     **/
+    public String selectQryToInsStatToString(String selQry, String tarTbNm) {
+        return selectInsStat(selQry, tarTbNm, false, "", true, getColMeta(selQry));
     }
     
     
-    public String selectInsStat(String tabNm, String selQry, boolean isFile, String pathFileNm) {
+    /*
+     * (코어) 쿼리된 결과를 INSERT문장으로 생성한다.
+     **/
+    public String selectInsStat(String selQry, String tarTabNm, boolean isFile, String pathFileNm, boolean isQry, List<TabInfo> tabInfoList) {
         //logger.info("selectInsStatToFile start");
         Map<String, Object> result = new HashMap<String, Object>();
 
@@ -155,6 +221,8 @@ public class ExtractTab {
         String insQry = "";
         String retQry = "";
         
+        ResultSetMetaData rsmd = null;
+        
         try {
 
             // 파일 변수 초기화
@@ -165,16 +233,20 @@ public class ExtractTab {
              **********************************************************************************/
             stmt = conn.createStatement();
             rs = stmt.executeQuery(selQry);
-            s01 = "INSERT INTO "+tabNm+" VALUES (";
+            s01 = "INSERT INTO "+tarTabNm+" VALUES (";
             
             /****************************
              * 메타정보 수보
              ****************************/
-            ResultSetMetaData rsmd = rs.getMetaData();
-            colCnt = rsmd.getColumnCount();
-            for (int i = 0; i < colCnt; i++) {
-                //System.out.println(rsmd.getColumnName(i+1)+"    "+rsmd.getColumnTypeName(i+1));
-            }
+            if(!isQry) {
+                rsmd = rs.getMetaData();
+                colCnt = rsmd.getColumnCount();
+                for (int i = 0; i < colCnt; i++) {
+                    //System.out.println(rsmd.getColumnName(i+1)+"    "+rsmd.getColumnTypeName(i+1));
+                }
+            } else {
+                colCnt = tabInfoList.size();
+            } 
             
             //System.out.println("colCnt="+colCnt);
             
@@ -188,7 +260,8 @@ public class ExtractTab {
                 //for (int i = 0; i < tabInfoList.size(); i++) {
                 for (int i = 0; i < colCnt; i++) {
                     //dataTypeNm = tabInfoList.get(i).getDataTypeNm().trim().toUpperCase();
-                    dataTypeNm = rsmd.getColumnTypeName(i+1).trim().toUpperCase();
+
+                     dataTypeNm = isQry ? tabInfoList.get(i).getDataTypeNm().toUpperCase() : rsmd.getColumnTypeName(i+1).trim().toUpperCase();
                     
                     //System.out.println("tabInfoList.get(i).getDataTypeNm()=="+tabInfoList.get(i).getDataTypeNm()+"   "+rs.getString(i+1));
                     //System.out.println(tabInfo.getJdbcInfo().getDb());
@@ -231,7 +304,35 @@ public class ExtractTab {
         return retQry;
     }
     
+
+
+    /**********************************************************************************
+    *
+    *                                    유틸
+    *
+    **********************************************************************************/
+    public void _________유틸_________(){}
     
+
+    /*
+     * 조회건수
+     **/
+    public void selectDataCnt() {
+        rowCnt = Integer.parseInt(tabInfoDynSrv.selectDataCnt(tabInfo).get("rowCnt").toString());
+    }
+    
+    /*
+     * DB close
+     **/
+    void DBClose(){ try { rs.close();stmt.close(); conn.close();} catch (SQLException e) { e.printStackTrace(); } }    
+        
+
+    /**********************************************************************************
+    *
+    *                                      기타
+    *
+    **********************************************************************************/
+    public void _________기타_________(){}
     
     public void selectCommaData() {}    
     public void selectBarData() {}    
@@ -288,7 +389,6 @@ public class ExtractTab {
             }
         } catch ( Exception e ) { e.printStackTrace(); } finally {try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }}        
     }
-    
    
     
 }

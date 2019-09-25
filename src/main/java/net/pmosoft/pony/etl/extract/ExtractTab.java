@@ -67,6 +67,8 @@ public class ExtractTab {
     public ExtractTab(JdbcInfo jdbcInfo){
         this.jdbcInfo = jdbcInfo;
         this.conn = new DbCon().getConnection(jdbcInfo);
+        this.tabInfo.setJdbcInfo(jdbcInfo);
+        this.tabInfo.setOwner(jdbcInfo.getUsrId());
     }
     
     public ExtractTab(TabInfo tabInfo){
@@ -121,7 +123,9 @@ public class ExtractTab {
     public void selectSelStat() {
         map = tabInfoDynSrv.selectSelectScript(tabInfo);
         selQry = map.get("selQry").toString();
+        logger.info(selQry);
         cntSelQry = map.get("cntSelQry").toString();
+        logger.info(cntSelQry);
         tabInfoList = (List<TabInfo>) map.get("tabInfoList");
         tabInfo.setQry(selQry);
         tabInfo.setCntQry(cntSelQry);
@@ -183,8 +187,10 @@ public class ExtractTab {
     /*
      * 테이블명 쿼리 결과를 INSERT문장으로 생성하여 문자열로 반환
      **/
-    public String selectTabToInsStatToString(String selQry, String tarTabNm) {
-        return selectInsStat(selQry, tarTabNm, false, "", tabInfoList);
+    public String selectTabToInsStatToString(String selQry, String tabNm) {
+        tabInfo.setTabNm(tabNm);
+        selectSelStat();
+        return selectInsStat(selQry, tabNm, false, "", tabInfoList);
     }
 
     /*
@@ -230,6 +236,7 @@ public class ExtractTab {
              *                              insert 문장 생성
              **********************************************************************************/
             stmt = conn.createStatement();
+            System.out.println("selQry==="+selQry);
             rs = stmt.executeQuery(selQry);
             s01 = "INSERT INTO "+tarTabNm+" VALUES (";
             

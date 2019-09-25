@@ -218,8 +218,8 @@ public class TabInfoDynSrv {
             /// Columns End ///////////////////////////////////////////////////////////
 
             ///////////////////////////////////////////////////////////////////////////
-            qry    += "FROM   "+inVo.getOwner().toUpperCase()+"."+inVo.getTabNm()+"\n";
-            cntQry += "FROM   "+inVo.getOwner().toUpperCase()+"."+inVo.getTabNm()+"\n";
+            qry    += "FROM   "+inVo.getTabNm()+"\n";
+            cntQry += "FROM   "+inVo.getTabNm()+"\n";
             ///////////////////////////////////////////////////////////////////////////
             
             ///////////////////////////////////////////////////////////////////////////

@@ -630,6 +630,7 @@ public class TabInfoDynSrv {
                     inVo.get(i).setCntQry("SELECT COUNT(*) FROM "+inVo.get(i).getOwner()+"."+inVo.get(i).getTabNm());
                     System.out.println(inVo.get(i).getCntQry());
                     int rowCnt = sqlSession(inVo.get(i)).getMapper(TabInfoDao.class).selectDataCnt(inVo.get(i));
+                    System.out.println("rowCnt = "+rowCnt);
                     if(inVo.get(i).getTabRows()!=rowCnt) {
                         TabInfo updateVo = new TabInfo();
                         updateVo.setOwner(inVo.get(i).getOwner());

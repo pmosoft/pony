@@ -177,28 +177,28 @@ public class ExtractTab {
         String tarTabNm   = tabInfo.getTabNm();
         boolean isFile    = true; 
         String pathFileNm = App.excelPath + tabInfo.getTabNm()+".sql";
-        selectInsStat(selQry, tarTabNm, isFile, pathFileNm, false, null);
+        selectInsStat(selQry, tarTabNm, isFile, pathFileNm, tabInfoList);
     }
 
     /*
      * 테이블명 쿼리 결과를 INSERT문장으로 생성하여 문자열로 반환
      **/
-    public String selectTabToInsStatToString(String tarTabNm, String selQry) {
-        return selectInsStat(selQry, tarTabNm, false, "", false, null);
+    public String selectTabToInsStatToString(String selQry, String tarTabNm) {
+        return selectInsStat(selQry, tarTabNm, false, "", tabInfoList);
     }
 
     /*
      * 사용자정의 쿼리 조회 결과를 INSERT문장으로 생성하여 문자열로 반환
      **/
     public String selectQryToInsStatToString(String selQry, String tarTbNm) {
-        return selectInsStat(selQry, tarTbNm, false, "", true, getColMeta(selQry));
+        return selectInsStat(selQry, tarTbNm, false, "", getColMeta(selQry));
     }
     
     
     /*
      * (코어) 쿼리된 결과를 INSERT문장으로 생성한다.
      **/
-    public String selectInsStat(String selQry, String tarTabNm, boolean isFile, String pathFileNm, boolean isQry, List<TabInfo> tabInfoList) {
+    public String selectInsStat(String selQry, String tarTabNm, boolean isFile, String pathFileNm, List<TabInfo> tabInfoList) {
         //logger.info("selectInsStatToFile start");
         Map<String, Object> result = new HashMap<String, Object>();
 
@@ -221,8 +221,6 @@ public class ExtractTab {
         String insQry = "";
         String retQry = "";
         
-        ResultSetMetaData rsmd = null;
-        
         try {
 
             // 파일 변수 초기화
@@ -235,22 +233,12 @@ public class ExtractTab {
             rs = stmt.executeQuery(selQry);
             s01 = "INSERT INTO "+tarTabNm+" VALUES (";
             
-            /****************************
-             * 메타정보 수보
-             ****************************/
-            if(!isQry) {
-                rsmd = rs.getMetaData();
-                colCnt = rsmd.getColumnCount();
-                for (int i = 0; i < colCnt; i++) {
-                    //System.out.println(rsmd.getColumnName(i+1)+"    "+rsmd.getColumnTypeName(i+1));
-                }
-            } else {
-                colCnt = tabInfoList.size();
-            } 
+            // 메타정보 수보(ResultSetMetaData) 사용불가. 컬럼의 변형이 있으면 date를 varchar로 인식할수 있다.
+            colCnt = tabInfoList.size();
             
             //System.out.println("colCnt="+colCnt);
             
-            while(rs.next()){
+            if(rs.next()){
             //if(rs.next()){
                 extractCnt++;
                 if(extractCnt%logCnt == 0) {
@@ -259,9 +247,7 @@ public class ExtractTab {
 
                 //for (int i = 0; i < tabInfoList.size(); i++) {
                 for (int i = 0; i < colCnt; i++) {
-                    //dataTypeNm = tabInfoList.get(i).getDataTypeNm().trim().toUpperCase();
-
-                     dataTypeNm = isQry ? tabInfoList.get(i).getDataTypeNm().toUpperCase() : rsmd.getColumnTypeName(i+1).trim().toUpperCase();
+                    dataTypeNm = tabInfoList.get(i).getDataTypeNm().toUpperCase();
                     
                     //System.out.println("tabInfoList.get(i).getDataTypeNm()=="+tabInfoList.get(i).getDataTypeNm()+"   "+rs.getString(i+1));
                     //System.out.println(tabInfo.getJdbcInfo().getDb());

@@ -74,14 +74,14 @@
 
 <select id="selectCommonQryList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="java.util.LinkedHashMap">
 <![CDATA[
-    -- TableDao.selectCommonQryList(MARIADB)
+    -- TableDao.selectCommonQryList(ORACLE)
     SELECT * FROM (${qry}) WHERE ROWNUM <= ${limitCnt}
 ]]>
 </select>
 
 <select id="selectDataCnt" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="int">
 <![CDATA[
-    -- TableDao.selectDataCnt(MARIADB)
+    -- TableDao.selectDataCnt(ORACLE)
     ${cntQry}
 ]]>
 </select>

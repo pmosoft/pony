@@ -90,20 +90,20 @@ public class ManageETL {
     
     // 단일이관 - 소스 테이블명과 타켓 테이블명 동일
     public void executeDbToDb(String tabNm) {
-        srcTabInfo.setTabNm(tabNm); new ExtractTab(srcTabInfo).executeTab();
+        srcTabInfo.setTabNm(tabNm); new ExtractTab(srcTabInfo,tarTabInfo).executeTab();
         tarTabInfo.setTabNm(tabNm); new LoadTab(tarTabInfo).executeInsertFileToDb();        
     }
 
     // 단일이관 - 소스 테이블명과 타켓 테이블명 상이
     public void executeDbToDb(String srcTabNm, String tarTabNm) {
-        srcTabInfo.setTabNm(srcTabNm); new ExtractTab(srcTabInfo).executeTab();
+        srcTabInfo.setTabNm(srcTabNm); new ExtractTab(srcTabInfo,tarTabInfo).executeTab();
         tarTabInfo.setTabNm(tarTabNm); new LoadTab(tarTabInfo).executeInsertFileToDb();        
     }    
 
     // 다수이관 - 소스 테이블명과 타켓 테이블명 동일
     public void executeDbToDbBatch(ArrayList<String> tabNmList) {
         for (int i = 0; i < tabNmList.size(); i++) {
-            srcTabInfo.setTabNm(tabNmList.get(i)); new ExtractTab(srcTabInfo).executeTab();
+            srcTabInfo.setTabNm(tabNmList.get(i)); new ExtractTab(srcTabInfo,tarTabInfo).executeTab();
             tarTabInfo.setTabNm(tabNmList.get(i)); new LoadTab(tarTabInfo).executeInsertFileToDb();        
         }
     }
@@ -111,7 +111,7 @@ public class ManageETL {
     // 다수이관 - 소스 테이블명과 타켓 테이블명 상이
     public void executeDbToDbBatch(ArrayList<String> srcTabNmList,ArrayList<String> tarTabNmList) {
         for (int i = 0; i < srcTabNmList.size(); i++) {
-            srcTabInfo.setTabNm(srcTabNmList.get(i)); new ExtractTab(srcTabInfo).executeTab();
+            srcTabInfo.setTabNm(srcTabNmList.get(i)); new ExtractTab(srcTabInfo,tarTabInfo).executeTab();
             tarTabInfo.setTabNm(tarTabNmList.get(i)); new LoadTab(tarTabInfo).executeInsertFileToDb();        
         }
     }

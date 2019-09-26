@@ -63,7 +63,7 @@ public class EtlSrv {
                     tarTabInfo.setOwner(srcTabInfo.getOwner());
                     tarTabInfo.setTabNm(srcTabInfo.getTabNm());
                     tarTabInfo.setChk(true);tarTabInfoList.add(tarTabInfo);
-                    if(srcTabInfo.isChkExtract()) new ExtractTab(srcTabInfo).executeTab();
+                    if(srcTabInfo.isChkExtract()) new ExtractTab(srcTabInfo,tarTabInfo).executeTab();
                     if(srcTabInfo.isChkLoad()) { 
                         new LoadTab(tarTabInfo).executeInsertFileToDb();
                         tabInfoDynSrv.updateTabRowsUpdateScript(tarTabInfoList);                        

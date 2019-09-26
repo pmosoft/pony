@@ -130,7 +130,7 @@ public class LoadTab {
              * DELETE 테이블
              ***************************************************************/
             qry = "DELETE FROM "+tabInfo.getOwner()+"."+tabInfo.getTabNm(); 
-            //logger.info(qry);
+            logger.info(qry);
             stmt.execute(qry);
             
             /***************************************************************

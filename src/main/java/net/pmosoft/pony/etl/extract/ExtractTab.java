@@ -34,9 +34,11 @@ public class ExtractTab {
 
     private static Logger logger = LoggerFactory.getLogger(ExtractTab.class);
 
-    JdbcInfo jdbcInfo = new JdbcInfo(); 
+    JdbcInfo jdbcInfo1 = new JdbcInfo(); 
+    JdbcInfo jdbcInfo2 = new JdbcInfo(); 
+    TabInfo  tabInfo1 = new TabInfo();    
+    TabInfo  tabInfo2 = new TabInfo();
     
-    TabInfo  tabInfo = new TabInfo();    
     TabInfoDynSrv tabInfoDynSrv = new TabInfoDynSrv();
     Map<String, Object> map = new HashMap<String, Object>();
 
@@ -64,32 +66,35 @@ public class ExtractTab {
     
     public ExtractTab(){}
 
-    public ExtractTab(JdbcInfo jdbcInfo){
-        this.jdbcInfo = jdbcInfo;
-        this.conn = new DbCon().getConnection(jdbcInfo);
-        this.tabInfo.setJdbcInfo(jdbcInfo);
-        this.tabInfo.setOwner(jdbcInfo.getUsrId());
+    public ExtractTab(JdbcInfo jdbcInfo1,JdbcInfo jdbcInfo2){
+        this.jdbcInfo1 = jdbcInfo1;
+        this.jdbcInfo2 = jdbcInfo2;
+        this.conn = new DbCon().getConnection(jdbcInfo1);
+        this.tabInfo1.setJdbcInfo(jdbcInfo1);
+        this.tabInfo1.setOwner(jdbcInfo1.getUsrId());
     }
     
-    public ExtractTab(TabInfo tabInfo){
-        this.tabInfo = tabInfo;
-        this.jdbcInfo = tabInfo.getJdbcInfo();
-        this.conn = new DbCon().getConnection(tabInfo.getJdbcInfo());
+    public ExtractTab(TabInfo tabInfo1,TabInfo tabInfo2){
+        this.tabInfo1 = tabInfo1;
+        this.tabInfo2 = tabInfo2;
+        this.jdbcInfo1 = tabInfo1.getJdbcInfo();
+        this.jdbcInfo2 = tabInfo2.getJdbcInfo();
+        this.conn = new DbCon().getConnection(tabInfo1.getJdbcInfo());
     }
     
     public static void main(String[] args) {
-        TabInfo tabInfo = new TabInfo();
-        tabInfo.getJdbcInfo().setUrl("jdbc:log4jdbc:oracle:thin:@localhost:9951/IAMLTE");
-        tabInfo.getJdbcInfo().setUsrId("cellplan");
-        tabInfo.getJdbcInfo().setUsrPw("cell_2012");
-        tabInfo.getJdbcInfo().setDb("oracle");
-        tabInfo.getJdbcInfo().setDriver("net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
-        tabInfo.setJdbcNm("CELLPLAN");
-        tabInfo.setOwner("CELLPLAN"); 
-        tabInfo.setTabNm("ANALYSIS_RESULT");
-        //tabInfo.setTabNm("DU");
+        TabInfo tabInfo1 = new TabInfo();
+        tabInfo1.getJdbcInfo().setUrl("jdbc:log4jdbc:oracle:thin:@localhost:9951/IAMLTE");
+        tabInfo1.getJdbcInfo().setUsrId("cellplan");
+        tabInfo1.getJdbcInfo().setUsrPw("cell_2012");
+        tabInfo1.getJdbcInfo().setDb("oracle");
+        tabInfo1.getJdbcInfo().setDriver("net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
+        tabInfo1.setJdbcNm("CELLPLAN");
+        tabInfo1.setOwner("CELLPLAN"); 
+        tabInfo1.setTabNm("ANALYSIS_RESULT");
+        //tabInfo1.setTabNm("DU");
         
-        ExtractTab extractTab = new ExtractTab(tabInfo);
+        ExtractTab extractTab = new ExtractTab(tabInfo1,tabInfo1);
         extractTab.executeTab();
     }
 
@@ -121,14 +126,14 @@ public class ExtractTab {
      * 테이블명으로 메타정보를 조회하여 쿼리를 생성
      **/
     public void selectSelStat() {
-        map = tabInfoDynSrv.selectSelectScript(tabInfo);
+        map = tabInfoDynSrv.selectSelectScript(tabInfo1);
         selQry = map.get("selQry").toString();
         logger.info(selQry);
         cntSelQry = map.get("cntSelQry").toString();
         logger.info(cntSelQry);
         tabInfoList = (List<TabInfo>) map.get("tabInfoList");
-        tabInfo.setQry(selQry);
-        tabInfo.setCntQry(cntSelQry);
+        tabInfo1.setQry(selQry);
+        tabInfo1.setCntQry(cntSelQry);
     }
     
     /*
@@ -151,8 +156,8 @@ public class ExtractTab {
 
                 // 리스트에 ADD
                 TabInfo tabInfo = new TabInfo();
-                tabInfo.setColNm(colNm);
-                tabInfo.setDataTypeNm(dataTypeNm);
+                tabInfo1.setColNm(colNm);
+                tabInfo1.setDataTypeNm(dataTypeNm);
                 tabInfoList.add(tabInfo);
                 System.out.println(asCol + "  " + colNm + "  " +dataTypeNm);
             }
@@ -177,10 +182,10 @@ public class ExtractTab {
     public void selectTabToInsStatToFile()
     {
         String selQry     = this.selQry;
-        String tarOwner   = tabInfo.getOwner();
-        String tarTabNm   = tabInfo.getTabNm();
+        String tarOwner   = tabInfo1.getOwner();
+        String tarTabNm   = tabInfo1.getTabNm();
         boolean isFile    = true; 
-        String pathFileNm = App.excelPath + tabInfo.getTabNm()+".sql";
+        String pathFileNm = App.excelPath + tabInfo1.getTabNm()+".sql";
         selectInsStat(selQry, tarTabNm, isFile, pathFileNm, tabInfoList);
     }
 
@@ -188,7 +193,7 @@ public class ExtractTab {
      * 테이블명 쿼리 결과를 INSERT문장으로 생성하여 문자열로 반환
      **/
     public String selectTabToInsStatToString(String selQry, String tabNm) {
-        tabInfo.setTabNm(tabNm);
+        tabInfo1.setTabNm(tabNm);
         selectSelStat();
         return selectInsStat(selQry, tabNm, false, "", tabInfoList);
     }
@@ -204,12 +209,12 @@ public class ExtractTab {
     /*
      * (코어) 쿼리된 결과를 INSERT문장으로 생성한다.
      **/
-    public String selectInsStat(String selQry, String tarTabNm, boolean isFile, String pathFileNm, List<TabInfo> tabInfoList) {
+    public String selectInsStat(String selQry, String tabNm2, boolean isFile, String pathFileNm, List<TabInfo> tabInfoList) {
         //logger.info("selectInsStatToFile start");
         Map<String, Object> result = new HashMap<String, Object>();
 
         // DB접속 변수
-        String db = jdbcInfo.getDb().toUpperCase();
+        String db2 = jdbcInfo2.getDb().toUpperCase();
         
         Statement stmt = null;
         ResultSet rs = null;
@@ -237,7 +242,7 @@ public class ExtractTab {
              **********************************************************************************/
             stmt = conn.createStatement();
             rs = stmt.executeQuery(selQry);
-            s01 = "INSERT INTO "+tarTabNm+" VALUES (";
+            s01 = "INSERT INTO "+tabNm2+" VALUES (";
             
             // 메타정보 수보(ResultSetMetaData) 사용불가. 컬럼의 변형이 있으면 date를 varchar로 인식할수 있다.
             colCnt = tabInfoList.size();
@@ -256,7 +261,7 @@ public class ExtractTab {
                     dataTypeNm = tabInfoList.get(i).getDataTypeNm().toUpperCase();
                     
                     //System.out.println("tabInfoList.get(i).getDataTypeNm()=="+tabInfoList.get(i).getDataTypeNm()+"   "+rs.getString(i+1));
-                    //System.out.println(tabInfo.getJdbcInfo().getDb());
+                    //System.out.println(tabInfo1.getJdbcInfo().getDb());
                     colData = rs.getString(i+1);
                     if (dataTypeNm.matches("NUMBER|INT|NUMERIC") || colData==null) {
                         s02 += colData + ",";
@@ -267,8 +272,8 @@ public class ExtractTab {
                          * [DATE] DBMS 및 site에 따라 date 형식을 처리하는 것이 상이하므로 별도로 처리요 
                          ********************************************************************************/
                         // 데이트 타입 변형조건일 경우 DBMS의 SQL규칙에 맞게 형변환 처리
-                        if     (db.equals("ORACLE")) {colData = "TO_DATE('"+colData+"','YYYY-MM-DD HH24:MI:SS')";}
-                        else if(db.equals("POSTGRE")) {colData = "TO_DATE('"+colData+"','YYYY-MM-DD HH24:MI:SS')";}
+                        if     (db2.equals("ORACLE")) {colData = "TO_DATE('"+colData+"','YYYY-MM-DD HH24:MI:SS')";}
+                        else if(db2.equals("POSTGRE")) {colData = "TO_DATE('"+colData+"','YYYY-MM-DD HH24:MI:SS')";}
                        
                         s02 += colData + ",";
                     } else {          
@@ -297,6 +302,77 @@ public class ExtractTab {
     }
     
 
+    /*
+     * (코어) 쿼리된 결과를 샘파일로 생성한다.
+     **/
+    public String selectSamFile(String selQry, String tarTabNm, String pathFileNm, String delimeter, List<TabInfo> tabInfoList) {
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        // DB접속 변수
+        String db = jdbcInfo2.getDb().toUpperCase();
+        
+        Statement stmt = null;
+        ResultSet rs = null;
+        
+        // 파일 변수
+        PrintWriter writer = null;
+
+        // 쿼리 변수
+        int    colCnt = 0;
+        String dataTypeNm  = "";
+       
+        String colData = "";
+        String s01 = "";
+        String s02 = "";
+        String insQry = "";
+        String retQry = "";
+        
+        try {
+
+            // 파일 변수 초기화
+            writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(pathFileNm)));
+
+            /***********************************************************************************
+             *                                    샘파일 생성
+             **********************************************************************************/
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(selQry);
+            
+            while(rs.next()){
+                extractCnt++;
+                if(extractCnt%logCnt == 0) {
+                    logger.info("extractCnt="+extractCnt);
+                }
+
+                for (int i = 0; i < colCnt; i++) {
+                    dataTypeNm = tabInfoList.get(i).getDataTypeNm().toUpperCase();
+                    colData = rs.getString(i+1);
+                    if (dataTypeNm.matches("DATE|TIMESTAMP")) {
+                        if     (db.equals("ORACLE")) {colData = "TO_DATE('"+colData+"','YYYY-MM-DD HH24:MI:SS')";}
+                        else if(db.equals("POSTGRE")) {colData = "TO_DATE('"+colData+"','YYYY-MM-DD HH24:MI:SS')";}
+                    }
+                    s02 += colData + delimeter;
+                }
+                writer.println(insQry);
+                s02 = "";                
+            }            
+            writer.close();
+            result.put("isSuccess", true);
+            logger.info("extractCnt="+extractCnt);
+            
+            return retQry;
+            
+        } catch ( Exception e ) { 
+            result.put("isSuccess", false);
+            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
+            result.put("errSysMsg", e.getMessage());
+            e.printStackTrace();
+        } finally { try { rs.close();stmt.close();conn.close(); } catch (SQLException e) { e.printStackTrace(); }; writer.close();}
+        
+        return retQry;
+    }
+    
+    
 
     /**********************************************************************************
     *
@@ -310,7 +386,7 @@ public class ExtractTab {
      * 조회건수
      **/
     public void selectDataCnt() {
-        rowCnt = Integer.parseInt(tabInfoDynSrv.selectDataCnt(tabInfo).get("rowCnt").toString());
+        rowCnt = Integer.parseInt(tabInfoDynSrv.selectDataCnt(tabInfo1).get("rowCnt").toString());
     }
     
     /*

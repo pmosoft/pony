@@ -265,17 +265,8 @@ public class ExtractTab {
                     colData = rs.getString(i+1);
                     if (dataTypeNm.matches("NUMBER|INT|NUMERIC") || colData==null) {
                         s02 += colData + ",";
-                        //System.out.println("insertData1="+insertData);
-                    } else if (dataTypeNm.matches("DATE|TIMESTAMP")) {
-                        
-                        /********************************************************************************
-                         * [DATE] DBMS 및 site에 따라 date 형식을 처리하는 것이 상이하므로 별도로 처리요 
-                         ********************************************************************************/
-                        // 데이트 타입 변형조건일 경우 DBMS의 SQL규칙에 맞게 형변환 처리
-                        if     (db2.equals("ORACLE")) {colData = "TO_DATE('"+colData+"','YYYY-MM-DD HH24:MI:SS')";}
-                        else if(db2.equals("POSTGRE")) {colData = "TO_DATE('"+colData+"','YYYY-MM-DD HH24:MI:SS')";}
-                       
-                        s02 += colData + ",";
+                    } else if (dataTypeNm.matches("DATE|TIMESTAMP")) { 
+                        s02 += getDateColData(db2,colData) + ",";
                     } else {          
                         s02 += "'"+colData + "',";
                     }
@@ -302,14 +293,32 @@ public class ExtractTab {
     }
     
 
+    /**********************************************************************************
+    *
+    *                                      샘파일생성
+    *
+    **********************************************************************************/
+
+    /*
+     * 테이블명 쿼리 결과를 샘파일로 저장
+     **/
+    
+    public void selectTabToFile(String selQry, String pathFileNm, String delimeter, String tabNm)
+    {
+        tabInfo1.setTabNm(tabNm);
+        selectSelStat();
+        selectSamFile(selQry, pathFileNm, delimeter, tabInfoList);
+    }
+    
+    
     /*
      * (코어) 쿼리된 결과를 샘파일로 생성한다.
      **/
-    public String selectSamFile(String selQry, String tarTabNm, String pathFileNm, String delimeter, List<TabInfo> tabInfoList) {
+    public String selectSamFile(String selQry, String pathFileNm, String delimeter, List<TabInfo> tabInfoList) {
         Map<String, Object> result = new HashMap<String, Object>();
 
         // DB접속 변수
-        String db = jdbcInfo2.getDb().toUpperCase();
+        String db2 = jdbcInfo2.getDb().toUpperCase();
         
         Statement stmt = null;
         ResultSet rs = null;
@@ -322,9 +331,7 @@ public class ExtractTab {
         String dataTypeNm  = "";
        
         String colData = "";
-        String s01 = "";
         String s02 = "";
-        String insQry = "";
         String retQry = "";
         
         try {
@@ -337,25 +344,19 @@ public class ExtractTab {
              **********************************************************************************/
             stmt = conn.createStatement();
             rs = stmt.executeQuery(selQry);
+
+            colCnt = tabInfoList.size();
             
             while(rs.next()){
-                extractCnt++;
-                if(extractCnt%logCnt == 0) {
-                    logger.info("extractCnt="+extractCnt);
-                }
+                extractCnt++; if(extractCnt%logCnt == 0) { logger.info("extractCnt="+extractCnt); }
 
                 for (int i = 0; i < colCnt; i++) {
-                    dataTypeNm = tabInfoList.get(i).getDataTypeNm().toUpperCase();
-                    colData = rs.getString(i+1);
-                    if (dataTypeNm.matches("DATE|TIMESTAMP")) {
-                        if     (db.equals("ORACLE")) {colData = "TO_DATE('"+colData+"','YYYY-MM-DD HH24:MI:SS')";}
-                        else if(db.equals("POSTGRE")) {colData = "TO_DATE('"+colData+"','YYYY-MM-DD HH24:MI:SS')";}
-                    }
+                    colData = StringUtil.trimNull(rs.getString(i+1));
                     s02 += colData + delimeter;
                 }
-                writer.println(insQry);
+                writer.println(s02);
                 s02 = "";                
-            }            
+            }
             writer.close();
             result.put("isSuccess", true);
             logger.info("extractCnt="+extractCnt);
@@ -381,7 +382,16 @@ public class ExtractTab {
     **********************************************************************************/
     public void _________유틸_________(){}
     
-
+    /*
+     * Date형의 data를 변형하여 리턴
+     **/
+    public String getDateColData(String db, String colData) {
+        if     (db.equals("ORACLE"))  {colData = "TO_DATE('"+colData+"','YYYY-MM-DD HH24:MI:SS')";}
+        else if(db.equals("POSTGRE")) {colData = "TO_DATE('"+colData+"','YYYY-MM-DD HH24:MI:SS')";}
+        
+        return colData;
+    }
+    
     /*
      * 조회건수
      **/
@@ -394,69 +404,4 @@ public class ExtractTab {
      **/
     void DBClose(){ try { rs.close();stmt.close(); conn.close();} catch (SQLException e) { e.printStackTrace(); } }    
         
-
-    /**********************************************************************************
-    *
-    *                                      기타
-    *
-    **********************************************************************************/
-    public void _________기타_________(){}
-    
-    public void selectCommaData() {}    
-    public void selectBarData() {}    
-    public void selectSharpBarData() {}    
-    public void insDataToFile() {}    
-    
-    
-    public void executeTabComma() {
-        
-    }    
-    
-    public void executeTabBar() {
-        
-    }    
-    
-    public void executeQry() {
-        
-    }    
-
-    public void executeQryComma() {
-        
-    }    
-    
-    public void executeQryBar() {
-        
-    }    
-    
-    
-    public void execute() {
-        Connection conn = null;
-        Statement stmt = null;
-        ResultSet rs = null;
-        
-        String insQry01 = "";
-        String insQry02 = "";
-        String insQry03 = "";
-        String col = "";
-        
-        BufferedWriter bw = null;
-        
-
-        String DB_URL = "jdbc:sqlite:C:/pony/pony.db";
-        String DB_USER = "";
-        String DB_PASSWORD = "";
-
-        try {
-            Class.forName("org.sqlite.JDBC");
-            conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-            stmt = conn.createStatement();
-            String query = "SELECT DISTINCT TAB_NM FROM TDACM00080 WHERE UPPER(JDBC_NM) = 'EOS_DEV'";
-            rs = stmt.executeQuery(query);
-            while (rs.next()) {
-                //System.out.println(rs.getString("TAB_NM"));
-            }
-        } catch ( Exception e ) { e.printStackTrace(); } finally {try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }}        
-    }
-   
-    
 }

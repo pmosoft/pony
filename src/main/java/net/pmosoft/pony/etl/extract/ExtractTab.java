@@ -236,7 +236,6 @@ public class ExtractTab {
              *                              insert 문장 생성
              **********************************************************************************/
             stmt = conn.createStatement();
-            System.out.println("selQry==="+selQry);
             rs = stmt.executeQuery(selQry);
             s01 = "INSERT INTO "+tarTabNm+" VALUES (";
             

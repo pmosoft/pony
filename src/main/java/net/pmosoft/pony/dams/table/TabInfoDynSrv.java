@@ -618,7 +618,7 @@ public class TabInfoDynSrv {
     * 테이블 데이터 건수조회후 갱신SQL 출력 및 로컬메테이블 테이블건수 갱신
     * */
     public Map<String, Object> updateTabRowsUpdateScript(List<TabInfo> inVo){
-        logger.info("updateTabRowsUpdateScript");
+        //logger.info("updateTabRowsUpdateScript");
 
         Map<String, Object> result = new HashMap<String, Object>();
         List<TabInfo> updateVoList = new ArrayList<TabInfo>();
@@ -628,9 +628,9 @@ public class TabInfoDynSrv {
             for (int i = 0; i < inVo.size(); i++) {
                 if(inVo.get(i).chk){
                     inVo.get(i).setCntQry("SELECT COUNT(*) FROM "+inVo.get(i).getOwner()+"."+inVo.get(i).getTabNm());
-                    System.out.println(inVo.get(i).getCntQry());
+                    //System.out.println(inVo.get(i).getCntQry());
                     int rowCnt = sqlSession(inVo.get(i)).getMapper(TabInfoDao.class).selectDataCnt(inVo.get(i));
-                    System.out.println("rowCnt = "+rowCnt);
+                    //System.out.println("rowCnt = "+rowCnt);
                     if(inVo.get(i).getTabRows()!=rowCnt) {
                         TabInfo updateVo = new TabInfo();
                         updateVo.setOwner(inVo.get(i).getOwner());
@@ -651,7 +651,7 @@ public class TabInfoDynSrv {
             }
             
             if(updateVoList.size()>0) {
-                logger.info("updateVoList.size()=="+updateVoList.size());
+                //logger.info("updateVoList.size()=="+updateVoList.size());
                 tabInfoSrv.updateTabRows(updateVoList);
             }    
             

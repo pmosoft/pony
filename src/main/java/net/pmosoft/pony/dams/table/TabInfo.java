@@ -74,9 +74,8 @@ public class TabInfo {
     String tarDb         = "";
     String tarJdbcNm     = "";
 
-    boolean isExtract = true;
-    boolean isLoad = true;
-    
+    boolean chkExtract = true;
+    boolean chkLoad = true;
     
     public JdbcInfo getJdbcInfo() {
         return jdbcInfo;
@@ -300,6 +299,12 @@ public class TabInfo {
     public void setCntQry(String cntQry) {
         this.cntQry = cntQry;
     }
+    public boolean isChgDate() {
+        return isChgDate;
+    }
+    public void setChgDate(boolean isChgDate) {
+        this.isChgDate = isChgDate;
+    }
     public String getPathFileNm() {
         return pathFileNm;
     }
@@ -311,12 +316,6 @@ public class TabInfo {
     }
     public void setLimitCnt(int limitCnt) {
         this.limitCnt = limitCnt;
-    }
-    public boolean isChgDate() {
-        return isChgDate;
-    }
-    public void setChgDate(boolean isChgDate) {
-        this.isChgDate = isChgDate;
     }
     public String getTarDb() {
         return tarDb;
@@ -330,17 +329,18 @@ public class TabInfo {
     public void setTarJdbcNm(String tarJdbcNm) {
         this.tarJdbcNm = tarJdbcNm;
     }
-    public boolean isExtract() {
-        return isExtract;
+    public boolean isChkExtract() {
+        return chkExtract;
     }
-    public void setExtract(boolean isExtract) {
-        this.isExtract = isExtract;
+    public void setChkExtract(boolean chkExtract) {
+        this.chkExtract = chkExtract;
     }
-    public boolean isLoad() {
-        return isLoad;
+    public boolean isChkLoad() {
+        return chkLoad;
     }
-    public void setLoad(boolean isLoad) {
-        this.isLoad = isLoad;
-    }   
+    public void setChkLoad(boolean chkLoad) {
+        this.chkLoad = chkLoad;
+    }
+    
     
 }

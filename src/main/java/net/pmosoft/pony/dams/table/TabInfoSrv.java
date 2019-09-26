@@ -241,16 +241,16 @@ public class TabInfoSrv {
     public Map<String, Object> updateTabRows(List<TabInfo> inVo){
         // mybatis에서 foreach사용시 sqlite의 jdbctype 처리를 못해주므로 단건으로 갱신한다
 
-        logger.info("updateTabRows");
-        System.out.println("inVo.size()="+inVo.size());
+        //logger.info("updateTabRows");
+        //System.out.println("inVo.size()="+inVo.size());
 
         Map<String, Object> result = new HashMap<String, Object>();
         try{
             for (int i = 0; i < inVo.size(); i++) {
-                System.out.println("inVo.get(i)="+inVo.get(i).getTabNm());
-                System.out.println("inVo.get(i)="+inVo.get(i).getTabRows());
-                System.out.println("inVo.get(i)="+inVo.get(i).getJdbcNm());
-                System.out.println("inVo.get(i)="+inVo.get(i).getOwner());
+                //System.out.println("inVo.get(i)="+inVo.get(i).getTabNm());
+                //System.out.println("inVo.get(i)="+inVo.get(i).getTabRows());
+                //System.out.println("inVo.get(i)="+inVo.get(i).getJdbcNm());
+                //System.out.println("inVo.get(i)="+inVo.get(i).getOwner());
 
                 tabInfoDao.updateTabRows(inVo.get(i));
             }

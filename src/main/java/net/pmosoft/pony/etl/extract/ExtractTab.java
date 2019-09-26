@@ -245,8 +245,8 @@ public class ExtractTab {
             
             //System.out.println("colCnt="+colCnt);
             
-            if(rs.next()){
             //if(rs.next()){
+            while(rs.next()){
                 extractCnt++;
                 if(extractCnt%logCnt == 0) {
                     logger.info("extractCnt="+extractCnt);

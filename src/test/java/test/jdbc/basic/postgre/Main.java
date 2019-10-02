@@ -40,14 +40,13 @@ class TestJdbcBasicSqlite {
     void DBConn(){
 
         //String DB_URL = "jdbc:postgresql://localhost:5432/postgres";
-        //String DB_USER = "postgres";
-        //String DB_PASSWORD = "1";
+        String DB_URL = "jdbc:postgresql://192.168.0.6:5432/postgres";
+        String DB_USER = "postgres"; String DB_PASSWORD = "1";
 
-        String DB_URL = "jdbc:postgresql://localhost:5432/cellplan";
-        String DB_USER = "cellplan";
-        String DB_PASSWORD = "cell_2012";
-        
-        
+        //String DB_URL = "jdbc:postgresql://localhost:5432/cellplan";
+        //String DB_USER = "cellplan"; String DB_PASSWORD = "cell_2012";
+
+
         try {
         	Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);

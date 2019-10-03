@@ -12,8 +12,54 @@ public class Serialize {
         //s.readBin();
         //s.writeBinTest01();
         //s.readBinTest01();
-        s.writeBinTest02();
+        s.writeBinTest03();
     }
+
+    void writeBinTest03(){
+        File file = new File("d:/fframe/workspace/pony/src/test/java/test/serialize/file3.bin") ;
+        FileOutputStream fos = null ;
+        int x = 1;
+
+        try {
+            // open file.
+            fos = new FileOutputStream(file) ;  // fos = new FileOutputStream("file.bin") ;
+            // write file.
+            fos.write(intToByteArray(x)) ;
+            fos.write(intToByteArray(x)) ;
+            //fos.write(x) ;
+
+        } catch (Exception e) {
+            e.printStackTrace() ;
+        }
+
+        // close file.
+        if (fos != null) {
+            // catch Exception here or throw.
+            try {
+                fos.close() ;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public  byte[] intToByteArray(int value) {
+        byte[] byteArray = new byte[4];
+        byteArray[3] = (byte)(value >> 24);
+        byteArray[2] = (byte)(value >> 16);
+        byteArray[1] = (byte)(value >> 8);
+        byteArray[0] = (byte)(value);
+        return byteArray;
+    }
+
+    public  int byteArrayToInt(byte bytes[]) {
+        return ((((int)bytes[3] & 0xff) << 24) |
+                (((int)bytes[2] & 0xff) << 16) |
+                (((int)bytes[1] & 0xff) << 8) |
+                (((int)bytes[0] & 0xff)));
+    }
+
+
 
     void readBin(){
         try {

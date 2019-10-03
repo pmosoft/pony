@@ -2,22 +2,23 @@ package net.pmosoft.pony.dams.code;
 
 public class Code {
 
-    String cdGrp     ; // 코드그룹  
-    String cdGrpNm   ; // 코드그룹명 
-    String cdId      ; // 코드아이디 
+    String cdGrp     ; // 코드그룹
+    String cdGrpNm   ; // 코드그룹명
+    String cdId      ; // 코드아이디
     String cdIdNm    ; // 코드아이디명
-    String cd        ; // 코드    
-    String cdNm      ; // 코드명   
-    String cdDesc    ; // 코드설명  
+    String cd        ; // 코드
+    String cdNm      ; // 코드명
+    String cdDesc    ; // 코드설명
     String cdTyCd    ; // 코드유형코드
-    String regDtm    ; // 등록일시  
-    String regUsrId  ; // 등록자   
-    String updDtm    ; // 변경일시  
-    String updUsrId  ; // 변경자   
+    int    cdSeq     ; // 코드순서
+    String regDtm    ; // 등록일시
+    String regUsrId  ; // 등록자
+    String updDtm    ; // 변경일시
+    String updUsrId  ; // 변경자
 
-    String comboCodeId ; // [조회조건] 선택된 콤보 id 
-    String searchValue ; // [조회조건] 코드관련    
-    
+    String comboCodeId ; // [조회조건] 선택된 콤보 id
+    String searchValue ; // [조회조건] 코드관련
+
     public String getCdGrp() {
         return cdGrp;
     }
@@ -101,6 +102,12 @@ public class Code {
     }
     public void setSearchValue(String searchValue) {
         this.searchValue = searchValue;
+    }
+    public int getCdSeq() {
+        return cdSeq;
+    }
+    public void setCdSeq(int cdSeq) {
+        this.cdSeq = cdSeq;
     }
 
 }

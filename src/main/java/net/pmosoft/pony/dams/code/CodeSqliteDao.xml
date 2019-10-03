@@ -8,14 +8,15 @@
 <select id="selectCodeList" parameterType="net.pmosoft.pony.dams.code.Code" resultType="net.pmosoft.pony.dams.code.Code">
 
     -- CodeDao.selectCodeList
-    SELECT   A.CD_GRP    
-            ,A.CD_GRP_NM   
+    SELECT   A.CD_GRP
+            ,A.CD_GRP_NM
             ,A.CD_ID
-            ,A.CD_ID_NM          
-            ,A.CD       
-            ,A.CD_NM      
-            ,A.CD_DESC      
+            ,A.CD_ID_NM
+            ,A.CD
+            ,A.CD_NM
+            ,A.CD_DESC
             ,B.CD_NM       AS CD_TY_CD
+            ,A.CD_SEQ
             ,A.REG_DTM
             ,A.REG_USR_ID
             ,A.UPD_DTM
@@ -25,7 +26,7 @@
             ON  B.CD_ID = 'CD_TY_CD'
             AND B.CD = A.CD_TY_CD
     WHERE  (#{comboCodeId} = 'ALL' AND
-             (   
+             (
                  A.CD_GRP    LIKE ('%'||#{searchValue}||'%')
               OR A.CD_GRP_NM LIKE ('%'||#{searchValue}||'%')
               OR A.CD_ID     LIKE ('%'||#{searchValue}||'%')
@@ -42,22 +43,23 @@
     OR     (#{comboCodeId} = 'CD'         AND A.CD        LIKE ('%'||#{searchValue}||'%'))
     OR     (#{comboCodeId} = 'CD_NM'      AND A.CD_NM     LIKE ('%'||#{searchValue}||'%'))
     OR     (#{comboCodeId} = 'CD_DESC'    AND A.CD_DESC   LIKE ('%'||#{searchValue}||'%'))
-    ORDER BY A.CD_TY_CD,A.CD_ID, A.CD
+    ORDER BY A.CD_TY_CD,A.CD_ID, A.CD_SEQ, A.CD
 </select>
 
 
 <select id="selectCodeRegList" parameterType="java.util.HashMap" resultType="java.util.LinkedHashMap">
 
     -- CodeDao.selectCodeRegList
-    SELECT   A.CD_ID_NM    
-            ,A.CD_ID_HNM   
+    SELECT   A.CD_ID_NM
+            ,A.CD_ID_HNM
             ,A.CD_ID_GRP_NM
             ,A.CD
-            ,A.CD_NM       
-            ,A.CD_HNM      
-            ,A.CD_DESC      
+            ,A.CD_NM
+            ,A.CD_HNM
+            ,A.CD_DESC
             ,A.CD_TY_CD
-            ,A.CD_STS_CD   
+            ,A.CD_STS_CD
+            ,A.CD_SEQ
             ,A.REG_DTM AS REG_DTM
             ,A.REG_USR_ID
             ,A.UPD_DTM AS UPD_DTM
@@ -68,30 +70,30 @@
     OR      A.CD_NM LIKE ('%'||#{searchValue}||'%')
     OR      A.CD_HNM LIKE ('%'||#{searchValue}||'%')
     OR      A.CD_ID_GRP_NM LIKE ('%'||#{searchValue}||'%')
-    ORDER BY A.CD_TY_CD,A.CD_ID_NM, A.CD
+    ORDER BY A.CD_TY_CD,A.CD_ID_NM, A.CD_SEQ, A.CD
 </select>
 
 
 <select id="selectCodeExtList" parameterType="java.util.HashMap" resultType="java.util.LinkedHashMap">
 
     -- CodeDao.selectCodeExtList
-    SELECT   A.CD_ID_NM      
+    SELECT   A.CD_ID_NM
             ,A.CD
-            ,B.CD_NM            
+            ,B.CD_NM
             ,A.CD_PARAM1_DESC
-            ,A.CD_PARAM1     
+            ,A.CD_PARAM1
             ,A.CD_PARAM2_DESC
-            ,A.CD_PARAM2     
+            ,A.CD_PARAM2
             ,A.CD_PARAM3_DESC
-            ,A.CD_PARAM3     
+            ,A.CD_PARAM3
             ,A.CD_PARAM4_DESC
-            ,A.CD_PARAM4     
+            ,A.CD_PARAM4
             ,A.CD_PARAM5_DESC
-            ,A.CD_PARAM5     
+            ,A.CD_PARAM5
             ,A.CD_PARAM6_DESC
-            ,A.CD_PARAM6     
+            ,A.CD_PARAM6
             ,A.CD_PARAM7_DESC
-            ,A.CD_PARAM7     
+            ,A.CD_PARAM7
             ,A.CD_PARAM8_DESC
             ,A.CD_PARAM8     +`
             ,A.REG_DTM AS REG_DTM
@@ -99,13 +101,13 @@
             ,A.UPD_DTM AS UPD_DTM
             ,A.UPD_USR_ID
     FROM    TDACM00061 A,
-            TDACM00060 B 
+            TDACM00060 B
     WHERE   A.CD_ID_NM = B.CD_ID_NM
-    AND     A.CD = B.CD  
+    AND     A.CD = B.CD
     AND    (   A.CD_ID_NM LIKE ('%'||#{searchValue}||'%')
             OR A.CD LIKE ('%'||#{searchValue}||'%')
-           ) 
-    AND     B.CD_STS_CD = '03'  
+           )
+    AND     B.CD_STS_CD = '03'
     ORDER BY A.CD_ID_NM, A.CD
 </select>
 
@@ -113,26 +115,26 @@
 <select id="selectCodeExtRegList" parameterType="java.util.HashMap" resultType="java.util.LinkedHashMap">
 
     -- CodeDao.selectCodeExtRegList
-    SELECT   A.CD_ID_NM      
-            ,A.CD            
+    SELECT   A.CD_ID_NM
+            ,A.CD
             ,A.CD_PARAM1_DESC
-            ,A.CD_PARAM1     
+            ,A.CD_PARAM1
             ,A.CD_PARAM2_DESC
-            ,A.CD_PARAM2     
+            ,A.CD_PARAM2
             ,A.CD_PARAM3_DESC
-            ,A.CD_PARAM3     
+            ,A.CD_PARAM3
             ,A.CD_PARAM4_DESC
-            ,A.CD_PARAM4     
+            ,A.CD_PARAM4
             ,A.CD_PARAM5_DESC
-            ,A.CD_PARAM5     
+            ,A.CD_PARAM5
             ,A.CD_PARAM6_DESC
-            ,A.CD_PARAM6     
+            ,A.CD_PARAM6
             ,A.CD_PARAM7_DESC
-            ,A.CD_PARAM7     
+            ,A.CD_PARAM7
             ,A.CD_PARAM8_DESC
-            ,A.CD_PARAM8     
+            ,A.CD_PARAM8
             ,A.CD_PARAM9_DESC
-            ,A.CD_PARAM9     
+            ,A.CD_PARAM9
             ,A.REG_DTM AS REG_DTM
             ,A.REG_USR_ID
             ,A.UPD_DTM AS UPD_DTM
@@ -146,37 +148,37 @@
 <select id="selectCodeExt" parameterType="java.util.HashMap" resultType="java.util.LinkedHashMap">
 
     -- CodeDao.selectCodeExt
-    SELECT   A.CD_ID_NM      
-            ,A.CD    
-            ,B.CD_NM       
-            ,B.CD_HNM      
-            ,B.CD_DESC      
+    SELECT   A.CD_ID_NM
+            ,A.CD
+            ,B.CD_NM
+            ,B.CD_HNM
+            ,B.CD_DESC
             ,A.CD_PARAM1_DESC
-            ,A.CD_PARAM1     
+            ,A.CD_PARAM1
             ,A.CD_PARAM2_DESC
-            ,A.CD_PARAM2     
+            ,A.CD_PARAM2
             ,A.CD_PARAM3_DESC
-            ,A.CD_PARAM3     
+            ,A.CD_PARAM3
             ,A.CD_PARAM4_DESC
-            ,A.CD_PARAM4     
+            ,A.CD_PARAM4
             ,A.CD_PARAM5_DESC
             ,A.CD_PARAM5
             ,A.CD_PARAM6_DESC
-            ,A.CD_PARAM6     
+            ,A.CD_PARAM6
             ,A.CD_PARAM7_DESC
-            ,A.CD_PARAM7     
+            ,A.CD_PARAM7
             ,A.CD_PARAM8_DESC
-            ,A.CD_PARAM8     
+            ,A.CD_PARAM8
             ,A.CD_PARAM9_DESC
-            ,A.CD_PARAM9     
+            ,A.CD_PARAM9
             ,A.REG_DTM AS REG_DTM
             ,A.REG_USR_ID
             ,A.UPD_DTM AS UPD_DTM
             ,A.UPD_USR_ID
     FROM    TDACM00061 A,
-            TDACM00060 B 
+            TDACM00060 B
     WHERE   A.CD_ID_NM = B.CD_ID_NM
-    AND     A.CD       = B.CD  
+    AND     A.CD       = B.CD
     AND     A.CD_ID_NM = #{CD_ID_NM}
     AND     A.CD       = (CASE WHEN #{CD} IS NULL THEN A.CD ELSE #{CD} END)
     AND     B.CD_NM    = (CASE WHEN #{CD_NM} IS NULL THEN B.CD_NM ELSE #{CD_NM} END)
@@ -203,75 +205,75 @@
 <select id="selectCodeCombo" parameterType="java.util.HashMap" resultType="java.util.LinkedHashMap">
 
     -- CodeDao.selectCodeRegList
-    SELECT   A.CD_ID_NM    
-            ,A.CD_ID_HNM   
+    SELECT   A.CD_ID_NM
+            ,A.CD_ID_HNM
             ,A.CD_ID_GRP_NM
             ,A.CD
-            ,A.CD_NM       
-            ,A.CD_HNM      
-            ,A.CD_DESC      
+            ,A.CD_NM
+            ,A.CD_HNM
+            ,A.CD_DESC
             ,A.CD_TY_CD
             ,A.CD_STS_CD
             ,B.CD_PARAM1_DESC
-            ,B.CD_PARAM1     
+            ,B.CD_PARAM1
             ,B.CD_PARAM2_DESC
-            ,B.CD_PARAM2     
+            ,B.CD_PARAM2
             ,B.CD_PARAM3_DESC
-            ,B.CD_PARAM3     
+            ,B.CD_PARAM3
             ,B.CD_PARAM4_DESC
-            ,B.CD_PARAM4     
+            ,B.CD_PARAM4
             ,B.CD_PARAM5_DESC
             ,B.CD_PARAM5
             ,B.CD_PARAM6_DESC
-            ,B.CD_PARAM6     
+            ,B.CD_PARAM6
             ,B.CD_PARAM7_DESC
-            ,B.CD_PARAM7     
+            ,B.CD_PARAM7
             ,B.CD_PARAM8_DESC
-            ,B.CD_PARAM8     
+            ,B.CD_PARAM8
             ,B.CD_PARAM9_DESC
-            ,B.CD_PARAM9     
+            ,B.CD_PARAM9
     FROM    TDACM00060 A
             LEFT JOIN TDACM00061 B
             ON  A.CD_ID_NM = B.CD_ID_NM
             AND A.CD       = B.CD
     WHERE   A.CD_ID_NM = #{CD_ID_NM}
-    AND     A.CD_STS_CD = '03' -- 승인   
+    AND     A.CD_STS_CD = '03' -- 승인
     ORDER BY A.CD_TY_CD,A.CD_ID_NM, A.CD
 </select>
 
 
-<insert id="insertCode" parameterType="java.util.HashMap">
+<insert id="insertCode" parameterType="net.pmosoft.pony.dams.code.Code">
 
     -- CodeDao.insertCode
     INSERT INTO TDACM00060
     (
-         CD_ID_NM     
-        ,CD_ID_HNM    
-        ,CD_ID_GRP_NM 
-        ,CD           
-        ,CD_NM        
-        ,CD_HNM       
-        ,CD_DESC      
-        ,CD_TY_CD     
-        ,CD_STS_CD    
-        ,REG_DTM      
-        ,REG_USR_ID   
-        ,UPD_DTM      
-        ,UPD_USR_ID   
+          CD_GRP
+        , CD_GRP_NM
+        , CD_ID
+        , CD_ID_NM
+        , CD
+        , CD_NM
+        , CD_DESC
+        , CD_TY_CD
+        , CD_SEQ
+        , REG_DTM
+        , REG_USR_ID
+        , UPD_DTM
+        , UPD_USR_ID
     ) VALUES (
-         #{CD_ID_NM}
-        ,#{CD_ID_HNM}
-        ,#{CD_ID_GRP_NM}
-        ,#{CD}
-        ,#{CD_NM}
-        ,#{CD_HNM}
-        ,#{CD_DESC}
-        ,#{CD_TY_CD}
-        ,#{CD_STS_CD}
-        ,strftime('%Y%m%d%H%M%S','now','localtime')
-        ,#{REG_USR_ID}
-        ,strftime('%Y%m%d%H%M%S','now','localtime')
-        ,#{UPD_USR_ID}
+          #{cdGrp}
+        , #{cdGrpNm}
+        , #{cdId}
+        , #{cdIdNm}
+        , #{cd}
+        , #{cdNm}
+        , #{cdDesc}
+        , #{cdTyCd}
+        , #{cdSeq}
+        , strftime('%Y%m%d%H%M%S','now','localtime')
+        , #{regUsrId}
+        , strftime('%Y%m%d%H%M%S','now','localtime')
+        , #{updUsrId}
     )
 </insert>
 
@@ -280,30 +282,30 @@
     -- CodeDao.insertCodeExt
     INSERT INTO TDACM00061
     (
-         CD_ID_NM      
-        ,CD            
+         CD_ID_NM
+        ,CD
         ,CD_PARAM1_DESC
-        ,CD_PARAM1     
+        ,CD_PARAM1
         ,CD_PARAM2_DESC
-        ,CD_PARAM2     
+        ,CD_PARAM2
         ,CD_PARAM3_DESC
-        ,CD_PARAM3     
+        ,CD_PARAM3
         ,CD_PARAM4_DESC
-        ,CD_PARAM4     
+        ,CD_PARAM4
         ,CD_PARAM5_DESC
-        ,CD_PARAM5     
+        ,CD_PARAM5
         ,CD_PARAM6_DESC
-        ,CD_PARAM6     
+        ,CD_PARAM6
         ,CD_PARAM7_DESC
-        ,CD_PARAM7     
+        ,CD_PARAM7
         ,CD_PARAM8_DESC
-        ,CD_PARAM8     
+        ,CD_PARAM8
         ,CD_PARAM9_DESC
-        ,CD_PARAM9     
-        ,REG_DTM      
-        ,REG_USR_ID   
-        ,UPD_DTM      
-        ,UPD_USR_ID   
+        ,CD_PARAM9
+        ,REG_DTM
+        ,REG_USR_ID
+        ,UPD_DTM
+        ,UPD_USR_ID
     ) VALUES (
          #{CD_ID_NM}
         ,#{CD}
@@ -357,26 +359,26 @@
 
     -- CodeDao.updateExtCode
     UPDATE TDACM00061
-    SET  CD_ID_NM           = #{CD_ID_NM}      
-        ,CD                 = #{CD}            
+    SET  CD_ID_NM           = #{CD_ID_NM}
+        ,CD                 = #{CD}
         ,CD_PARAM1_DESC     = #{CD_PARAM1_DESC}
-        ,CD_PARAM1          = #{CD_PARAM1}     
+        ,CD_PARAM1          = #{CD_PARAM1}
         ,CD_PARAM2_DESC     = #{CD_PARAM2_DESC}
-        ,CD_PARAM2          = #{CD_PARAM2}     
+        ,CD_PARAM2          = #{CD_PARAM2}
         ,CD_PARAM3_DESC     = #{CD_PARAM3_DESC}
-        ,CD_PARAM3          = #{CD_PARAM3}     
+        ,CD_PARAM3          = #{CD_PARAM3}
         ,CD_PARAM4_DESC     = #{CD_PARAM4_DESC}
-        ,CD_PARAM4          = #{CD_PARAM4}     
+        ,CD_PARAM4          = #{CD_PARAM4}
         ,CD_PARAM5_DESC     = #{CD_PARAM5_DESC}
-        ,CD_PARAM5          = #{CD_PARAM5}     
+        ,CD_PARAM5          = #{CD_PARAM5}
         ,CD_PARAM6_DESC     = #{CD_PARAM6_DESC}
-        ,CD_PARAM6          = #{CD_PARAM6}     
+        ,CD_PARAM6          = #{CD_PARAM6}
         ,CD_PARAM7_DESC     = #{CD_PARAM7_DESC}
-        ,CD_PARAM7          = #{CD_PARAM7}     
+        ,CD_PARAM7          = #{CD_PARAM7}
         ,CD_PARAM8_DESC     = #{CD_PARAM8_DESC}
-        ,CD_PARAM8          = #{CD_PARAM8}     
+        ,CD_PARAM8          = #{CD_PARAM8}
         ,CD_PARAM9_DESC     = #{CD_PARAM9_DESC}
-        ,CD_PARAM9          = #{CD_PARAM9}     
+        ,CD_PARAM9          = #{CD_PARAM9}
         ,UPD_DTM       = strftime('%Y%m%d%H%M%S','now','localtime')
         ,UPD_USR_ID    = #{UPD_USR_ID}
     WHERE  CD_ID_NM = #{CD_ID_NM}
@@ -385,15 +387,15 @@
 </update>
 
 
-<delete id="deleteCode" parameterType="java.util.HashMap">
+<delete id="deleteCode" parameterType="net.pmosoft.pony.dams.code.Code">
     -- CodeDao.deleteCode
-    DELETE FROM TDACM00060 WHERE CD_ID_NM = #{CD_ID_NM} AND CD = #{CD}
-</delete> 
+    DELETE FROM TDACM00060 WHERE CD_GRP = #{cdGrp} AND CD_ID = #{cdId}
+</delete>
 
 <delete id="deleteCodeExt" parameterType="java.util.HashMap">
     -- CodeDao.deleteCodeExt
     DELETE FROM TDACM00061 WHERE CD_ID_NM = #{CD_ID_NM} AND CD = #{CD}
-</delete> 
+</delete>
 
 
 </mapper>

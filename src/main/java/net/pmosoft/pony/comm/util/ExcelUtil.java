@@ -25,6 +25,20 @@ import org.apache.poi.ss.usermodel.Workbook;
 public class ExcelUtil {
 
 
+    public static void main(String[] args) {
+        testUpload();
+    }
+
+    public static void testUpload(){
+
+        ExcelUtil eu = new ExcelUtil();
+        List<Map<String,String>> list = eu.xlsToList("c:/pony/excel/code-list-upload.xls");
+
+        for (int i = 0; i < list.size(); i++) {
+            System.out.println( list.get(i).get("cdGrp") );
+        }
+    }
+
 	public void downRsToExcel(ResultSet rs, String filePathNm) throws SQLException {
 		Workbook xlsWb;
 		Sheet sheet1;

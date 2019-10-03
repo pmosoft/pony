@@ -17,7 +17,15 @@ public class StringTest
         //끝문자제거();
         //구분자배열();
         //정규식02();
-        Contain();
+        //Contain();
+        Cast01();
+    }
+
+    static void Cast01() {
+
+        String str = "1.0";
+        //String str = "1";
+        System.out.println(Math.round(Float.parseFloat(str)));
     }
 
 
@@ -47,7 +55,7 @@ public class StringTest
         //System.out.println("인코딩 전 : " + text);
         //System.out.println("인코딩 text : " + new String(encodedBytes));
         //System.out.println("디코딩 text : " + new String(decodedBytes));
-          
+
     }
 
 

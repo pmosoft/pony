@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-    
+
 /**
  *
  */
@@ -40,7 +40,7 @@ public class CodeCtrl {
     @RequestMapping(value = "/dams/code/selectCodeRegList")
     public Map<String, Object> selectCodeRegList(@RequestParam Map<String, String> params) {
         return codeSrv.selectCodeRegList(params);
-    }   
+    }
 
     /**
      * 코드콤보 조회
@@ -48,7 +48,7 @@ public class CodeCtrl {
     @RequestMapping(value = "/dams/code/selectCodeCombo")
     public Map<String, Object> selectCodeCombo(@RequestParam Map<String, String> params) {
         return codeSrv.selectCodeCombo(params);
-    }   
+    }
 
 
     /**
@@ -57,17 +57,27 @@ public class CodeCtrl {
     @RequestMapping(value = "/dams/code/selectCodeExtList")
     public Map<String, Object> selectCodeExtList(@RequestParam Map<String, String> params) {
         return codeSrv.selectCodeExtList(params);
-    }      
-    
+    }
+
     /**
      * 코드확장등록목록 조회
      */
     @RequestMapping(value = "/dams/code/selectCodeExtRegList")
     public Map<String, Object> selectCodeExtRegList(@RequestParam Map<String, String> params) {
         return codeSrv.selectCodeExtRegList(params);
-    }   
-    
-   
+    }
+
+
+
+    /**
+     * 코드 저장(Excel)
+     */
+    @RequestMapping(value = "/dams/code/insertCodeExcel")
+    public Map<String, Object> insertCodeExcel() {
+        return codeSrv.insertCodeExcel();
+    }
+
+
     /**
      * 코드 저장(Multi:json)
      */
@@ -83,7 +93,7 @@ public class CodeCtrl {
     public Map<String, Object> saveCodeExt(@RequestParam Map<String,String> params) {
         return codeSrv.saveCodeExt(params);
     }
-    
+
     /**
      * 코드 삭제(Multi:json)
      */
@@ -98,6 +108,6 @@ public class CodeCtrl {
     @RequestMapping(value = "/dams/code/deleteCodeExt")
     public Map<String, Object> deleteCodeExt(@RequestParam Map<String,String> params) {
         return codeSrv.deleteCodeExt(params);
-    }   
-    
+    }
+
 }

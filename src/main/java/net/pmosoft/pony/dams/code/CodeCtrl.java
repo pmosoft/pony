@@ -110,4 +110,13 @@ public class CodeCtrl {
         return codeSrv.deleteCodeExt(params);
     }
 
+    /**
+     * 코드 데이터 INSERT문장 리턴
+     */
+    @RequestMapping(value = "/dams/code/selectInsStat")
+    public Map<String, Object> selectInsStat(@RequestBody Code code) {
+        return codeSrv.selectInsStat(code);
+    }
+
+
 }

@@ -21,39 +21,39 @@ import net.pmosoft.pony.dams.table.TabInfo;
 import net.pmosoft.pony.etl.extract.ExtractTab;
 
 public class LoadTab {
-    
+
     private static Logger logger = LoggerFactory.getLogger(ExtractTab.class);
-    
+
     TabInfo tabInfo = new TabInfo();
     JdbcInfo jdbcInfo = new JdbcInfo();
-    
-    int rowCnt = 0;    
+
+    int rowCnt = 0;
     int loadCnt = 0;
 
     int commitCnt = 0;
     int commitMaxCnt = 10000;
-    
+
     int logCnt = 10000;
-    
+
     Connection conn = null;
     Statement stmt = null;
     ResultSet rs = null;
-    
+
     String qry = "";
-    
+
     public LoadTab(){}
-    
+
     public LoadTab(JdbcInfo jdbcInfo){
         this.jdbcInfo = jdbcInfo;
         this.conn = new DbCon().getConnection(jdbcInfo);
     }
-    
+
     public LoadTab(TabInfo tabInfo){
         this.tabInfo = tabInfo;
         tabInfo.getJdbcInfo().setUrl(tabInfo.getJdbcInfo().getUrl().replace("log4jdbc:", ""));
         this.conn = new DbCon().getConnection(tabInfo.getJdbcInfo());
     }
-    
+
     public static void main(String[] args) {
         TabInfo tabInfo = new TabInfo();
         tabInfo.getJdbcInfo().setUrl("jdbc:oracle:thin:@localhost:1521/orcl");
@@ -62,87 +62,87 @@ public class LoadTab {
         tabInfo.getJdbcInfo().setDb("Oracle");
         tabInfo.getJdbcInfo().setDriver("net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
         tabInfo.setJdbcNm("CELLPLAN");
-        tabInfo.setOwner("CELLPLAN"); 
+        tabInfo.setOwner("CELLPLAN");
         tabInfo.setTabNm("ANALYSIS_RESULT");
         //tabInfo.setTabNm("DU");
-        
+
         LoadTab loadTab = new LoadTab(tabInfo);
         loadTab.executeInsertFileToDb();
     }
 
     public void executeInsertStringToDb(String tabNm, String whereDel, String insQry) {
         Map<String, Object> result = new HashMap<String, Object>();
-        
+
         // 쿼리 변수
         String qry = "";
-        
+
         try {
             stmt = conn.createStatement();
-            
+
             /***************************************************************
              * DELETE 테이블
              ***************************************************************/
-            //qry = "DELETE FROM "+owner+"."+tabNm; 
-            qry = "DELETE FROM "+tabNm + " " + whereDel; 
+            //qry = "DELETE FROM "+owner+"."+tabNm;
+            qry = "DELETE FROM "+tabNm + " " + whereDel;
             logger.info(qry);
             stmt.execute(qry);
-            
+
             /***************************************************************
              * INSERT 테이블
              ***************************************************************/
             qry = setDbmsSql(insQry);
             logger.info(qry);
             stmt.execute(qry);
-            
+
             result.put("isSuccess", true);
-            
-        } catch ( Exception e ) { 
+
+        } catch ( Exception e ) {
             logger.info("\n"+qry);
             result.put("isSuccess", false);
             result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
             result.put("errSysMsg", e.getMessage());
             e.printStackTrace();
-        } finally { DBClose(); }        
+        } finally { DBClose(); }
     }
-    
-    
+
+
     public void executeInsertFileToDb() {
-        
+
         logger.info("executeInsertFileToDb "+tabInfo.getOwner()+"."+tabInfo.getTabNm()+" start");
         Map<String, Object> result = new HashMap<String, Object>();
-        
+
         // 파일 변수
         String pathFileNm = App.excelPath+tabInfo.getTabNm()+".sql";
         String encoding = "";
 
         // 쿼리 변수
         String qry = "";
-        
+
         File f = new File(pathFileNm);
         if(!f.exists()) logger.info("No exists File");
         if(!f.canRead()) logger.info("Read protected");
 
         try {
-            
+
             stmt = conn.createStatement();
-            
+
             /***************************************************************
              * DELETE 테이블
              ***************************************************************/
-            qry = "DELETE FROM "+tabInfo.getOwner()+"."+tabInfo.getTabNm(); 
+            qry = "DELETE FROM "+tabInfo.getOwner()+"."+tabInfo.getTabNm();
             logger.info(qry);
             stmt.execute(qry);
-            
+
             /***************************************************************
              * INSERT 테이블
              ***************************************************************/
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(pathFileNm)));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(pathFileNm),"euc-kr"));
             qry = " ";
             while (br.ready()) {
                 loadCnt++;
                 commitCnt++;
                 qry += br.readLine()+"\n";
-                
+
                 if(commitCnt%commitMaxCnt == 0) {
                    stmt.execute(setDbmsSql(qry));
                    logger.info("loadCnt=========="+loadCnt);
@@ -150,23 +150,23 @@ public class LoadTab {
                    qry = "";
                 }
             }
-            
+
             if(commitCnt < commitMaxCnt) {
                 logger.info("loadCnt=========="+loadCnt);
                 stmt.execute(setDbmsSql(qry));
-            }            
+            }
             result.put("isSuccess", true);
             logger.info("executeInsertFileToDb "+tabInfo.getOwner()+"."+tabInfo.getTabNm()+" loadCnt="+loadCnt+" end");
-            
-        } catch ( Exception e ) { 
+
+        } catch ( Exception e ) {
             logger.info("\n"+qry);
             result.put("isSuccess", false);
             result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
             result.put("errSysMsg", e.getMessage());
             e.printStackTrace();
-        } finally { DBClose(); }        
+        } finally { DBClose(); }
     }
-    
+
     public String setDbmsSql(String qry) {
         String retQry = "";
 
@@ -174,14 +174,14 @@ public class LoadTab {
             retQry += "BEGIN\n";
             retQry += qry;
             retQry += "END;\n";
-            
+
         } else {
             retQry += qry;
         }
-        
+
         return retQry;
     }
-    
-    void DBClose(){ try { stmt.close(); conn.close();} catch (SQLException e) { e.printStackTrace(); } }    
-        
+
+    void DBClose(){ try { stmt.close(); conn.close();} catch (SQLException e) { e.printStackTrace(); } }
+
 }

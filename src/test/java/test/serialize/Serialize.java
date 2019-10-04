@@ -18,7 +18,7 @@ public class Serialize {
     void writeBinTest03(){
         File file = new File("d:/fframe/workspace/pony/src/test/java/test/serialize/file3.bin") ;
         FileOutputStream fos = null ;
-        int x = 1;
+        int x = -2;
 
         try {
             // open file.
@@ -59,6 +59,15 @@ public class Serialize {
                 (((int)bytes[0] & 0xff)));
     }
 
+    public byte[] floatToByteArray(float value) {
+        int floatValue =  Float.floatToIntBits(value);
+        return intToByteArray(floatValue);
+    }
+
+    public float byteArrayToFloat(byte bytes[]) {
+        int value =  byteArrayToInt(bytes);
+        return Float.intBitsToFloat(value);
+    }
 
 
     void readBin(){

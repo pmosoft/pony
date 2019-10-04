@@ -289,6 +289,23 @@ public class CodeSrv {
         return result;
     }
 
+    public Map<String, Object> selectInsStat(Code code){
+
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        try {
+            List<Code> codeOutVoList = null;
+            codeOutVoList = codeDao.selectCodeList(code);;
+            result.put("isSuccess", true);
+            //result.put("codeOutVoList", codeOutVoList);
+        } catch (Exception e){
+            result.put("isSuccess", false);
+            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
+            result.put("errSysMsg", e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
 
 
 }

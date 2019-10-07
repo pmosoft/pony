@@ -18,7 +18,7 @@ public class Serialize {
     void writeBinTest03(){
         File file = new File("d:/fframe/workspace/pony/src/test/java/test/serialize/file3.bin") ;
         FileOutputStream fos = null ;
-        int x = -2;
+        int x = 1;
 
         try {
             // open file.

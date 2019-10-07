@@ -1,5 +1,6 @@
 package net.pmosoft.pony.dams.code;
 
+
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import com.google.gson.reflect.TypeToken;
 
 import net.pmosoft.pony.comm.App;
 import net.pmosoft.pony.comm.util.ExcelUtil;
+import net.pmosoft.pony.comm.util.FileUtil;
 
 
 @Service
@@ -296,6 +298,60 @@ public class CodeSrv {
         try {
             List<Code> codeOutVoList = null;
             codeOutVoList = codeDao.selectCodeList(code);;
+
+            String qry = "";
+            String s00 = "";
+            s00 += " \n CREATE TABLE TDACM00060 (                                                                      ";
+            s00 += " \n       CD_GRP         VARCHAR(20)  NOT NULL -- COMMENT '코드그룹'       -- META                     ";
+            s00 += " \n     , CD_GRP_NM      VARCHAR(20)      NULL -- COMMENT '코드그룹명'      -- 메타                              ";
+            s00 += " \n     , CD_ID          VARCHAR(20)  NOT NULL -- COMMENT '코드아이디'     -- COL_STS_CD                ";
+            s00 += " \n     , CD_ID_NM       VARCHAR(20)      NULL -- COMMENT '코드아이디명'    -- 컬럼상태코드                      ";
+            s00 += " \n     , CD             VARCHAR(20)  NOT NULL -- COMMENT '코드'          -- 01                      ";
+            s00 += " \n     , CD_NM          VARCHAR(500)     NULL -- COMMENT '코드명'        -- 요청                                       ";
+            s00 += " \n     , CD_DESC        VARCHAR(500)     NULL -- COMMENT '코드설명'                                   ";
+            s00 += " \n     , CD_TY_CD_NM    VARCHAR(500)     NULL -- COMMENT '코드유형코드'    -- 1:필드 2:화면 3:프로그램     ";
+            s00 += " \n     , CD_SEQ         INT              NULL -- COMMENT '코드순서'                              ";
+            s00 += " \n     , REG_DTM        VARCHAR(14)      NULL -- COMMENT '등록일시'                              ";
+            s00 += " \n     , REG_USR_ID     VARCHAR(20)      NULL -- COMMENT '등록자'                               ";
+            s00 += " \n     , UPD_DTM        VARCHAR(14)      NULL -- COMMENT '변경일시'                             ";
+            s00 += " \n     , UPD_USR_ID     VARCHAR(20)      NULL -- COMMENT '변경자'                               ";
+            s00 += " \n     , PRIMARY KEY(CD_GRP,CD_ID,CD)                                                         ";
+            s00 += " \n );\n";
+
+            //qry = s00;
+
+            String s01 = "INSERT INTO TDACM00060 VALUES (";
+            String s02 = "", s03 = "";
+
+            for (int i = 0; i < codeOutVoList.size(); i++) {
+                s02 += "'" +codeOutVoList.get(i).getCdGrp()   + "'";
+                s02 += ",'"+codeOutVoList.get(i).getCdGrpNm() + "'";
+                s02 += ",'"+codeOutVoList.get(i).getCdId()    + "'";
+                s02 += ",'"+codeOutVoList.get(i).getCdIdNm()  + "'";
+                s02 += ",'"+codeOutVoList.get(i).getCd()      + "'";
+                s02 += ",'"+codeOutVoList.get(i).getCdNm()    + "'";
+                s02 += ",'"+codeOutVoList.get(i).getCdDesc()  + "'";
+                s02 += ",'"+codeOutVoList.get(i).getCdTyCd()  + "'";
+                s02 += ", "+codeOutVoList.get(i).getCdSeq()   + " ";
+                s02 += ",'"+codeOutVoList.get(i).getRegDtm()  + "'";
+                s02 += ",'"+codeOutVoList.get(i).getRegUsrId()+ "'";
+                s02 += ",'"+codeOutVoList.get(i).getUpdDtm()  + "'";
+                s02 += ",'"+codeOutVoList.get(i).getUpdUsrId()+ "');\n";
+
+                s03 += s01 + s02;
+                //System.out.println(qry);
+                s02 = "";
+            }
+
+            qry = s00+s03;
+            System.out.println(qry);
+
+            // 메모패드로 출력
+            FileUtil.stringToFile(qry, App.excelPath+"insertStatCode.sql");
+            Runtime run = Runtime.getRuntime ();
+            run.exec ("cmd /c start notepad++.exe "+App.excelPath+"insertStatCode.sql");
+
+
             result.put("isSuccess", true);
             //result.put("codeOutVoList", codeOutVoList);
         } catch (Exception e){

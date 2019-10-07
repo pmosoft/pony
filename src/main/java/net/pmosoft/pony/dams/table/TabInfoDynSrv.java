@@ -280,7 +280,7 @@ public class TabInfoDynSrv {
                     pk  += ",CONSTRAINT "+inVo.get(i).getTabNm()+"_PK PRIMARY KEY(";
 
                     // 테이블 커맨트
-                    commentQry = "COMMENT ON "+inVo.get(i).getTabNm() + " IS '"+ inVo.get(i).getTabHnm()+"';\n";;
+                    commentQry = "COMMENT ON COLUMN "+inVo.get(i).getTabNm() + " IS '"+ inVo.get(i).getTabHnm()+"';\n";;
 
                     // 컬럼 정보 생성
                     for (int j = 0; j < tab.size(); j++) {

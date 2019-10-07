@@ -5,12 +5,12 @@ import net.pmosoft.pony.dams.jdbc.JdbcInfo;
 public class TabInfo {
 
     //-------------------------------
-    // JDBC    
+    // JDBC
     //-------------------------------
     JdbcInfo jdbcInfo = new JdbcInfo();
 
     //-------------------------------
-    // TABLE    
+    // TABLE
     //-------------------------------
     String stsNm        = "";
     String jdbcNm       = "";
@@ -37,13 +37,13 @@ public class TabInfo {
     String updUsrId     = "";
 
     //-------------------------------
-    // TABLE 조회 조건    
+    // TABLE 조회 조건
     //-------------------------------
     boolean chk          = false;
-                         
+
     boolean chkSelect    = false;
     String txtSelect     = "";
-    
+
     boolean chkWhere     = false;
     String txtWhere      = "";
     String whereColTab   = "";
@@ -56,28 +56,33 @@ public class TabInfo {
     String ascDesc       = "";
 
     //-------------------------------
-    // 동적쿼리 조건    
+    // 동적쿼리 조건
     //-------------------------------
     String qry           = "";
     String cntQry        = "";
     boolean isChgDate    = false;
 
     //-------------------------------
-    // 데이터 추출 조건    
+    // 데이터 추출 조건
     //-------------------------------
     String pathFileNm    = "";
     String delimeter     = "";
     int limitCnt = 50000;
-    
+
     //-------------------------------
-    // 테이블생성쿼리    
+    // 테이블생성쿼리
     //-------------------------------
     String tarDb         = "";
     String tarJdbcNm     = "";
 
     boolean chkExtract = true;
     boolean chkLoad = true;
-    
+
+    //-------------------------------
+    // select 스크립트 생성쿼리
+    //-------------------------------
+    boolean chkSelStat = false;
+
     public JdbcInfo getJdbcInfo() {
         return jdbcInfo;
     }
@@ -348,6 +353,12 @@ public class TabInfo {
     public void setDelimeter(String delimeter) {
         this.delimeter = delimeter;
     }
-    
-    
+    public boolean isChkSelStat() {
+        return chkSelStat;
+    }
+    public void setChkSelStat(boolean chkSelStat) {
+        this.chkSelStat = chkSelStat;
+    }
+
+
 }

@@ -228,6 +228,13 @@ public class TabInfoDynSrv {
             cntQry += inVo.isChkWhere() ? inVo.getTxtWhere() +"\n" : "";
             ///////////////////////////////////////////////////////////////////////////
 
+            // 메모패드로 출력
+            if(inVo.isChkSelStat()) {
+                FileUtil.stringToFile(qry, App.excelPath+"selectSelectScript.sql");
+                Runtime run = Runtime.getRuntime ();
+                run.exec ("cmd /c start notepad++.exe "+App.excelPath+"selectSelectScript.sql");
+            }
+
             result.put("isSuccess", true);
 
             result.put("tabInfoList", tab);

@@ -91,7 +91,7 @@ public class ExtractTab {
         ExtractTab extractTab = new ExtractTab(tabInfo1,tabInfo2);
         extractTab.executeTabToInsStatFile();
     }
-
+ 
     /**********************************************************************************
     *
     *                                   추출수행

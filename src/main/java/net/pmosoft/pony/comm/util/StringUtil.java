@@ -7,7 +7,8 @@ import java.util.regex.Pattern;
 public class StringUtil {
 
     public static void main(String[] args) {
-        testSqlTabScript();
+        //testSqlTabScript();
+        System.out.println( String.format("%03d",3) );
     }
 
     public static void testSqlTabScript(){
@@ -17,7 +18,7 @@ public class StringUtil {
      * 개행문자 제거
      */
     public static String delCR(String s) { return s.replaceAll("(\r\n|\r|\n|\n\r)", " "); }
-    
+
     /**
      * "aaa\nbbb"를 'aaa','bbb'로 변형. in 조건문에서 사용
      */
@@ -37,13 +38,12 @@ public class StringUtil {
         return inParams;
     }
 
-
     public static String padRight(String s, int n) {
         String result = s;
         if(n > 0) result = String.format("%1$-" + n + "s", s) + s;
         return result;
     }
-    
+
     public static String padLeft(String s, int n) {
         String result = s;
         if(n > 0) result = String.format("%1$" + n + "s", s) + s;
@@ -137,7 +137,7 @@ public class StringUtil {
     }
 
     /**
-     * 
+     *
      */
     public static String trimNull(String str) {
         if(str==null) str="";
@@ -146,12 +146,12 @@ public class StringUtil {
     }
 
     /**
-     * 
+     *
      */
     public static String zeroNull(String str) {
         if(str==null) str="0";
         str = str.trim().replace("null", "0");
         return str;
     }
-    
+
 }

@@ -26,12 +26,14 @@ class TestJdbcBasicSqlite {
 
         try {
             stmt = conn.createStatement();
-            String query = "select * from (select '1' empno, 'abc' ename union all select '2' empno, 'def' ename) emp";
+            //String query = "select * from (select '1' empno, 'abc' ename union all select '2' empno, 'def' ename) emp";
+            String query = "select * from LOS_ANT_GRID_DIS";
             rs = stmt.executeQuery(query);
             while (rs.next()) {
-                String empno = rs.getString("empno");
-                String ename = rs.getString("ename");
-                System.out.println("empno="+empno+" ename=" + ename);
+                System.out.println(rs.getString(1));
+                //String empno = rs.getString("empno");
+                //String ename = rs.getString("ename");
+                //System.out.println("empno="+empno+" ename=" + ename);
             }
         } catch ( Exception e ) { e.printStackTrace(); } finally { DBClose(); }
 
@@ -39,9 +41,12 @@ class TestJdbcBasicSqlite {
 
     void DBConn(){
 
+        String DB_URL = "jdbc:postgresql://localhost:55432/postgres";
         //String DB_URL = "jdbc:postgresql://localhost:5432/postgres";
-        String DB_URL = "jdbc:postgresql://192.168.0.6:5432/postgres";
-        String DB_USER = "postgres"; String DB_PASSWORD = "1";
+        //String DB_URL = "jdbc:postgresql://192.168.0.6:5432/postgres";
+        //String DB_URL = "jdbc:postgresql://185.15.16.156:5432/postgres";
+        //String DB_USER = "postgres"; String DB_PASSWORD = "1";
+        String DB_USER = "postgres"; String DB_PASSWORD = "postgres";
 
         //String DB_URL = "jdbc:postgresql://localhost:5432/cellplan";
         //String DB_USER = "cellplan"; String DB_PASSWORD = "cell_2012";

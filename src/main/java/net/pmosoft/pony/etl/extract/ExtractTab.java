@@ -246,7 +246,7 @@ public class ExtractTab {
         try {
 
             // 파일 변수 초기화
-            if(isFile) writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(pathFileNm)));
+            if(isFile) writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(pathFileNm),"MS949"));
 
             /***********************************************************************************
              *                              insert 문장 생성

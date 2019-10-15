@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import net.pmosoft.pony.comm.App;
 import net.pmosoft.pony.comm.db.DbCon;
-import net.pmosoft.pony.comm.util.FileUtil;
 import net.pmosoft.pony.dams.jdbc.JdbcInfo;
 import net.pmosoft.pony.dams.table.TabInfo;
 import net.pmosoft.pony.etl.extract.ExtractTab;
@@ -41,11 +40,6 @@ public class LoadTab {
     ResultSet rs = null;
 
     String qry = "";
-
-
-    // 동시잡 체크
-    int exeCnt = 0;
-
 
     public LoadTab(){}
 
@@ -118,12 +112,15 @@ public class LoadTab {
         Map<String, Object> result = new HashMap<String, Object>();
 
         // 파일 변수
-        String encoding = "ms949";
-        //String encoding = "euc-kr";
-        //String encoding = "utf-8";
+        String pathFileNm = App.excelPath+tabInfo.getTabNm()+".sql";
+        String encoding = "";
 
         // 쿼리 변수
         String qry = "";
+
+        File f = new File(pathFileNm);
+        if(!f.exists()) logger.info("No exists File");
+        if(!f.canRead()) logger.info("Read protected");
 
         try {
 
@@ -136,43 +133,10 @@ public class LoadTab {
             logger.info(qry);
             stmt.execute(qry);
 
-            String pathFileNoNm = "";
-
-            for (int i = 1; i < 1000; i++) {
-                pathFileNoNm = App.excelPath+tabInfo.getTabNm()+"_"+String.format("%03d",i)+".sql";
-                if(new File(pathFileNoNm).exists()) {
-                    System.out.println(FileUtil.detectEncoding(pathFileNoNm));
-                    //executeInsert(pathFileNoNm, encoding);
-                }
-            }
-
-        } catch ( Exception e ) {
-            logger.info("\n"+qry);
-            result.put("isSuccess", false);
-            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
-            result.put("errSysMsg", e.getMessage());
-            e.printStackTrace();
-        } finally { DBClose(); }
-    }
-
-    public void executeInsert(String pathFileNm, String encoding) {
-
-        logger.info(pathFileNm);
-
-        while(exeCnt > 10) {
-            try { Thread.sleep( (int)(Math.random()*100)); } catch (InterruptedException e) { e.printStackTrace(); }
-        }
-        exeCnt++;
-        //System.out.println("jdbcInfo.getDriver()="+this.jdbcInfo.getDriver());
-        Connection conn = new DbCon().getConnection(tabInfo.getJdbcInfo());
-
-        try {
-            Statement stmt = conn.createStatement();
-
             /***************************************************************
              * INSERT 테이블
              ***************************************************************/
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(pathFileNm),encoding));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(pathFileNm),"euc-kr"));
             qry = " ";
             while (br.ready()) {
                 loadCnt++;
@@ -191,14 +155,17 @@ public class LoadTab {
                 logger.info("loadCnt=========="+loadCnt);
                 stmt.execute(setDbmsSql(qry));
             }
-
-            exeCnt--;
+            result.put("isSuccess", true);
+            logger.info("executeInsertFileToDb "+tabInfo.getOwner()+"."+tabInfo.getTabNm()+" loadCnt="+loadCnt+" end");
 
         } catch ( Exception e ) {
+            logger.info("\n"+qry);
+            result.put("isSuccess", false);
+            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
+            result.put("errSysMsg", e.getMessage());
             e.printStackTrace();
-        }
+        } finally { DBClose(); }
     }
-
 
     public String setDbmsSql(String qry) {
         String retQry = "";
@@ -211,7 +178,7 @@ public class LoadTab {
         } else {
             retQry += qry;
         }
-        System.out.println(retQry);
+
         return retQry;
     }
 

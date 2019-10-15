@@ -1,7 +1,6 @@
 package net.pmosoft.pony.etl.extract;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -198,9 +197,8 @@ public class ExtractTab {
     public void selectTabToInsStatToFile()
     {
         boolean isFile    = true;
-        String pathFileNm = App.excelPath + tabInfo1.getTabNm();
-        String encoding = "";
-        selectInsStat(selQry, tabInfo1.getTabNm(), isFile, pathFileNm, tabInfoList1, encoding);
+        String pathFileNm = App.excelPath + tabInfo1.getTabNm()+".sql";
+        selectInsStat(selQry, tabInfo1.getTabNm(), isFile, pathFileNm, tabInfoList1);
     }
 
     /*
@@ -209,21 +207,20 @@ public class ExtractTab {
     public String selectTabToInsStatToString()
     {
         boolean isFile    = false;
-        String encoding = "euc-kr";
-        return selectInsStat(selQry, tabInfo1.getTabNm(), isFile, "", tabInfoList1, encoding);
+        return selectInsStat(selQry, tabInfo1.getTabNm(), isFile, "", tabInfoList1);
     }
 
     /*
      * 사용자정의 쿼리 조회 결과를 INSERT문장으로 생성하여 문자열로 반환
      **/
     public String selectQryToInsStatToString(String selQry, String tarTbNm) {
-        return selectInsStat(selQry, tarTbNm, false, "", getColMeta(selQry),"");
+        return selectInsStat(selQry, tarTbNm, false, "", getColMeta(selQry));
     }
 
     /*
      * (코어) 쿼리된 결과를 INSERT문장으로 생성한다.
      **/
-    public String selectInsStat(String selQry, String tabNm2, boolean isFile, String pathFileNm, List<TabInfo> tabInfoList1, String encoding) {
+    public String selectInsStat(String selQry, String tabNm2, boolean isFile, String pathFileNm, List<TabInfo> tabInfoList1) {
         //logger.info("selectInsStatToFile start");
         Map<String, Object> result = new HashMap<String, Object>();
 
@@ -246,20 +243,10 @@ public class ExtractTab {
         String insQry = "";
         String retQry = "";
 
-        int   fileMaxRowCnt = 1000000;
-        int   fileNo = 1;
-
-        String pathFileNoNm = pathFileNm+"_"+String.format("%03d",fileNo)+".sql";
-
         try {
 
             // 파일 변수 초기화
-            if(isFile) {
-                for (int i = 1; i < 1000; i++) {
-                    new File(pathFileNm+"_"+String.format("%03d",i)+".sql").delete();
-                }
-                writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(pathFileNoNm),encoding));
-            }
+            if(isFile) writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(pathFileNm)));
 
             /***********************************************************************************
              *                              insert 문장 생성
@@ -280,12 +267,6 @@ public class ExtractTab {
                     logger.info("extractCnt="+extractCnt);
                 }
 
-                if(isFile && extractCnt%fileMaxRowCnt == 0) {
-                    fileNo++;
-                    pathFileNoNm = pathFileNm+"_"+String.format("%03d",fileNo)+".sql";
-                    writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(pathFileNoNm),encoding));
-                }
-
                 //for (int i = 0; i < tabInfoList1.size(); i++) {
                 for (int i = 0; i < colCnt; i++) {
                     dataTypeNm = tabInfoList1.get(i).getDataTypeNm().toUpperCase();
@@ -301,7 +282,6 @@ public class ExtractTab {
                         s02 += "'"+colData + "',";
                     }
                 }
-
                 insQry = s01 + s02 + ");"; insQry = insQry.replace(",);",");");
                 if(isFile) { writer.println(insQry); } else {retQry += insQry +"\n";}
                 insQry = ""; s02 = "";
@@ -317,10 +297,8 @@ public class ExtractTab {
             result.put("isSuccess", false);
             result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
             result.put("errSysMsg", e.getMessage());
-            if(isFile) writer.close();
             e.printStackTrace();
-        }
-        //finally { try { rs1.close();stmt1.close();conn1.close(); } catch (SQLException e) { e.printStackTrace(); }; if(isFile) writer.close();}
+        } finally { try { rs1.close();stmt1.close();conn1.close(); } catch (SQLException e) { e.printStackTrace(); }; if(isFile) writer.close();}
 
         return retQry;
     }
@@ -367,7 +345,7 @@ public class ExtractTab {
         try {
 
             // 파일 변수 초기화
-            writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(pathFileNm),"euc-kr"));
+            writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(pathFileNm)));
 
             /***********************************************************************************
              *                                    샘파일 생성

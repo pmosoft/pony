@@ -27,18 +27,23 @@ class TestJdbcBasicSqlite {
         try {
             stmt = conn.createStatement();
             //String query = "select * from (select '1' empno, 'abc' ename union all select '2' empno, 'def' ename) emp";
-            String query = "select * from LOS_ANT_GRID_DIS";
+            String query = "select job_id from LOS_ENG_RESULT_DIS";
+            System.out.println(query);
             rs = stmt.executeQuery(query);
             while (rs.next()) {
-                System.out.println(rs.getString(1));
+                System.out.println("job_id="+ rs.getString("job_id"));
+                //System.out.println("ru_pos="+ rs.getString("ru_pos"));
+                //System.out.println("ru_id="+ rs.getString("ru_id"));                
+                
                 //String empno = rs.getString("empno");
                 //String ename = rs.getString("ename");
                 //System.out.println("empno="+empno+" ename=" + ename);
             }
+            System.out.println("end");
         } catch ( Exception e ) { e.printStackTrace(); } finally { DBClose(); }
 
     }
-
+ 
     void DBConn(){
 
         String DB_URL = "jdbc:postgresql://localhost:55432/postgres";

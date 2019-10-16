@@ -43,6 +43,7 @@ class TestJdbcBasicHive {
         String DB_USER = "hive"; String DB_PASSWORD = "";
 
         try {
+            //
         	Class.forName("org.apache.hive.jdbc.HiveDriver");
             conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
         } catch ( Exception e ) { e.printStackTrace(); } finally {}

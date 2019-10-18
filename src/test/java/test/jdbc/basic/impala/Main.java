@@ -1,4 +1,4 @@
-package test.jdbc.basic.hive;
+package test.jdbc.basic.impala;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,18 +9,18 @@ public class Main {
 
     public static void main(String[] args) {
 
-        TestJdbcBasicHive hiveBasicJdbc = new TestJdbcBasicHive();
-        hiveBasicJdbc.test01();
+        TestJdbcBasicImpala impalaBasicJdbc = new TestJdbcBasicImpala();
+        impalaBasicJdbc.test01();
     }
 }
 
-class TestJdbcBasicHive {
+class TestJdbcBasicImpala {
 
     public Connection conn = null;
     public Statement stmt = null;
     public ResultSet rs = null;
 
-    TestJdbcBasicHive() { DBConn(); }
+    TestJdbcBasicImpala() { DBConn(); }
 
     public void test01(){
 
@@ -39,12 +39,12 @@ class TestJdbcBasicHive {
 
     void DBConn(){
 
-        String DB_URL = "jdbc:hive2://name.dmtech.biz:10000/default";
+        String DB_URL = "jdbc:impala://name.dmtech.biz:21050/default";
         String DB_USER = "hive"; String DB_PASSWORD = "";
 
         try {
             //
-        	Class.forName("org.apache.hive.jdbc.HiveDriver");
+        	Class.forName("com.cloudera.impala.jdbc41.Driver");
             conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
         } catch ( Exception e ) { e.printStackTrace(); } finally {}
     }

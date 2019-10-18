@@ -23,7 +23,7 @@ public class TabInfoDynCtrl {
 
     @Autowired
     private TabInfoDynSrv tabInfoDynSrv;
-    
+
    /**
      * JDBC 연결 테스트
      */
@@ -52,7 +52,17 @@ public class TabInfoDynCtrl {
     public Map<String, Object> selectCreateScript(@RequestBody List<TabInfo> inVo){
         return tabInfoDynSrv.selectCreateScript(inVo);
     }
-    
+
+    /*
+     * Create Script 생성(Hive, Spark)
+     */
+    @RequestMapping(value = "/dams/table/selectCreateHiveScript")
+    public Map<String, Object> selectCreateHiveScript(@RequestBody List<TabInfo> inVo){
+        return tabInfoDynSrv.selectCreateHiveScript(inVo);
+    }
+
+
+
     /*
      * 테이블 쿼리 데이터 리턴
      */
@@ -62,7 +72,7 @@ public class TabInfoDynCtrl {
     }
 
 
-    
+
     /*
      * 다운로드 Insert 문장
      */

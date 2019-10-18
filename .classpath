@@ -33,7 +33,5 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="D:/fframe/lib/postgresql-42.2.6.jar"/>
-	<classpathentry kind="lib" path="D:/fframe/lib/hive-jdbc-1.1.0-cdh5.16.2-standalone.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

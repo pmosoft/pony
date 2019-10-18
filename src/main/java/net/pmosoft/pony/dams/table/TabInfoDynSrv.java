@@ -328,6 +328,85 @@ public class TabInfoDynSrv {
     }
 
     /*
+     * 테이블 생성 스크립드(Hive, Spark)
+     */
+    public Map<String, Object> selectCreateHiveScript(List<TabInfo> inVo){
+        logger.info("selectCreateScript");
+        //System.out.println("inVo.size()="+inVo.size());
+
+        Map<String, Object> result = new HashMap<String, Object>();
+        String qry = "";
+        String pk = "";
+        boolean isPk = false;
+
+        int maxColLen = 0;
+
+        String commentQry = "";
+
+        try{
+            for (int i = 0; i < inVo.size(); i++) {
+                if(inVo.get(i).chk){
+                    inVo.get(i).setOrderBy("1");
+                    inVo.get(i).setJdbcInfo(getJdbcInfo(inVo.get(i).getJdbcNm()));
+                    List<TabInfo> tab = sqlSession(inVo.get(i)).getMapper(TabInfoDao.class).selectMetaTabInfoList(inVo.get(i));
+
+                    /// Columns Start /////////////////////////////////////////////////////////
+                    // SELECT 컬럼들중 길이가 가장 큰 컬럼의 길이를 산출한다
+                    for (int j = 0; j < tab.size(); j++) {
+                        if(maxColLen <= tab.get(j).getColNm().length()) maxColLen = tab.get(j).getColNm().length();
+                    }
+
+                    //System.out.println("outVo="+outVo.size());
+                    qry += "--DROP TABLE "+inVo.get(i).getOwner()+"."+inVo.get(i).getTabNm()+";\n";
+                    //qry += "--DROP TABLE "+inVo.get(i).getTabNm()+";\n";
+                    qry += "CREATE TABLE "+inVo.get(i).getOwner()+"."+inVo.get(i).getTabNm()+"\n";
+                    //qry += "CREATE TABLE "+inVo.get(i).getTabNm()+"\n";
+                    qry += "(\n";
+                    pk  += ",CONSTRAINT "+inVo.get(i).getTabNm()+"_PK PRIMARY KEY(";
+
+                    // 테이블 커맨트
+                    commentQry = "COMMENT ON TABLE "+inVo.get(i).getTabNm() + " IS '"+ inVo.get(i).getTabHnm()+"';\n";;
+
+                    // 컬럼 정보 생성
+                    for (int j = 0; j < tab.size(); j++) {
+                        qry += (j>0) ? "," : " ";
+                        qry += setColOnDBMS(tab.get(j),inVo.get(i).getJdbcNm(),inVo.get(i).getTarJdbcNm(), maxColLen);
+                        //System.out.println("tabNm="+tabNm);
+
+                        // PK정보 생성
+                        if(tab.get(j).pk.equals("Y")) {pk += tab.get(j).colNm + ",";isPk=true;}
+
+                        // 컬럼 커맨트
+                        commentQry += "COMMENT ON "+tab.get(j).getTabNm()+"."+tab.get(j).getColNm() + " IS '"+ tab.get(j).getColHnm()+"';\n";;
+                    }
+                    pk += ")";pk = pk.replace(",)", ")");
+                    //System.out.println("isPk="+isPk);
+                    if(isPk) qry += pk+"\n";
+                    qry += ");\n";
+                    pk = ""; isPk=false;
+                }
+            }
+
+            qry += commentQry;
+            // 메모패드로 출력
+            FileUtil.stringToFile(qry, App.excelPath+"createTableScript.sql");
+            Runtime run = Runtime.getRuntime ();
+            run.exec ("cmd /c start notepad++.exe "+App.excelPath+"createTableScript.sql");
+
+
+            result.put("isSuccess", true);
+            result.put("createScript", qry);
+        } catch (Exception e){
+            result.put("isSuccess", false);
+            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
+            result.put("errSysMsg", e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
+    /*
      * DBMS별 컬럼정보 변형 생성
      */
     public String setColOnDBMS(TabInfo tabInfo,String srcJdbcNm,String tarJdbcNm, int maxColLen){

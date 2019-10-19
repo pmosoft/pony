@@ -56,9 +56,9 @@ public class TabInfoDynCtrl {
     /*
      * Create Script 생성(Hive, Spark)
      */
-    @RequestMapping(value = "/dams/table/selectCreateHiveScript")
-    public Map<String, Object> selectCreateHiveScript(@RequestBody List<TabInfo> inVo){
-        return tabInfoDynSrv.selectCreateHiveScript(inVo);
+    @RequestMapping(value = "/dams/table/selectHiveCreateScript")
+    public Map<String, Object> selectHiveCreateScript(@RequestBody List<TabInfo> inVo){
+        return tabInfoDynSrv.selectHiveCreateScript(inVo);
     }
 
 

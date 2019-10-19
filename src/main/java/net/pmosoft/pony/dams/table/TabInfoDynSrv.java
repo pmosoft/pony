@@ -330,18 +330,15 @@ public class TabInfoDynSrv {
     /*
      * 테이블 생성 스크립드(Hive, Spark)
      */
-    public Map<String, Object> selectCreateHiveScript(List<TabInfo> inVo){
+    public Map<String, Object> selectHiveCreateScript(List<TabInfo> inVo){
         logger.info("selectCreateScript");
         //System.out.println("inVo.size()="+inVo.size());
 
         Map<String, Object> result = new HashMap<String, Object>();
         String qry = "";
-        String pk = "";
-        boolean isPk = false;
+        String tabNm = "";
 
         int maxColLen = 0;
-
-        String commentQry = "";
 
         try{
             for (int i = 0; i < inVo.size(); i++) {
@@ -356,38 +353,57 @@ public class TabInfoDynSrv {
                         if(maxColLen <= tab.get(j).getColNm().length()) maxColLen = tab.get(j).getColNm().length();
                     }
 
-                    //System.out.println("outVo="+outVo.size());
-                    qry += "--DROP TABLE "+inVo.get(i).getOwner()+"."+inVo.get(i).getTabNm()+";\n";
-                    //qry += "--DROP TABLE "+inVo.get(i).getTabNm()+";\n";
-                    qry += "CREATE TABLE "+inVo.get(i).getOwner()+"."+inVo.get(i).getTabNm()+"\n";
-                    //qry += "CREATE TABLE "+inVo.get(i).getTabNm()+"\n";
+                    tabNm = inVo.get(i).getTabNm();
+                    //----------------------------------- Hive start --------------------------------------
+                    qry += "--DROP TABLE "+tabNm+";\n";
+                    qry += "CREATE EXTERNAL TABLE I_"+tabNm+"\n";
                     qry += "(\n";
-                    pk  += ",CONSTRAINT "+inVo.get(i).getTabNm()+"_PK PRIMARY KEY(";
-
-                    // 테이블 커맨트
-                    commentQry = "COMMENT ON TABLE "+inVo.get(i).getTabNm() + " IS '"+ inVo.get(i).getTabHnm()+"';\n";;
 
                     // 컬럼 정보 생성
                     for (int j = 0; j < tab.size(); j++) {
                         qry += (j>0) ? "," : " ";
-                        qry += setColOnDBMS(tab.get(j),inVo.get(i).getJdbcNm(),inVo.get(i).getTarJdbcNm(), maxColLen);
-                        //System.out.println("tabNm="+tabNm);
-
-                        // PK정보 생성
-                        if(tab.get(j).pk.equals("Y")) {pk += tab.get(j).colNm + ",";isPk=true;}
-
-                        // 컬럼 커맨트
-                        commentQry += "COMMENT ON "+tab.get(j).getTabNm()+"."+tab.get(j).getColNm() + " IS '"+ tab.get(j).getColHnm()+"';\n";;
+                        qry += setColOnHive(tab.get(j), maxColLen);
                     }
-                    pk += ")";pk = pk.replace(",)", ")");
-                    //System.out.println("isPk="+isPk);
-                    if(isPk) qry += pk+"\n";
-                    qry += ");\n";
-                    pk = ""; isPk=false;
+                    qry += ")\n";
+                    // only teos
+                    qry += "PARTITIONED BY (SCHEDULE_ID INT)"+"\n";
+                    qry += "--COMMENT 'SCENARIO'"+"\n";
+                    qry += "STORED AS PARQUET"+"\n";
+                    qry += "LOCATION '/teos/warehouse/SCENARIO'"+"\n";
+                    qry += "\n";
+                    qry += "ALTER TABLE I_"+tabNm+" ADD PARTITION (SCHEDULE_ID=8459967) LOCATION '/teos/warehouse/"+tabNm+"/SCHEDULE_ID=8459967'"+"\n";
+                    qry += "ALTER TABLE I_"+tabNm+" DROP PARTITION (SCHEDULE_ID=8459967)"+"\n";
+                    qry += "\n";
+                    qry += "SELECT * FROM I_"+tabNm+";"+"\n";
+                    qry += "sql(\"SELECT * FROM I_"+tabNm+"\").take(100).foreach(println);"+"\n";
+                    //----------------------------------- Hive end ----------------------------------------
+                    qry += "\n";
+                    qry += "\n";
+                    qry += "\n";
+                    //------------------------------ Spark Struct start -----------------------------------
+                    qry += "package com.sccomz.scala.schema"+"\n";
+                    qry += "\n";
+                    qry += "import org.apache.spark.sql.types.StructType "+"\n";
+                    qry += "import org.apache.spark.sql.types.StructField"+"\n";
+                    qry += "import org.apache.spark.sql.types.StringType "+"\n";
+                    qry += "import org.apache.spark.sql.types.FloatType  "+"\n";
+                    qry += "import org.apache.spark.sql.types.IntegerType"+"\n";
+                    qry += "\n";
+                    qry += "object "+tabNm+"{"+"\n";
+                    qry += "final val schema : StructType= StructType( Array("+"\n";
+
+                    // 컬럼 정보 생성
+                    for (int j = 0; j < tab.size(); j++) {
+                        qry += (j>0) ? "," : " ";
+                        qry += setColOnSpark(tab.get(j), maxColLen);
+                    }
+                    qry += "))"+"\n";
+                    qry += "}"+"\n";
+                    //------------------------------ Spark Struct end -------------------------------------
+
                 }
             }
 
-            qry += commentQry;
             // 메모패드로 출력
             FileUtil.stringToFile(qry, App.excelPath+"createTableScript.sql");
             Runtime run = Runtime.getRuntime ();
@@ -419,15 +435,39 @@ public class TabInfoDynSrv {
         String dataTypeDesc = tabInfo.getDataTypeDesc().toString();
         String nullable = tabInfo.getNullable().toString();
 
-
-
-        System.out.println("srcDb=="+srcDb);
-        System.out.println("tarDb=="+tarDb);
         if(srcDb.contains("oracle") && tarDb.contains("postgre")){
             dataTypeDesc = dataTypeDesc.replace("NUMBER"  , "NUMERIC");
             dataTypeDesc = dataTypeDesc.replace("VARCHAR2", "VARCHAR");
         }
         retCol = colNm +StringUtil.padRight(" ",maxColLen-colNm.length())+ dataTypeDesc +" "+ nullable+"\n";
+
+        return retCol;
+    }
+
+    public String setColOnHive(TabInfo tabInfo, int maxColLen){
+        String retCol = "";
+
+        String colNm = tabInfo.getColNm().toString();
+        String dataTypeNm = tabInfo.getDataTypeNm().toString();
+        System.out.println(dataTypeNm);
+        if(dataTypeNm.matches(".*(NUMBER|NUMERIC|INTEGER|INT).*")) {
+            dataTypeNm = "INT";
+        } else dataTypeNm = "STRING";
+        retCol = colNm +StringUtil.padRight(" ",maxColLen-colNm.length())+ dataTypeNm+"\n";
+
+        return retCol;
+    }
+
+    public String setColOnSpark(TabInfo tabInfo, int maxColLen){
+        String retCol = "";
+
+        String colNm = tabInfo.getColNm().toString();
+        String dataTypeNm = tabInfo.getDataTypeNm().toString();
+        System.out.println(dataTypeNm);
+        if(dataTypeNm.matches(".*(NUMBER|NUMERIC|INTEGER|INT).*")) {
+            dataTypeNm = "IntegerType";
+        } else dataTypeNm = "StringType ";
+        retCol = "StructField(\""+ colNm +"\""+StringUtil.padRight(" ",maxColLen-colNm.length())+" , "+ dataTypeNm+")\n";
 
         return retCol;
     }

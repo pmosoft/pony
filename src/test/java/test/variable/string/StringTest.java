@@ -17,8 +17,8 @@ public class StringTest
         //끝문자제거();
         //구분자배열();
         //정규식02();
-        //Contain();
-        Cast01();
+        Contain();
+        //Cast01();
     }
 
     static void Cast01() {
@@ -60,10 +60,13 @@ public class StringTest
 
 
     static void Contain() {
-        String str = "int";
-        if(str.contains("var2char|null")) System.out.println("varchar"); else System.out.println("na");
-        if(str.matches(".*(var2char|null).*")) System.out.println("varchar"); else System.out.println("na");
-        if(str.toUpperCase().matches(".*(NUMBER|INT|NUMERIC).*")) System.out.println("varchar"); else System.out.println("na");
+        //matches("DATE|TIMESTAMP")
+        String str = "integer";
+        if(str.contains("int")) System.out.println("find"); else System.out.println("na");
+        //if(str.contains("var2char|null")) System.out.println("find"); else System.out.println("na");
+        //if(str.matches(".*(var2char|null).*")) System.out.println("find"); else System.out.println("na");
+        //if(str.toUpperCase().matches(".*(NUMBER|INT|NUMERIC).*")) System.out.println("find"); else System.out.println("na");
+        //if(str.toUpperCase().matches("NUMBER|INT|NUMERIC")) System.out.println("find"); else System.out.println("na");
 
     }
 

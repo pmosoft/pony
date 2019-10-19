@@ -173,7 +173,9 @@ public class TabInfoDynSrv {
         String db = "";
         String colNm = "";
         String cols = "";
-        int maxColLen = 0;
+        String colSpace = "";
+        ArrayList<String> colList = new ArrayList<String>();
+        int maxColLen = 0;int maxColLen2 = 0;
         String pkCol = "";
 
         String where = "";
@@ -181,35 +183,30 @@ public class TabInfoDynSrv {
         try{
             List<TabInfo> tab = sqlSession(inVo).getMapper(TabInfoDao.class).selectMetaTabInfoList(inVo);
 
+            db =getJdbcInfo(inVo.getJdbcNm()).getDb().toUpperCase();
+
             //////////////////////////////////////////////////
             qry += "SELECT \n";
             //////////////////////////////////////////////////
 
-            /// Columns Start /////////////////////////////////////////////////////////
-            // SELECT 컬럼들중 길이가 가장 큰 컬럼의 길이를 산출한다
             for (int i = 0; i < tab.size(); i++) {
-                if(maxColLen <= tab.get(i).getColNm().length()) maxColLen = tab.get(i).getColNm().length();
+                // 컬럼 정보 생성
+                colSpace = (i>0) ? "     , " : "       ";
+                colList.add(colSpace + setColEtl(db,tab.get(i)));
+                // PK컬럼 조건 정보 생성
+                if(tab.get(i).getPk().equals("Y")) { pkCol += "AND "+tab.get(i).getColNm() + " LIKE '%'\n"; }
+            }
+
+            // MAX 컬럼 폭 산출
+            for (int i = 0; i < colList.size(); i++) {
+                if(maxColLen <= colList.get(i).length()) maxColLen = colList.get(i).length();
+                if(maxColLen2 <= tab.get(i).getColNm().length()) maxColLen2 = tab.get(i).getColNm().length();
             }
 
             // SELECT 컬럼들의 폭을 균등하게 맞추고 주석을 생성한다.
-            logger.debug("maxColLen="+maxColLen);
-            for (int i = 0; i < tab.size(); i++) {
-                colNm = tab.get(i).getColNm();
-                db = inVo.getJdbcInfo().getDb().toUpperCase();
-
-                // 데이트 타입 변형조건일 경우 DBMS의 SQL규칙에 맞게 형변환 처리
-                if (tab.get(i).isChgDate()||tab.get(i).getDataTypeNm().trim().toUpperCase().matches("DATE|TIMESTAMP")) {
-                    if     (db.equals("ORACLE")) {colNm = "TO_CHAR("+colNm+",'YYYY-MM-DD HH24:MI:SS') AS "+colNm;}
-                    else if(db.equals("ORACLE")) {colNm = "TO_CHAR("+colNm+",'YYYY-MM-DD HH24:MI:SS') AS "+colNm;}
-                }
-
-                // 컬럼 정보 생성
-                cols += (i>0) ? "     , " : "       ";
-                logger.debug(colNm+"="+colNm.length() );
-                cols += colNm + StringUtil.padRight(" ",maxColLen-colNm.length()) + "    -- "+ StringUtil.delCR(tab.get(i).getColHnm())+"\n";
-
-                // PK컬럼 조건 정보 생성
-                if(tab.get(i).getPk().equals("Y")) { pkCol += "AND "+tab.get(i).getColNm() + " LIKE '%'\n"; }
+            for (int i = 0; i < colList.size(); i++) {
+                colNm = colList.get(i);
+                cols +=  colNm + StringUtil.padRight(" ",maxColLen-colNm.length()) + " AS "+tab.get(i).getColNm().trim().toUpperCase() + StringUtil.padRight(" ",maxColLen2-tab.get(i).getColNm().length()) + " -- "+ StringUtil.delCR(tab.get(i).getColHnm())+"\n";
             }
 
             qry    += inVo.isChkSelect() ? inVo.getTxtSelect() +"\n" : cols;
@@ -246,6 +243,48 @@ public class TabInfoDynSrv {
         }
         return result;
     }
+
+    public String setColBasic(String db,TabInfo tab, int maxColLen){
+        String retCol = "";
+
+        String colNm = tab.getColNm().toString();
+        String dataTypeNm = tab.getDataTypeNm().trim().toUpperCase();
+
+        retCol = colNm + StringUtil.padRight(" ",maxColLen-colNm.length()) + "    -- "+ StringUtil.delCR(tab.getColHnm())+"\n";
+        return retCol;
+    }
+
+    public String setColEtl(String db,TabInfo tab){
+        String colNm = tab.getColNm().trim().toUpperCase();
+        String dataTypeNm = tab.getDataTypeNm().trim().toUpperCase();
+
+        // 데이트 타입 변형조건일 경우 DBMS의 SQL규칙에 맞게 형변환 처리
+        System.out.println(db+":"+colNm+":"+dataTypeNm);
+        if(dataTypeNm.matches("DATE|TIMESTAMP")) {
+            if     (db.equals("ORACLE")) {colNm = "TO_CHAR("+colNm+",'YYYY-MM-DD HH24:MI:SS')";}
+            else if(db.equals("ORACLE")) {colNm = "TO_CHAR("+colNm+",'YYYY-MM-DD HH24:MI:SS')";}
+        } else if(dataTypeNm.matches("NUMBER|NUMERIC|INTEGER|INT")) {
+            if     (db.equals("ORACLE")) {colNm = "NVL("+colNm+",0)";}
+            else if(db.equals("ORACLE")) {colNm = "NVL("+colNm+",0)";}
+        } else if(dataTypeNm.matches("VARCHAR|VARCHAR2")) {
+        }
+
+        //retCol = colNm + StringUtil.padRight(" ",maxColLen-colNm.length()) + " AS "+tab.getColNm().trim().toUpperCase()+ StringUtil.padRight(" ",maxColLen-colNm.length()) + " -- "+ StringUtil.delCR(tab.getColHnm())+"\n";
+        //System.out.println("retCol="+retCol);
+        return colNm;
+    }
+
+    public String setColCsv(String db,TabInfo tab, int maxColLen){
+        String retCol = "";
+        return retCol;
+    }
+
+    public String setColIns(String db,TabInfo tab, int maxColLen){
+        String retCol = "";
+        return retCol;
+    }
+
+
 
     /*
      * 테이블 생성 스크립드
@@ -469,6 +508,9 @@ public class TabInfoDynSrv {
 
         return retCol;
     }
+
+
+
 
 
     /**********************************************************************************

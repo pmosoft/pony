@@ -167,8 +167,10 @@ public class TabInfoDynSrv {
         Map<String, Object> result = new HashMap<String, Object>();
         String qry = "";
         String basQry = "";
+        String basRowQry = "";
         String usrQry = "";
         String etlQry = "";
+        String etlRowQry = "";
         String insQry = "";
         String cntQry = "";
 
@@ -177,12 +179,16 @@ public class TabInfoDynSrv {
         try{
             List<TabInfo> tab = sqlSession(inVo).getMapper(TabInfoDao.class).selectMetaTabInfoList(inVo);
 
-            cntQry = selectCntSelectScript(inVo, tab);
-            basQry = selectBasSelectScript(inVo, tab);
-            etlQry = selectEtlSelectScript(inVo, tab);
+            cntQry    = selectCntSelectScript(inVo, tab);
+            basQry    = selectBasSelectScript(inVo, tab, "col");
+            basRowQry = selectBasSelectScript(inVo, tab, "row");
+            etlQry    = selectEtlSelectScript(inVo, tab, "col");
+            etlRowQry = selectEtlSelectScript(inVo, tab, "row");
 
-            qry += basQry + ";\n\n";
-            qry += etlQry + ";\n\n";
+            qry += basQry    + ";\n\n";
+            qry += basRowQry + ";\n\n";
+            qry += etlQry    + ";\n\n";
+            qry += etlRowQry + ";\n\n";
 
             // 메모패드로 출력
             if(inVo.isChkSelStat()) {
@@ -216,18 +222,16 @@ public class TabInfoDynSrv {
         String qry = "";
         String where = "";
 
-        qry += "SELECT COUNT(*) "            ;
-        qry += "FROM   "+inVo.getTabNm()+"\n";
-        qry += "WHERE 1=1 "             +"\n";
+        qry += "SELECT COUNT(*) FROM "+inVo.getTabNm()+"WHERE 1=1 " +"\n";
         qry += inVo.isChkWhere() ? inVo.getTxtWhere() +"\n" : "\n";
 
         return qry;
     }
 
     /*
-     * SELECT 문장 생성 [MAIN:기본 스크립트]
+     * SELECT 문장 생성 [MAIN:기본스크립트]
      */
-    public String selectBasSelectScript(TabInfo inVo, List<TabInfo> tab){
+    public String selectBasSelectScript(TabInfo inVo, List<TabInfo> tab, String cdNm){
         String qry = "";
 
         String colNm = "";
@@ -235,6 +239,7 @@ public class TabInfoDynSrv {
         int maxColLen = 0;
         String pkCol = "";
         String where = "";
+        String colSpace = "",colDelimeter = "";
 
         qry += "SELECT \n";
 
@@ -247,8 +252,14 @@ public class TabInfoDynSrv {
         for (int i = 0; i < tab.size(); i++) {
             colNm = tab.get(i).getColNm();
             // 컬럼 정보 생성
-            cols += (i>0) ? "     , " : "       ";
-            cols += colNm + StringUtil.padRight(" ",maxColLen-colNm.length()) + "    -- "+ StringUtil.delCR(tab.get(i).getColHnm())+"\n";
+            if(cdNm.contains("col")) {
+                colSpace = (i>0) ? "     , " : "       ";
+                cols +=  colSpace +colNm + StringUtil.padRight(" ",maxColLen-colNm.length()) + "    -- "+ StringUtil.delCR(tab.get(i).getColHnm())+"\n";
+            } else if(cdNm.contains("row")) {
+                colSpace = "       ";
+                colDelimeter = (i<tab.size()-1) ? "||'|'||" : "||'|'";
+                cols +=  colSpace +colNm + StringUtil.padRight(" ",maxColLen-colNm.length()) + colDelimeter + "\n";
+            }
 
             // PK컬럼 조건 정보 생성
             if(tab.get(i).getPk().equals("Y")) { pkCol += "AND "+tab.get(i).getColNm() + " LIKE '%'\n"; }
@@ -263,13 +274,13 @@ public class TabInfoDynSrv {
     }
 
     /*
-     * SELECT 문장 생성 [MAIN:ETL 스크립트]
+     * SELECT 문장 생성 [MAIN:ETL스크립트]
      */
-    public String selectEtlSelectScript(TabInfo inVo, List<TabInfo> tab){
+    public String selectEtlSelectScript(TabInfo inVo, List<TabInfo> tab, String cdNm){
         String qry = "";
         String colNm = "";
         String cols = "";
-        String colSpace = "";
+        String colSpace = "",colDelimeter = "";
         ArrayList<String> colList = new ArrayList<String>();
         int maxEtlColLen = 0;int maxBasColLen = 0;
         String pkCol = "";
@@ -282,7 +293,6 @@ public class TabInfoDynSrv {
         // etl용 컬럼정보 생성
         for (int i = 0; i < tab.size(); i++) {
             // 컬럼 정보 생성
-            colSpace = (i>0) ? "     , " : "       ";
             colList.add(colSpace + setColEtl(db,tab.get(i)));
             // PK컬럼 조건 정보 생성
             if(tab.get(i).getPk().equals("Y")) { pkCol += "AND "+tab.get(i).getColNm() + " LIKE '%'\n"; }
@@ -297,7 +307,14 @@ public class TabInfoDynSrv {
         // SELECT 컬럼들의 폭을 균등하게 맞추고 주석을 생성한다.
         for (int i = 0; i < colList.size(); i++) {
             colNm = colList.get(i);
-            cols +=  colNm + StringUtil.padRight(" ",maxEtlColLen-colNm.length()) + " AS "+tab.get(i).getColNm().trim().toUpperCase() + StringUtil.padRight(" ",maxBasColLen-tab.get(i).getColNm().length()) + " -- "+ StringUtil.delCR(tab.get(i).getColHnm())+"\n";
+            if(cdNm.contains("col")) {
+                colSpace     = (i>0) ? "     , " : "       ";
+                cols +=  colSpace +colNm + StringUtil.padRight(" ",maxEtlColLen-colNm.length()) + " AS "+tab.get(i).getColNm().trim().toUpperCase() + StringUtil.padRight(" ",maxBasColLen-tab.get(i).getColNm().length()) + " -- "+ StringUtil.delCR(tab.get(i).getColHnm())+"\n";
+            } else if(cdNm.contains("row")) {
+                colSpace = "       ";
+                colDelimeter = (i<colList.size()-1) ? "||'|'||" : "||'|'";
+                cols +=  colSpace +colNm + StringUtil.padRight(" ",maxEtlColLen-colNm.length()) + colDelimeter + "\n";
+            }
         }
 
         qry    += cols;
@@ -308,12 +325,14 @@ public class TabInfoDynSrv {
         return qry;
     }
 
+    /*
+     * SELECT 문장 생성 [MAIN:ETL스크립트:ETL변형]
+     */
     public String setColEtl(String db,TabInfo tab){
         String colNm = tab.getColNm().trim().toUpperCase();
         String dataTypeNm = tab.getDataTypeNm().trim().toUpperCase();
 
         // 데이트 타입 변형조건일 경우 DBMS의 SQL규칙에 맞게 형변환 처리
-        System.out.println(db+":"+colNm+":"+dataTypeNm);
         if(dataTypeNm.matches("DATE|TIMESTAMP")) {
             if     (db.equals("ORACLE")) {colNm = "TO_CHAR("+colNm+",'YYYY-MM-DD HH24:MI:SS')";}
             else if(db.equals("ORACLE")) {colNm = "TO_CHAR("+colNm+",'YYYY-MM-DD HH24:MI:SS')";}
@@ -322,9 +341,6 @@ public class TabInfoDynSrv {
             else if(db.equals("ORACLE")) {colNm = "NVL("+colNm+",0)";}
         } else if(dataTypeNm.matches("VARCHAR|VARCHAR2")) {
         }
-
-        //retCol = colNm + StringUtil.padRight(" ",maxColLen-colNm.length()) + " AS "+tab.getColNm().trim().toUpperCase()+ StringUtil.padRight(" ",maxColLen-colNm.length()) + " -- "+ StringUtil.delCR(tab.getColHnm())+"\n";
-        //System.out.println("retCol="+retCol);
         return colNm;
     }
 
@@ -337,8 +353,6 @@ public class TabInfoDynSrv {
         String retCol = "";
         return retCol;
     }
-
-
 
     /*
      * 테이블 생성 스크립드

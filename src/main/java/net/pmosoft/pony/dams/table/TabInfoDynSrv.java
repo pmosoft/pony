@@ -159,69 +159,30 @@ public class TabInfoDynSrv {
     public void ____________SQL스크립트생성_____________(){}
 
     /*
-     * SELECT 문장 생성
+     * SELECT 문장 생성 [MAIN]
      */
     public Map<String, Object> selectSelectScript(TabInfo inVo){
-
         logger.info("selectSelectScript");
-
 
         Map<String, Object> result = new HashMap<String, Object>();
         String qry = "";
-        String cntQry = "SELECT COUNT(*) ";
+        String basQry = "";
+        String usrQry = "";
+        String etlQry = "";
+        String insQry = "";
+        String cntQry = "";
 
         String db = "";
-        String colNm = "";
-        String cols = "";
-        String colSpace = "";
-        ArrayList<String> colList = new ArrayList<String>();
-        int maxColLen = 0;int maxColLen2 = 0;
-        String pkCol = "";
-
-        String where = "";
 
         try{
             List<TabInfo> tab = sqlSession(inVo).getMapper(TabInfoDao.class).selectMetaTabInfoList(inVo);
 
-            db =getJdbcInfo(inVo.getJdbcNm()).getDb().toUpperCase();
+            cntQry = selectCntSelectScript(inVo, tab);
+            basQry = selectBasSelectScript(inVo, tab);
+            etlQry = selectEtlSelectScript(inVo, tab);
 
-            //////////////////////////////////////////////////
-            qry += "SELECT \n";
-            //////////////////////////////////////////////////
-
-            for (int i = 0; i < tab.size(); i++) {
-                // 컬럼 정보 생성
-                colSpace = (i>0) ? "     , " : "       ";
-                colList.add(colSpace + setColEtl(db,tab.get(i)));
-                // PK컬럼 조건 정보 생성
-                if(tab.get(i).getPk().equals("Y")) { pkCol += "AND "+tab.get(i).getColNm() + " LIKE '%'\n"; }
-            }
-
-            // MAX 컬럼 폭 산출
-            for (int i = 0; i < colList.size(); i++) {
-                if(maxColLen <= colList.get(i).length()) maxColLen = colList.get(i).length();
-                if(maxColLen2 <= tab.get(i).getColNm().length()) maxColLen2 = tab.get(i).getColNm().length();
-            }
-
-            // SELECT 컬럼들의 폭을 균등하게 맞추고 주석을 생성한다.
-            for (int i = 0; i < colList.size(); i++) {
-                colNm = colList.get(i);
-                cols +=  colNm + StringUtil.padRight(" ",maxColLen-colNm.length()) + " AS "+tab.get(i).getColNm().trim().toUpperCase() + StringUtil.padRight(" ",maxColLen2-tab.get(i).getColNm().length()) + " -- "+ StringUtil.delCR(tab.get(i).getColHnm())+"\n";
-            }
-
-            qry    += inVo.isChkSelect() ? inVo.getTxtSelect() +"\n" : cols;
-            /// Columns End ///////////////////////////////////////////////////////////
-
-            ///////////////////////////////////////////////////////////////////////////
-            qry    += "FROM   "+inVo.getTabNm()+"\n";
-            cntQry += "FROM   "+inVo.getTabNm()+"\n";
-            ///////////////////////////////////////////////////////////////////////////
-
-            ///////////////////////////////////////////////////////////////////////////
-            where = "WHERE 1=1 "+"\n" + pkCol;
-            qry    += inVo.isChkWhere() ? inVo.getTxtWhere() +"\n" : where;
-            cntQry += inVo.isChkWhere() ? inVo.getTxtWhere() +"\n" : "";
-            ///////////////////////////////////////////////////////////////////////////
+            qry += basQry + ";\n\n";
+            qry += etlQry + ";\n\n";
 
             // 메모패드로 출력
             if(inVo.isChkSelStat()) {
@@ -233,8 +194,11 @@ public class TabInfoDynSrv {
             result.put("isSuccess", true);
 
             result.put("tabInfoList", tab);
-            result.put("selQry", qry);
             result.put("cntSelQry", cntQry);
+            result.put("selBasQry", basQry);
+            result.put("selEtlQry", etlQry);
+            result.put("selInsQry", insQry);
+            result.put("selQry"   , qry);
         } catch (Exception e){
             result.put("isSuccess", false);
             result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
@@ -242,16 +206,106 @@ public class TabInfoDynSrv {
             e.printStackTrace();
         }
         return result;
+
     }
 
-    public String setColBasic(String db,TabInfo tab, int maxColLen){
-        String retCol = "";
+    /*
+     * SELECT 문장 생성 [MAIN:건수 스크립트]
+     */
+    public String selectCntSelectScript(TabInfo inVo, List<TabInfo> tab){
+        String qry = "";
+        String where = "";
 
-        String colNm = tab.getColNm().toString();
-        String dataTypeNm = tab.getDataTypeNm().trim().toUpperCase();
+        qry += "SELECT COUNT(*) "            ;
+        qry += "FROM   "+inVo.getTabNm()+"\n";
+        qry += "WHERE 1=1 "             +"\n";
+        qry += inVo.isChkWhere() ? inVo.getTxtWhere() +"\n" : "\n";
 
-        retCol = colNm + StringUtil.padRight(" ",maxColLen-colNm.length()) + "    -- "+ StringUtil.delCR(tab.getColHnm())+"\n";
-        return retCol;
+        return qry;
+    }
+
+    /*
+     * SELECT 문장 생성 [MAIN:기본 스크립트]
+     */
+    public String selectBasSelectScript(TabInfo inVo, List<TabInfo> tab){
+        String qry = "";
+
+        String colNm = "";
+        String cols = "";
+        int maxColLen = 0;
+        String pkCol = "";
+        String where = "";
+
+        qry += "SELECT \n";
+
+        // 최대컬럼길이
+        for (int i = 0; i < tab.size(); i++) {
+            if(maxColLen <= tab.get(i).getColNm().length()) maxColLen = tab.get(i).getColNm().length();
+        }
+
+        // SELECT 컬럼들의 폭을 균등하게 맞추고 주석을 생성한다.
+        for (int i = 0; i < tab.size(); i++) {
+            colNm = tab.get(i).getColNm();
+            // 컬럼 정보 생성
+            cols += (i>0) ? "     , " : "       ";
+            cols += colNm + StringUtil.padRight(" ",maxColLen-colNm.length()) + "    -- "+ StringUtil.delCR(tab.get(i).getColHnm())+"\n";
+
+            // PK컬럼 조건 정보 생성
+            if(tab.get(i).getPk().equals("Y")) { pkCol += "AND "+tab.get(i).getColNm() + " LIKE '%'\n"; }
+        }
+
+        qry    += cols;
+        qry    += "FROM   "+inVo.getTabNm()+"\n";
+        where = "WHERE 1=1 "+"\n" + pkCol;
+        qry    += inVo.isChkWhere() ? inVo.getTxtWhere() +"\n" : where;
+
+        return qry;
+    }
+
+    /*
+     * SELECT 문장 생성 [MAIN:ETL 스크립트]
+     */
+    public String selectEtlSelectScript(TabInfo inVo, List<TabInfo> tab){
+        String qry = "";
+        String colNm = "";
+        String cols = "";
+        String colSpace = "";
+        ArrayList<String> colList = new ArrayList<String>();
+        int maxEtlColLen = 0;int maxBasColLen = 0;
+        String pkCol = "";
+        String where = "";
+
+        String db =getJdbcInfo(inVo.getJdbcNm()).getDb().toUpperCase();
+
+        qry += "SELECT \n";
+
+        // etl용 컬럼정보 생성
+        for (int i = 0; i < tab.size(); i++) {
+            // 컬럼 정보 생성
+            colSpace = (i>0) ? "     , " : "       ";
+            colList.add(colSpace + setColEtl(db,tab.get(i)));
+            // PK컬럼 조건 정보 생성
+            if(tab.get(i).getPk().equals("Y")) { pkCol += "AND "+tab.get(i).getColNm() + " LIKE '%'\n"; }
+        }
+
+        // MAX 컬럼 폭 산출
+        for (int i = 0; i < colList.size(); i++) {
+            if(maxEtlColLen <= colList.get(i).length()) maxEtlColLen = colList.get(i).length();
+            if(maxBasColLen <= tab.get(i).getColNm().length()) maxBasColLen = tab.get(i).getColNm().length();
+        }
+
+        // SELECT 컬럼들의 폭을 균등하게 맞추고 주석을 생성한다.
+        for (int i = 0; i < colList.size(); i++) {
+            colNm = colList.get(i);
+            cols +=  colNm + StringUtil.padRight(" ",maxEtlColLen-colNm.length()) + " AS "+tab.get(i).getColNm().trim().toUpperCase() + StringUtil.padRight(" ",maxBasColLen-tab.get(i).getColNm().length()) + " -- "+ StringUtil.delCR(tab.get(i).getColHnm())+"\n";
+        }
+
+        qry    += cols;
+        qry    += "FROM   "+inVo.getTabNm()+"\n";
+        where = "WHERE 1=1 "+"\n" + pkCol;
+        qry    += inVo.isChkWhere() ? inVo.getTxtWhere() +"\n" : where;
+
+        return qry;
     }
 
     public String setColEtl(String db,TabInfo tab){

@@ -12,7 +12,48 @@ public class Serialize {
         //s.readBin();
         //s.writeBinTest01();
         //s.readBinTest01();
-        s.writeBinTest03();
+        //s.writeBinTest03();
+
+        s.array2to1();
+
+        //binary bytes, 11111111 11111111 11111111 01111111. decimal ... hexidecimal, FFFFFF7F
+    }
+
+    void array2to1(){
+      int arr[][] = new int[10][5];
+      int arr1[] = new int[arr.length*arr[0].length];
+      //배열에 값을 넣는다.
+      for(int i=0; i<arr.length; i++) {
+        for(int j=0; j<arr[i].length; j++) {
+          arr[i][j]=(i+1)*(j+1);
+        }
+      }
+
+      System.out.println("2차원 배열");
+      //2차원 배열 출력
+      for(int i=0; i<arr.length; i++) {
+        for(int j=0; j<arr[i].length; j++) {
+          System.out.print("\t"+arr[i][j]);
+        }
+        System.out.println();
+      }
+
+      System.out.println("변환");
+
+      for(int i=0; i<arr.length; i++) {
+        for(int j=0; j<arr[i].length; j++) {
+          //2차원 배열의 원소를 1차원 배열의 원소로 이동.
+          arr1[( i * arr[i].length ) + j ] = arr[i][j];
+        }
+      }
+      //1차원 배열 출력
+      System.out.println("1차원 배열");
+      for(int i=0; i<arr1.length; i++) {
+        if(i%arr[0].length==0) {
+          System.out.println();
+        }
+        System.out.print("\t"+arr1[i]);
+      }
     }
 
     void writeBinTest03(){

@@ -35,28 +35,28 @@ public class EtlSrv {
 
     private static Logger logger = LoggerFactory.getLogger(EtlSrv.class);
 
-   
+
     @Autowired
     private TabInfoDynSrv tabInfoDynSrv;
-    
+
     /*
      * 테이블 건수 갱신
      */
     public Map<String, Object> executeDbToDb(List<TabInfo> inVo){
 
         Map<String, Object> result = new HashMap<String, Object>();
-        
+
         TabInfo srcTabInfo = new TabInfo();
         TabInfo tarTabInfo = new TabInfo();
         List<TabInfo> tarTabInfoList = new ArrayList<TabInfo>();
-        
+
         try{
             for (int i = 0; i < inVo.size(); i++) {
                 if(inVo.get(i).isChk()){
                     // 추출 테이블정보
                     srcTabInfo = inVo.get(i);
                     srcTabInfo.setJdbcInfo(tabInfoDynSrv.getJdbcInfo(inVo.get(i).getJdbcNm()));
-                    
+
                     // 로드 테이블정보
                     tarTabInfo.setJdbcInfo(tabInfoDynSrv.getJdbcInfo(inVo.get(i).getTarJdbcNm()));
                     tarTabInfo.setJdbcNm(srcTabInfo.getTarJdbcNm());
@@ -64,12 +64,12 @@ public class EtlSrv {
                     tarTabInfo.setTabNm(srcTabInfo.getTabNm());
                     tarTabInfo.setChk(true);tarTabInfoList.add(tarTabInfo);
                     if(srcTabInfo.isChkExtract()) new ExtractTab(srcTabInfo,tarTabInfo).executeTabToInsStatFile();
-                    if(srcTabInfo.isChkLoad()) { 
+                    if(srcTabInfo.isChkLoad()) {
                         new LoadTab(tarTabInfo).executeInsertFileToDb();
-                        tabInfoDynSrv.updateTabRowsUpdateScript(tarTabInfoList);                        
+                        tabInfoDynSrv.updateTabRowsUpdateScript(tarTabInfoList);
                     }
-                } 
-            }    
+                }
+            }
             result.put("isSuccess", true);
         } catch (Exception e){
             result.put("isSuccess", false);
@@ -84,10 +84,10 @@ public class EtlSrv {
 //    public void executeDbToDbBatch(ArrayList<String> tabNmList) {
 //        for (int i = 0; i < tabNmList.size(); i++) {
 //            srcTabInfo.setTabNm(tabNmList.get(i)); new ExtractTab(srcTabInfo).executeTab();
-//            tarTabInfo.setTabNm(tabNmList.get(i)); new LoadTab(tarTabInfo).executeInsertFileToDb();        
+//            tarTabInfo.setTabNm(tabNmList.get(i)); new LoadTab(tarTabInfo).executeInsertFileToDb();
 //        }
 //    }
-    
-    
- 
+
+
+
 }

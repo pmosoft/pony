@@ -31,9 +31,9 @@ public class LoadTab {
     int loadCnt = 0;
 
     int commitCnt = 0;
-    int commitMaxCnt = 10000;
+    int commitMaxCnt = 1;
 
-    int logCnt = 10000;
+    int logCnt = 1;
 
     Connection conn = null;
     Statement stmt = null;
@@ -56,21 +56,26 @@ public class LoadTab {
 
     public static void main(String[] args) {
         TabInfo tabInfo = new TabInfo();
-        tabInfo.getJdbcInfo().setUrl("jdbc:oracle:thin:@localhost:1521/orcl");
+        tabInfo.getJdbcInfo().setUrl("jdbc:oracle:thin:@192.168.0.6:1521/orcl");
         tabInfo.getJdbcInfo().setUsrId("cellplan");
         tabInfo.getJdbcInfo().setUsrPw("cell_2012");
         tabInfo.getJdbcInfo().setDb("Oracle");
         tabInfo.getJdbcInfo().setDriver("net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
         tabInfo.setJdbcNm("CELLPLAN");
         tabInfo.setOwner("CELLPLAN");
-        tabInfo.setTabNm("ANALYSIS_RESULT");
+        tabInfo.setTabNm("BD_LOSS");
         //tabInfo.setTabNm("DU");
 
         LoadTab loadTab = new LoadTab(tabInfo);
-        loadTab.executeInsertFileToDb();
+        try {
+            loadTab.executeInsertFileToDb();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
-    public void executeInsertStringToDb(String tabNm, String whereDel, String insQry) {
+    public void executeInsertStringToDb(String tabNm, String whereDel, String insQry) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
 
         // 쿼리 변수
@@ -98,15 +103,13 @@ public class LoadTab {
 
         } catch ( Exception e ) {
             logger.info("\n"+qry);
-            result.put("isSuccess", false);
-            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
-            result.put("errSysMsg", e.getMessage());
             e.printStackTrace();
+            throw e;
         } finally { DBClose(); }
     }
 
 
-    public void executeInsertFileToDb() {
+    public void executeInsertFileToDb()  throws Exception {
 
         logger.info("executeInsertFileToDb "+tabInfo.getOwner()+"."+tabInfo.getTabNm()+" start");
         Map<String, Object> result = new HashMap<String, Object>();
@@ -142,9 +145,10 @@ public class LoadTab {
                 loadCnt++;
                 commitCnt++;
                 qry += br.readLine()+"\n";
+                //logger.info(qry);
 
                 if(commitCnt%commitMaxCnt == 0) {
-                   stmt.execute(setDbmsSql(qry));
+                   try { stmt.execute(setDbmsSql(qry));} catch (Exception e) {}
                    logger.info("loadCnt=========="+loadCnt);
                    commitCnt = 0;
                    qry = "";
@@ -153,6 +157,7 @@ public class LoadTab {
 
             if(commitCnt < commitMaxCnt) {
                 logger.info("loadCnt=========="+loadCnt);
+                try { stmt.execute(setDbmsSql(qry));} catch (Exception e) {}
                 stmt.execute(setDbmsSql(qry));
             }
             result.put("isSuccess", true);
@@ -160,10 +165,8 @@ public class LoadTab {
 
         } catch ( Exception e ) {
             logger.info("\n"+qry);
-            result.put("isSuccess", false);
-            result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
-            result.put("errSysMsg", e.getMessage());
             e.printStackTrace();
+            throw e;
         } finally { DBClose(); }
     }
 

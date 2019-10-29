@@ -1,2 +1,8 @@
 /target/
 /.classpath
+/bin/
+/.gitignore
+/.project
+/.springBeans
+/mvnw
+/mvnw.cmd

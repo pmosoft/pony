@@ -324,9 +324,9 @@ public class TabInfoDynSrv {
                 cols +=  colSpace +colNm + StringUtil.padRight(" ",maxEtlColLen-colNm.length()) + colDelimeter + "\n";
             } else if(cdNm.contains("ins")) {
                 cols += (i==0) ? "'INSERT INTO "+tabNm+" VALUES ('"+"\n" : "";
-                colComma = (i==0) ? "" : ",";
+                colComma = (i==0) ? " " : ",";
                 if(colDataTypeNm.matches("NUMBER|INT|NUMERIC")) {
-                    cols +=  "||'"+colComma+"'||"+colNm + StringUtil.padRight(" ",maxEtlColLen-colNm.length()) + "\n";
+                    cols +=  "||'"+colComma+"'  ||"+colNm + StringUtil.padRight(" ",maxEtlColLen-colNm.length()) + "\n";
                 } else {
                     cols +=  "||'"+colComma+"'''||"+colNm + StringUtil.padRight(" ",maxEtlColLen-colNm.length()) + "||''''" + "\n";
                 }

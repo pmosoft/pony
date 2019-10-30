@@ -184,11 +184,13 @@ public class TabInfoDynSrv {
             basRowQry = selectBasSelectScript(inVo, tab, "row");
             etlQry    = selectEtlSelectScript(inVo, tab, "col");
             etlRowQry = selectEtlSelectScript(inVo, tab, "row");
+            insQry    = selectEtlSelectScript(inVo, tab, "ins");
 
             qry += basQry    + ";\n\n";
             qry += basRowQry + ";\n\n";
             qry += etlQry    + ";\n\n";
             qry += etlRowQry + ";\n\n";
+            qry += insQry + ";\n\n";
 
             // 메모패드로 출력
             if(inVo.isChkSelStat()) {
@@ -279,8 +281,11 @@ public class TabInfoDynSrv {
     public String selectEtlSelectScript(TabInfo inVo, List<TabInfo> tab, String cdNm){
         String qry = "";
         String colNm = "";
+        String colDataTypeNm = "";
         String cols = "";
-        String colSpace = "",colDelimeter = "";
+        String colSpace = "",colDelimeter = "",colComma="";
+        String tabNm = "";
+        String insStr = "";
         ArrayList<String> colList = new ArrayList<String>();
         int maxEtlColLen = 0;int maxBasColLen = 0;
         String pkCol = "";
@@ -304,9 +309,12 @@ public class TabInfoDynSrv {
             if(maxBasColLen <= tab.get(i).getColNm().length()) maxBasColLen = tab.get(i).getColNm().length();
         }
 
+
         // SELECT 컬럼들의 폭을 균등하게 맞추고 주석을 생성한다.
         for (int i = 0; i < colList.size(); i++) {
             colNm = colList.get(i);
+            colDataTypeNm = tab.get(i).getDataTypeNm().trim().toUpperCase();
+            tabNm = tab.get(i).getTabNm().trim().toUpperCase();
             if(cdNm.contains("col")) {
                 colSpace     = (i>0) ? "     , " : "       ";
                 cols +=  colSpace +colNm + StringUtil.padRight(" ",maxEtlColLen-colNm.length()) + " AS "+tab.get(i).getColNm().trim().toUpperCase() + StringUtil.padRight(" ",maxBasColLen-tab.get(i).getColNm().length()) + " -- "+ StringUtil.delCR(tab.get(i).getColHnm())+"\n";
@@ -314,6 +322,15 @@ public class TabInfoDynSrv {
                 colSpace = "       ";
                 colDelimeter = (i<colList.size()-1) ? "||'|'||" : "||'|'";
                 cols +=  colSpace +colNm + StringUtil.padRight(" ",maxEtlColLen-colNm.length()) + colDelimeter + "\n";
+            } else if(cdNm.contains("ins")) {
+                cols += (i==0) ? "'INSERT INTO "+tabNm+" VALUES ('"+"\n" : "";
+                colComma = (i==0) ? "" : ",";
+                if(colDataTypeNm.matches("NUMBER|INT|NUMERIC")) {
+                    cols +=  "||'"+colComma+"'||"+colNm + StringUtil.padRight(" ",maxEtlColLen-colNm.length()) + "\n";
+                } else {
+                    cols +=  "||'"+colComma+"'''||"+colNm + StringUtil.padRight(" ",maxEtlColLen-colNm.length()) + "||''''" + "\n";
+                }
+                cols += (i==colList.size()-1) ? "||')'"+"\n" : "";
             }
         }
 

@@ -186,6 +186,14 @@ public class TabInfoDynSrv {
             etlRowQry = selectEtlSelectScript(inVo, tab, "row");
             insQry    = selectEtlSelectScript(inVo, tab, "ins");
 
+            logger.info("cntQry    ="+cntQry    );
+            logger.info("basQry    ="+basQry    );
+            logger.info("basRowQry ="+basRowQry );
+            logger.info("etlQry    ="+etlQry    );
+            logger.info("etlRowQry ="+etlRowQry );
+            logger.info("insQry    ="+insQry    );
+
+
             qry += basQry    + ";\n\n";
             qry += basRowQry + ";\n\n";
             qry += etlQry    + ";\n\n";
@@ -206,7 +214,7 @@ public class TabInfoDynSrv {
             result.put("selBasQry", basQry);
             result.put("selEtlQry", etlQry);
             result.put("selInsQry", insQry);
-            result.put("selQry"   , qry);
+            result.put("selQry"   , basQry);
         } catch (Exception e){
             result.put("isSuccess", false);
             result.put("errUsrMsg", "시스템 장애가 발생하였습니다");
@@ -224,7 +232,7 @@ public class TabInfoDynSrv {
         String qry = "";
         String where = "";
 
-        qry += "SELECT COUNT(*) FROM "+inVo.getTabNm()+"WHERE 1=1 " +"\n";
+        qry += "SELECT COUNT(*) FROM "+inVo.getTabNm()+" WHERE 1=1 " +"\n";
         qry += inVo.isChkWhere() ? inVo.getTxtWhere() +"\n" : "\n";
 
         return qry;
@@ -633,6 +641,8 @@ public class TabInfoDynSrv {
         try{
 
             inVo.setQry(selectSelectScript(inVo).get("selQry").toString());
+            System.out.println("inVo.getQry()================="+inVo.getQry());
+
             //inVo.setCntQry(selectSelectScript(inVo).get("cntSelQry").toString());
 
             //int rowCnt = sqlSession(inVo).getMapper(TabInfoDao.class).selectDataCnt(inVo);

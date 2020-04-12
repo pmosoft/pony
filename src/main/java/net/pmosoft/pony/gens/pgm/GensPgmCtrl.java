@@ -16,6 +16,11 @@ public class GensPgmCtrl {
     @Autowired
     private GensPgmSrv gensPgmSrv;
 
+    @RequestMapping(value = "/gens/textToJavaVo")
+    public Map<String, Object> textToJavaVo(@RequestBody GensPgm gens) {
+        return gensPgmSrv.textToJavaVo(gens);
+    }
+
     @RequestMapping(value = "/gens/pgm/cloneAngular")
     public Map<String, Object> cloneAngular(@RequestBody GensPgm gens) {
         return gensPgmSrv.cloneAngular(gens);

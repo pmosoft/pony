@@ -14,6 +14,8 @@ public class GensPgm {
     String srcDotNm        ; // 소스 구분자 . 형식명                      (예:code.list)
     String srcTabNm        ; // 소스 구분자 _ 형식명                      (예:code_list)
 
+    String srcTxt          ; // 소스 범용
+
     String tarPathNm       ;
     String tarPkgNm        ;
     String tarPkgPathNm    ;
@@ -23,6 +25,9 @@ public class GensPgm {
     String tarMethodNm     ;
     String tarDotNm        ;
     String tarTabNm        ;
+
+    String tarTxt          ; // 타켓 범용
+
 
     String retMsg             = "";
     String retErrMsg          = "";
@@ -173,5 +178,16 @@ public class GensPgm {
     public void setRetTarMsg(String retTarMsg) {
         this.retTarMsg = retTarMsg;
     }
-
+    public String getSrcTxt() {
+        return srcTxt;
+    }
+    public void setSrcTxt(String srcTxt) {
+        this.srcTxt = srcTxt;
+    }
+    public String getTarTxt() {
+        return tarTxt;
+    }
+    public void setTarTxt(String tarTxt) {
+        this.tarTxt = tarTxt;
+    }
 }

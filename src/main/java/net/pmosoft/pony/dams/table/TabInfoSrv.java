@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
 import net.pmosoft.pony.comm.App;
 import net.pmosoft.pony.comm.util.ExcelUtil;
 import net.pmosoft.pony.comm.util.StringUtil;
@@ -42,9 +43,8 @@ import net.pmosoft.pony.dams.jdbc.JdbcInfo;
 import net.pmosoft.pony.dams.jdbc.JdbcInfoDao;
 
 @Service
+@Slf4j
 public class TabInfoSrv {
-
-    private static Logger logger = LoggerFactory.getLogger(TabInfoSrv.class);
 
     @Autowired
     private TabInfoDao tabInfoDao;
@@ -64,16 +64,18 @@ public class TabInfoSrv {
      * @param jdbcNm,owner,tabNm
      * */
     public Map<String, Object> selectMetaTabInfoList(TabInfo inVo){
+        log.debug(">>>>> selectMetaTabInfoList");
+
         Map<String, Object> result = new HashMap<String, Object>();
         int rowCnt = 0;
         int commitCnt = 500;
-        
+
         inVo.setTabNm("%");
 
         try{
             // 1단계 : DB 메타 테이블컬럼정보 조회
             List<TabInfo> tabInfoOutVoList = (List<TabInfo>) tabInfoDynSrv.selectMetaTabInfoList(inVo).get("tabInfoList");
-            logger.info("tabInfoOutVoList="+tabInfoOutVoList.size());
+            log.info("tabInfoOutVoList="+tabInfoOutVoList.size());
 
             // 2단계 : 메타테이블컬럼정보 삭제
             tabInfoDao.deleteMetaTabInfo(inVo);
@@ -92,7 +94,7 @@ public class TabInfoSrv {
             }
 
             if(rowCnt < commitCnt) {
-                logger.debug("rowCnt2=========="+rowCnt);
+                log.debug("rowCnt2=========="+rowCnt);
                 tabInfoDao.insertMetaTabInfoBulk(tabInfoList);
             }
 
@@ -241,7 +243,7 @@ public class TabInfoSrv {
     public Map<String, Object> updateTabRows(List<TabInfo> inVo){
         // mybatis에서 foreach사용시 sqlite의 jdbctype 처리를 못해주므로 단건으로 갱신한다
 
-        //logger.info("updateTabRows");
+        //log.info("updateTabRows");
         //System.out.println("inVo.size()="+inVo.size());
 
         Map<String, Object> result = new HashMap<String, Object>();
@@ -263,6 +265,6 @@ public class TabInfoSrv {
         }
         return result;
     }
-    
- 
+
+
 }

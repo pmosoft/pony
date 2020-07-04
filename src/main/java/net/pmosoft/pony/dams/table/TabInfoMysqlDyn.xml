@@ -11,7 +11,7 @@
 
 <select id="selectMetaTabInfoList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="net.pmosoft.pony.dams.table.TabInfo">
 
-    -- TableDao.selectMetaTabInfoList(MARIADB)
+    -- TableDao.selectMetaTabInfoList(MYSQL)
     SELECT
            '추출'                                                                              AS stsNm
          , UPPER(#{jdbcNm})                                                               AS jdbcNm
@@ -53,7 +53,7 @@
 
 <select id="selectCommonQryList" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="java.util.LinkedHashMap">
 <![CDATA[
-    -- TableDao.selectCommonQryList(MARIADB)
+    -- TableDao.selectCommonQryList(MYSQL)
     ${qry}
     limit ${limitCnt}
 ]]>
@@ -61,7 +61,7 @@
 
 <select id="selectDataCnt" parameterType="net.pmosoft.pony.dams.table.TabInfo" resultType="int">
 <![CDATA[
-    -- TableDao.selectDataCnt(MARIADB)
+    -- TableDao.selectDataCnt(MYSQL)
     ${cntQry}
 ]]>
 </select>

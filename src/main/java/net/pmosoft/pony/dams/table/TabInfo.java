@@ -36,6 +36,68 @@ public class TabInfo {
     String updDtm       = "";
     String updUsrId     = "";
 
+    public void print() {
+
+        String row = "";
+
+        row += "  " + stsNm       ;
+        row += "  " + jdbcNm      ;
+        row += "  " + owner       ;
+        row += "  " + tabNm       ;
+        row += "  " + tabHnm      ;
+        row += "  " + colId       ;
+        row += "  " + colNm       ;
+        row += "  " + colHnm      ;
+        row += "  " + dataTypeDesc;
+        row += "  " + nullable    ;
+        row += "  " + pk          ;
+        row += "  " + dataTypeNm  ;
+        row += "  " + len         ;
+        row += "  " + decimalCnt  ;
+        row += "  " + tabRows     ;
+        row += "  " + tabRegDt    ;
+        row += "  " + tabRegDt2   ;
+        row += "  " + tabUpdDt    ;
+        row += "  " + tabUpdDt2   ;
+        row += "  " + regDtm      ;
+        row += "  " + regUsrId    ;
+        row += "  " + updDtm      ;
+        row += "  " + updUsrId    ;
+
+        System.out.println(row);
+
+    }
+
+    public void printHeader() {
+        String header = "";
+        header += "|stsNm";
+        header += "|jdbcNm";
+        header += "|owner";
+        header += "|tabNm";
+        header += "|tabHnm";
+        header += "|colId";
+        header += "|colNm";
+        header += "|colHnm";
+        header += "|dataTypeDesc";
+        header += "|nullable";
+        header += "|pk";
+        header += "|dataTypeNm";
+        header += "|len";
+        header += "|decimalCnt";
+        header += "|tabRows";
+        header += "|tabRegDt";
+        header += "|tabRegDt2";
+        header += "|tabUpdDt";
+        header += "|tabUpdDt2";
+        header += "|regDtm";
+        header += "|regUsrId";
+        header += "|updDtm";
+        header += "|updUsrId";
+
+        System.out.println(header);
+
+    }
+
     //-------------------------------
     // TABLE 조회 조건
     //-------------------------------

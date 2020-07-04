@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
 import net.pmosoft.pony.comm.App;
 import net.pmosoft.pony.comm.util.ExcelUtil;
 import net.pmosoft.pony.comm.util.FileUtil;
@@ -43,6 +44,7 @@ import net.pmosoft.pony.dams.jdbc.JdbcInfo;
 import net.pmosoft.pony.dams.jdbc.JdbcInfoDao;
 
 @Service
+@Slf4j
 public class TabInfoDynSrv {
 
     private static Logger logger = LoggerFactory.getLogger(TabInfoDynSrv.class);
@@ -65,17 +67,24 @@ public class TabInfoDynSrv {
     public void ________JDBC_Mybatis_SqlSession________(){}
 
     private SqlSession sqlSession(TabInfo inVo){
+        log.debug(">>>>> sqlSession");
         JdbcInfo jdbcVo = new JdbcInfo();
         Properties props = new Properties();
         props.put("driver"      , "net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
 
+        inVo.print();
+
         if(inVo.jdbcInfo.getUrl().length() > 0){
+            log.debug(">>>>> sqlSession#1");
+
             props.put("url"         , inVo.jdbcInfo.getUrl()  );
             props.put("username"    , inVo.jdbcInfo.getUsrId());
             props.put("password"    , inVo.jdbcInfo.getUsrPw());
             props.put("mapper"      , "net/pmosoft/pony/dams/table/TabInfo"+StringUtil.replaceFirstCharUpperCase(inVo.jdbcInfo.getDb())+"Dyn.xml");
 
         } else {
+            log.debug(">>>>> sqlSession#2");
+
             jdbcVo = getJdbcInfo(inVo.getJdbcNm());
             props.put("url"         , jdbcVo.getUrl()  );
             props.put("username"    , jdbcVo.getUsrId());
@@ -136,6 +145,10 @@ public class TabInfoDynSrv {
      * 해당DB의 테이블메타정보 조회
      * */
     public Map<String, Object> selectMetaTabInfoList(TabInfo inVo){
+
+        log.debug(">>>>> selectMetaTabInfoList");
+        inVo.printHeader();inVo.print();
+
         Map<String, Object> result = new HashMap<String, Object>();
 
         try{
@@ -299,6 +312,8 @@ public class TabInfoDynSrv {
         int maxEtlColLen = 0;int maxBasColLen = 0;
         String pkCol = "";
         String where = "";
+
+        logger.info("inVo.getJdbcNm()={}",inVo.getJdbcNm());
 
         String db =getJdbcInfo(inVo.getJdbcNm()).getDb().toUpperCase();
 

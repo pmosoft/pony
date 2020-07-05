@@ -13,6 +13,7 @@
         ,DB
         ,DRIVER
         ,URL
+        ,DATABASE
         ,USR_ID
         ,USR_PW
         ,REG_DTM
@@ -24,6 +25,7 @@
         ,#{db}
         ,#{driver}
         ,#{url}
+        ,#{database}
         ,#{usrId}
         ,#{usrPw}
         ,strftime('%Y%m%d%H%M%S','now','localtime')
@@ -39,6 +41,7 @@
          , DB
          , DRIVER
          , URL
+         , DATABASE
          , USR_ID
          , USR_PW
          , REG_DTM
@@ -55,6 +58,7 @@
          , DB
          , DRIVER
          , URL
+         , DATABASE
          , USR_ID
          , USR_PW
          , REG_DTM
@@ -73,6 +77,7 @@
          , ''          AS DB
          , ''          AS DRIVER
          , ''          AS URL
+         , ''          AS DATABASE
          , ''          AS USR_ID
          , ''          AS USR_PW
          , ''          AS REG_DTM
@@ -97,6 +102,7 @@
     SET    DB         = #{db}
          , DRIVER     = #{driver}
          , URL        = #{url}
+         , DATABASE   = #{database}
          , USR_ID     = #{usrId}
          , USR_PW     = #{usrPw}
          , UPD_DTM    = strftime('%Y%m%d%H%M%S','now','localtime')

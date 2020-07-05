@@ -6,14 +6,14 @@ public class JdbcInfo {
     String db       = "";
     String driver   = "";
     String url      = "";
+    String database = "";
     String usrId    = "";
     String usrPw    = "";
     String regDtm   = "";
     String regUsrId = "";
     String updDtm   = "";
     String updUsrId = "";
-    
-    
+
     public String getJdbcNm() {
         return jdbcNm;
     }
@@ -37,6 +37,12 @@ public class JdbcInfo {
     }
     public void setUrl(String url) {
         this.url = url;
+    }
+    public String getDatabase() {
+        return database;
+    }
+    public void setDatabase(String database) {
+        this.database = database;
     }
     public String getUsrId() {
         return usrId;
@@ -74,5 +80,6 @@ public class JdbcInfo {
     public void setUpdUsrId(String updUsrId) {
         this.updUsrId = updUsrId;
     }
+
 
 }

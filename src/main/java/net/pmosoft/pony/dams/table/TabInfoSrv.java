@@ -52,6 +52,9 @@ public class TabInfoSrv {
     @Autowired
     private TabInfoDynSrv tabInfoDynSrv;
 
+    @Autowired
+    private JdbcInfoDao jdbcInfoDao;
+
     /**********************************************************************************
     *
     *                               Pony테이블모듈_로컬DB
@@ -65,6 +68,15 @@ public class TabInfoSrv {
      * */
     public Map<String, Object> selectMetaTabInfoList(TabInfo inVo){
         log.debug(">>>>> selectMetaTabInfoList");
+        inVo.print();
+
+        inVo.getJdbcInfo().setJdbcNm(inVo.getJdbcNm());
+        inVo.setJdbcInfo(jdbcInfoDao.selectJdbcInfo(inVo.getJdbcInfo()));
+
+        log.debug(">>>>> selectMetaTabInfoList inVo.getJdbcInfo().getJdbcNm()={}",inVo.getJdbcInfo().getJdbcNm());
+
+        inVo.print();
+
 
         Map<String, Object> result = new HashMap<String, Object>();
         int rowCnt = 0;

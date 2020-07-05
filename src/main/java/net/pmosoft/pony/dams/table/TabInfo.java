@@ -40,6 +40,9 @@ public class TabInfo {
 
         String row = "";
 
+        row += "  " + jdbcInfo.getDb()       ;
+        row += "  " + jdbcInfo.getDatabase()       ;
+
         row += "  " + stsNm       ;
         row += "  " + jdbcNm      ;
         row += "  " + owner       ;

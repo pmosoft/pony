@@ -68,15 +68,6 @@ public class TabInfoSrv {
      * */
     public Map<String, Object> selectMetaTabInfoList(TabInfo inVo){
         log.debug(">>>>> selectMetaTabInfoList");
-        inVo.print();
-
-        inVo.getJdbcInfo().setJdbcNm(inVo.getJdbcNm());
-        inVo.setJdbcInfo(jdbcInfoDao.selectJdbcInfo(inVo.getJdbcInfo()));
-
-        log.debug(">>>>> selectMetaTabInfoList inVo.getJdbcInfo().getJdbcNm()={}",inVo.getJdbcInfo().getJdbcNm());
-
-        inVo.print();
-
 
         Map<String, Object> result = new HashMap<String, Object>();
         int rowCnt = 0;

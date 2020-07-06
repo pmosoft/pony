@@ -90,6 +90,8 @@ public class TabInfoDynSrv {
             props.put("username"    , jdbcVo.getUsrId());
             props.put("password"    , jdbcVo.getUsrPw());
             props.put("mapper"      , "net/pmosoft/pony/dams/table/TabInfo"+StringUtil.replaceFirstCharUpperCase(jdbcVo.getDb())+"Dyn.xml");
+
+            inVo.setJdbcInfo(jdbcVo);
         }
 
         SqlSession session = null;
@@ -256,6 +258,7 @@ public class TabInfoDynSrv {
      * SELECT 문장 생성 [MAIN:기본스크립트]
      */
     public String selectBasSelectScript(TabInfo inVo, List<TabInfo> tab, String cdNm){
+        log.debug(">>>>> selectBasSelectScript");
         String qry = "";
 
         String colNm = "";
@@ -269,6 +272,7 @@ public class TabInfoDynSrv {
 
         // 최대컬럼길이
         for (int i = 0; i < tab.size(); i++) {
+            tab.get(i).print();
             if(maxColLen <= tab.get(i).getColNm().length()) maxColLen = tab.get(i).getColNm().length();
         }
 

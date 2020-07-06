@@ -285,7 +285,7 @@
 
 <sql id="whereTDACM00080">
     WHERE (#{jdbcNm} = '' OR UPPER(A.JDBC_NM  ) LIKE (UPPER(#{jdbcNm})))
-    AND   (#{owner} = '' OR UPPER(A.OWNER  ) LIKE (UPPER(#{owner})))
+    AND   (#{jdbcInfo.database} = '' OR UPPER(A.OWNER  ) LIKE (UPPER(#{jdbcInfo.database})))
     AND   (#{tabNm} = '' OR UPPER(A.TAB_NM ) LIKE (UPPER(#{tabNm})))
     AND   (#{tabHnm} = '' OR UPPER(A.TAB_HNM ) LIKE (UPPER(#{tabHnm})))
     AND   (
@@ -360,12 +360,12 @@
 ********************************************************************************************************************-->
 <update id="updateTabRows" parameterType="net.pmosoft.pony.dams.table.TabInfo">
 	--	updateTabRows (mybatis에서 foreach사용시 sqlite의 jdbctype 처리를 못해주므로 단건으로 갱신한다 )
-	UPDATE TDACM00080 
+	UPDATE TDACM00080
 	SET    TAB_ROWS = ${tabRows}
-	WHERE  UPPER(JDBC_NM) = UPPER(#{jdbcNm}) 
+	WHERE  UPPER(JDBC_NM) = UPPER(#{jdbcNm})
 	AND    UPPER(OWNER)   = UPPER(#{owner})
 	AND    UPPER(TAB_NM)  = UPPER(#{tabNm})
-	
+
 </update>
 
 <!--*******************************************************************************************************************

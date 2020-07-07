@@ -4,6 +4,10 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -13,6 +17,25 @@ import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
 public class DateUtil {
+
+
+    public static void main(String[] arg) {
+        //System.out.println(getDaysBetween("2020-03-26","2020-03-28","yyyy-MM-dd"));
+
+        //1585894845157 1587694958000
+
+        Instant instant = Instant.ofEpochMilli(Long.parseLong("1587694958000"));
+        //ZonedDateTime z = instant.atZone(ZoneId.of(""));
+        //ZonedDateTime z = instant.atZone(ZoneId.of("Australia/Sydney"));
+        ZonedDateTime z = instant.atZone(ZoneId.of("Asia/Seoul"));
+
+
+        // format it
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+        System.out.println(fmt.format(z)); // 01:16 17/10/2017
+
+        //12:28 16/04/2020 11:59 16/04/2020
+    }
 
     /*
      * yyyyMMddHHmmss
@@ -497,9 +520,6 @@ public class DateUtil {
 		return week[W];
 	}
 
-	public static void main(String[] arg) {
-		System.out.println("★★★★★★★★★★★★★★★[key] " + getDateString(getCurrentDate()));
-	}
 
 	/**
 	 * from ~ to 기간동안의 특정요일을 반환한다.

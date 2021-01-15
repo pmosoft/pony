@@ -77,6 +77,7 @@
          , ''          AS DB
          , ''          AS DRIVER
          , ''          AS URL
+         , ''          AS DATABASE
          , ''          AS USR_ID
          , ''          AS USR_PW
          , ''          AS REG_DTM

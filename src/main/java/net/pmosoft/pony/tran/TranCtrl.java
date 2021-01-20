@@ -15,9 +15,15 @@ public class TranCtrl {
     @Autowired
     private TranSrv tranSrv;
 
-    @RequestMapping(value = "/tran/delimeterToRows")
-    public Map<String, Object> delimeterToRows(@RequestBody Tran tran) {
-        return tranSrv.delimeterToRows(tran);
+    @RequestMapping(value = "/tran/delimiterToRows")
+    public Map<String, Object> delimiterToRows(@RequestBody Tran tran) {
+        return tranSrv.delimiterToRows(tran);
     }
 
+    @RequestMapping(value = "/tran/thinq")
+    public Map<String, Object> thinq(@RequestBody Tran tran) {
+        return tranSrv.thinq(tran);
+    }
+    
+    
 }

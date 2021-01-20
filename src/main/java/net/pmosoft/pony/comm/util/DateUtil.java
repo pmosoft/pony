@@ -420,14 +420,14 @@ public class DateUtil {
 
     /**
      * 날짜문자열을 날짜표시타입으로 변환한다. <BR>
-     * (예) 19981210 --> 1998-12-10  delimeter(-)        <BR>
-     *     19981210 --> 1998/12/10  delimeter(/)        <BR>
-     *     19981210 --> 1998.12.10  delimeter(.)        <BR>
+     * (예) 19981210 --> 1998-12-10  delimiter(-)        <BR>
+     *     19981210 --> 1998/12/10  delimiter(/)        <BR>
+     *     19981210 --> 1998.12.10  delimiter(.)        <BR>
      * @param    nowDate String 날짜문자열 구분작 존재하지 않는 숫자로만 구성된 날짜 (yyyymmdd)
-     *          delimeter String 년,월,일을 구분하기 위한 구분자. ('/','-','.' 등등)
+     *          delimiter String 년,월,일을 구분하기 위한 구분자. ('/','-','.' 등등)
      * @return   변경된 날짜 문자열.(구분자가 첨가된 날짜 형태) (yyyy-mm-dd)
      */
-	public static String StringToDate(String nowDate, String delimeter) {
+	public static String StringToDate(String nowDate, String delimiter) {
 		String temp = null;
 		String fac_no = null;
 
@@ -437,9 +437,9 @@ public class DateUtil {
 			return "invalid length";
 
 		temp = nowDate.substring(0, 4);
-		fac_no = temp + delimeter ;
+		fac_no = temp + delimiter ;
 		temp = nowDate.substring(4, 6);
-		fac_no = fac_no + temp + delimeter;
+		fac_no = fac_no + temp + delimiter;
 		temp = nowDate.substring(6, 8);
 		fac_no = fac_no + temp;
 

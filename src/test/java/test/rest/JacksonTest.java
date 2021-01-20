@@ -50,12 +50,12 @@ public class JacksonTest {
 
     public void objToJson01() throws Exception {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        Person person = Person.builder().name("aa").age(11).build();
-        String personJson = objectMapper.writeValueAsString(person);
-        System.out.println(personJson);
+        //ObjectMapper objectMapper = new ObjectMapper();
+        //Person person = Person.builder().name("aa").age(11).build();
+        //String personJson = objectMapper.writeValueAsString(person);
+        //System.out.println(personJson);
 
-        Person jsonToPerson = objectMapper.readValue(personJson, Person.class);
+        //Person jsonToPerson = objectMapper.readValue(personJson, Person.class);
         //System.out.println(jsonToPerson.getName());
         //System.out.println(jsonToPerson.getAge());
 

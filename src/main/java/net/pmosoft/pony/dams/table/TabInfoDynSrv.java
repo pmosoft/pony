@@ -67,7 +67,7 @@ public class TabInfoDynSrv {
     public void ________JDBC_Mybatis_SqlSession________(){}
 
     private SqlSession sqlSession(TabInfo inVo){
-        log.debug(">>>>> sqlSession");
+        //log.debug">>>>> sqlSession");
         JdbcInfo jdbcVo = new JdbcInfo();
         Properties props = new Properties();
         props.put("driver"      , "net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
@@ -75,7 +75,7 @@ public class TabInfoDynSrv {
         inVo.print();
 
         if(inVo.jdbcInfo.getUrl().length() > 0){
-            log.debug(">>>>> sqlSession#1");
+            //log.debug">>>>> sqlSession#1");
 
             props.put("url"         , inVo.jdbcInfo.getUrl()  );
             props.put("username"    , inVo.jdbcInfo.getUsrId());
@@ -83,7 +83,7 @@ public class TabInfoDynSrv {
             props.put("mapper"      , "net/pmosoft/pony/dams/table/TabInfo"+StringUtil.replaceFirstCharUpperCase(inVo.jdbcInfo.getDb())+"Dyn.xml");
 
         } else {
-            log.debug(">>>>> sqlSession#2");
+            //log.debug">>>>> sqlSession#2");
 
             jdbcVo = getJdbcInfo(inVo.getJdbcNm());
             props.put("url"         , jdbcVo.getUrl()  );
@@ -148,7 +148,7 @@ public class TabInfoDynSrv {
      * */
     public Map<String, Object> selectMetaTabInfoList(TabInfo inVo){
 
-        log.debug(">>>>> selectMetaTabInfoList");
+        //log.debug">>>>> selectMetaTabInfoList");
         inVo.printHeader();inVo.print();
 
         Map<String, Object> result = new HashMap<String, Object>();
@@ -258,7 +258,7 @@ public class TabInfoDynSrv {
      * SELECT 문장 생성 [MAIN:기본스크립트]
      */
     public String selectBasSelectScript(TabInfo inVo, List<TabInfo> tab, String cdNm){
-        log.debug(">>>>> selectBasSelectScript");
+        //log.debug">>>>> selectBasSelectScript");
         String qry = "";
 
         String colNm = "";
@@ -266,7 +266,7 @@ public class TabInfoDynSrv {
         int maxColLen = 0;
         String pkCol = "";
         String where = "";
-        String colSpace = "",colDelimeter = "";
+        String colSpace = "",coldelimiter = "";
 
         qry += "SELECT \n";
 
@@ -285,8 +285,8 @@ public class TabInfoDynSrv {
                 cols +=  colSpace +colNm + StringUtil.padRight(" ",maxColLen-colNm.length()) + "    -- "+ StringUtil.delCR(tab.get(i).getColHnm())+"\n";
             } else if(cdNm.contains("row")) {
                 colSpace = "       ";
-                colDelimeter = (i<tab.size()-1) ? "||'|'||" : "||'|'";
-                cols +=  colSpace +colNm + StringUtil.padRight(" ",maxColLen-colNm.length()) + colDelimeter + "\n";
+                coldelimiter = (i<tab.size()-1) ? "||'|'||" : "||'|'";
+                cols +=  colSpace +colNm + StringUtil.padRight(" ",maxColLen-colNm.length()) + coldelimiter + "\n";
             }
 
             // PK컬럼 조건 정보 생성
@@ -309,7 +309,7 @@ public class TabInfoDynSrv {
         String colNm = "";
         String colDataTypeNm = "";
         String cols = "";
-        String colSpace = "",colDelimeter = "",colComma="";
+        String colSpace = "",coldelimiter = "",colComma="";
         String tabNm = "";
         String insStr = "";
         ArrayList<String> colList = new ArrayList<String>();
@@ -348,8 +348,8 @@ public class TabInfoDynSrv {
                 cols +=  colSpace +colNm + StringUtil.padRight(" ",maxEtlColLen-colNm.length()) + " AS "+tab.get(i).getColNm().trim().toUpperCase() + StringUtil.padRight(" ",maxBasColLen-tab.get(i).getColNm().length()) + " -- "+ StringUtil.delCR(tab.get(i).getColHnm())+"\n";
             } else if(cdNm.contains("row")) {
                 colSpace = "       ";
-                colDelimeter = (i<colList.size()-1) ? "||'|'||" : "||'|'";
-                cols +=  colSpace +colNm + StringUtil.padRight(" ",maxEtlColLen-colNm.length()) + colDelimeter + "\n";
+                coldelimiter = (i<colList.size()-1) ? "||'|'||" : "||'|'";
+                cols +=  colSpace +colNm + StringUtil.padRight(" ",maxEtlColLen-colNm.length()) + coldelimiter + "\n";
             } else if(cdNm.contains("ins")) {
                 cols += (i==0) ? "'INSERT INTO "+tabNm+" VALUES ('"+"\n" : "";
                 colComma = (i==0) ? " " : ",";

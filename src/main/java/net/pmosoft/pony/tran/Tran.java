@@ -2,20 +2,20 @@ package net.pmosoft.pony.tran;
 
 public class Tran {
 
-    String delimeter   ; //
+    String delimiter   ; //
     String strToken    ; //
     String strRows     ; //
     int tokenCnt    ; //
-    int delimeterCnt    ; //
+    int delimiterCnt    ; //
 
     String retMsg             = "";
     String retErrMsg          = "";
 
-    public String getDelimeter() {
-        return delimeter;
+    public String getdelimiter() {
+        return delimiter;
     }
-    public void setDelimeter(String delimeter) {
-        this.delimeter = delimeter;
+    public void setdelimiter(String delimiter) {
+        this.delimiter = delimiter;
     }
     public String getStrToken() {
         return strToken;
@@ -47,11 +47,11 @@ public class Tran {
     public void setRetErrMsg(String retErrMsg) {
         this.retErrMsg = retErrMsg;
     }
-    public int getDelimeterCnt() {
-        return delimeterCnt;
+    public int getdelimiterCnt() {
+        return delimiterCnt;
     }
-    public void setDelimeterCnt(int delimeterCnt) {
-        this.delimeterCnt = delimeterCnt;
+    public void setdelimiterCnt(int delimiterCnt) {
+        this.delimiterCnt = delimiterCnt;
     }
 
 }

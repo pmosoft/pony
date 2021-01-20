@@ -131,7 +131,7 @@ public class TabInfo {
     // 데이터 추출 조건
     //-------------------------------
     String pathFileNm    = "";
-    String delimeter     = "";
+    String delimiter     = "";
     int limitCnt = 50000;
 
     //-------------------------------
@@ -412,11 +412,11 @@ public class TabInfo {
     public void setChkLoad(boolean chkLoad) {
         this.chkLoad = chkLoad;
     }
-    public String getDelimeter() {
-        return delimeter;
+    public String getdelimiter() {
+        return delimiter;
     }
-    public void setDelimeter(String delimeter) {
-        this.delimeter = delimeter;
+    public void setdelimiter(String delimiter) {
+        this.delimiter = delimiter;
     }
     public boolean isChkSelStat() {
         return chkSelStat;

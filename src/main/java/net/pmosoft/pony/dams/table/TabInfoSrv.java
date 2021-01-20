@@ -67,7 +67,7 @@ public class TabInfoSrv {
      * @param jdbcNm,owner,tabNm
      * */
     public Map<String, Object> selectMetaTabInfoList(TabInfo inVo){
-        log.debug(">>>>> selectMetaTabInfoList");
+        //log.debug">>>>> selectMetaTabInfoList");
 
         Map<String, Object> result = new HashMap<String, Object>();
         int rowCnt = 0;
@@ -78,7 +78,7 @@ public class TabInfoSrv {
         try{
             // 1단계 : DB 메타 테이블컬럼정보 조회
             List<TabInfo> tabInfoOutVoList = (List<TabInfo>) tabInfoDynSrv.selectMetaTabInfoList(inVo).get("tabInfoList");
-            log.info("tabInfoOutVoList="+tabInfoOutVoList.size());
+            //log.info("tabInfoOutVoList="+tabInfoOutVoList.size());
 
             // 2단계 : 메타테이블컬럼정보 삭제
             tabInfoDao.deleteMetaTabInfo(inVo);
@@ -97,7 +97,7 @@ public class TabInfoSrv {
             }
 
             if(rowCnt < commitCnt) {
-                log.debug("rowCnt2=========="+rowCnt);
+                //log.debug"rowCnt2=========="+rowCnt);
                 tabInfoDao.insertMetaTabInfoBulk(tabInfoList);
             }
 

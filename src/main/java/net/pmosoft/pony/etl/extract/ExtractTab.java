@@ -315,14 +315,14 @@ public class ExtractTab {
     public void selectTabToSamFile()
     {
         boolean isFile    = true;
-        selectSamFile(selQry, tabInfo1.getPathFileNm(), tabInfo1.getDelimeter(), tabInfoList1);
+        selectSamFile(selQry, tabInfo1.getPathFileNm(), tabInfo1.getdelimiter(), tabInfoList1);
     }
 
 
     /*
      * (코어) 쿼리된 결과를 샘파일로 생성한다.
      **/
-    public String selectSamFile(String selQry, String pathFileNm, String delimeter, List<TabInfo> tabInfoList1) {
+    public String selectSamFile(String selQry, String pathFileNm, String delimiter, List<TabInfo> tabInfoList1) {
         Map<String, Object> result = new HashMap<String, Object>();
 
         // DB접속 변수
@@ -360,7 +360,7 @@ public class ExtractTab {
 
                 for (int i = 0; i < colCnt; i++) {
                     colData = StringUtil.trimNull(rs1.getString(i+1));
-                    s02 += colData + delimeter;
+                    s02 += colData + delimiter;
                 }
                 writer.println(s02);
                 s02 = "";

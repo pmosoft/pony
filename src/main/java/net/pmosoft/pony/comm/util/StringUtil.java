@@ -53,10 +53,10 @@ public class StringUtil {
     /*
      *  토큰을 첫문자대문자 Camel로 변환
      * */
-    public static String tokenToUCamel(String str, String delimeter) {
+    public static String tokenToUCamel(String str, String delimiter) {
 
         //String str = "aa-bb-cc";
-        String[] array = str.split(delimeter);
+        String[] array = str.split(delimiter);
         //System.out.println(array.length);
         String firstUpperCamel = "";
         for (int i = 0; i < array.length; i++) {
@@ -70,9 +70,9 @@ public class StringUtil {
     /*
      *  토큰을 첫문자소문자 Camel로 변환
      * */
-    public static String tokenToLCamel(String str, String delimeter) {
+    public static String tokenToLCamel(String str, String delimiter) {
         //String str = "aa-bb-cc";
-        String[] array = str.split(delimeter);
+        String[] array = str.split(delimiter);
         //System.out.println(array.length);
         String firstLowerCamel = "";
         for (int i = 0; i < array.length; i++) {
